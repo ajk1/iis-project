@@ -3,7 +3,7 @@
     <collectionReader>
         <collectionIterator>
             <descriptor>
-                <import location="questionPassageReaderDescriptor.xml"/>
+                <import location="reviewReaderDescriptor.xml"/>
             </descriptor>
         </collectionIterator>
     </collectionReader>
@@ -22,7 +22,7 @@
     </casProcessor>
     <casProcessor deployment="integrated" name="passageRankingWriterDescriptor">
         <descriptor>
-            <import location="passageRankingWriterDescriptor.xml"/>
+            <import location="reviewScoreWriterDescriptor.xml"/>
         </descriptor>
             <deploymentParameters/>
         <errorHandling>
