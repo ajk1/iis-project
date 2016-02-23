@@ -17,7 +17,7 @@ import org.apache.uima.util.ProgressImpl;
  * This Collection Reader serves as a reader to parse your input. This is just template code, so you
  * need to implement actual code.
  */
-public class QuestionPassageReader extends CollectionReader_ImplBase {
+public class ReviewReader extends CollectionReader_ImplBase {
   final String PARAM_INPUTDIR = "InputDir";
 
   int mCurrentIndex;

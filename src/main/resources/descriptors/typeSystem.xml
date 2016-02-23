@@ -16,12 +16,7 @@ You need to implement the types requried for your ranking model.</description>
           <description>An identifier that specifies which system produced this annotation.</description>
           <rangeTypeName>uima.cas.String</rangeTypeName>
         </featureDescription>
-        <featureDescription>
-          <name>score</name>
-          <description>The ranking score acquired for the answer and the confidence score acquired for the question.</description>
-          <rangeTypeName>uima.cas.Double</rangeTypeName>
-        </featureDescription>
-      </features>
+        </features>
     </typeDescription>
     <typeDescription>
       <name>type.InputDocument</name>
@@ -29,71 +24,10 @@ You need to implement the types requried for your ranking model.</description>
       <supertypeName>type.ComponentAnnotation</supertypeName>
       <features>
         <featureDescription>
-          <name>passages</name>
-          <description>All the passages found in the input file.</description>
+          <name>reviews</name>
+          <description/>
           <rangeTypeName>uima.cas.FSList</rangeTypeName>
-          <elementType>type.Passage</elementType>
-        </featureDescription>
-        <featureDescription>
-          <name>questions</name>
-          <description>All the questions found in the input file.</description>
-          <rangeTypeName>uima.cas.FSList</rangeTypeName>
-          <elementType>type.Question</elementType>
-        </featureDescription>
-      </features>
-    </typeDescription>
-    <typeDescription>
-      <name>type.Question</name>
-      <description>Stores the information about a question.</description>
-      <supertypeName>type.ComponentAnnotation</supertypeName>
-      <features>
-        <featureDescription>
-          <name>id</name>
-          <description>The identifier for the question.</description>
-          <rangeTypeName>uima.cas.String</rangeTypeName>
-        </featureDescription>
-        <featureDescription>
-          <name>sentence</name>
-          <description>The text of the question.</description>
-          <rangeTypeName>uima.cas.String</rangeTypeName>
-        </featureDescription>
-      <featureDescription>
-          <name>passages</name>
-          <description>Passages associated with this question.</description>
-          <rangeTypeName>uima.cas.FSList</rangeTypeName>
-          <elementType>type.Passage</elementType>
-        </featureDescription>
-      <featureDescription>
-          <name>measurement</name>
-          <description>This stores all the measurements related to the question.</description>
-          <rangeTypeName>type.Measurement</rangeTypeName>
-        </featureDescription>
-      </features>
-    </typeDescription>
-    <typeDescription>
-      <name>type.Passage</name>
-      <description>Stores the information of the passage.</description>
-      <supertypeName>type.ComponentAnnotation</supertypeName>
-      <features>
-        <featureDescription>
-          <name>text</name>
-          <description>The passage text extracted from the source document.</description>
-          <rangeTypeName>uima.cas.String</rangeTypeName>
-        </featureDescription>
-        <featureDescription>
-          <name>label</name>
-          <description>This stores a gold standard label of this answer.  'True' means that it answers the question; otherwise, it is does not.</description>
-          <rangeTypeName>uima.cas.Boolean</rangeTypeName>
-        </featureDescription>
-      <featureDescription>
-          <name>sourceDocId</name>
-          <description>This specifies the source document id to which the passage belongs to.</description>
-          <rangeTypeName>uima.cas.String</rangeTypeName>
-        </featureDescription>
-      <featureDescription>
-          <name>question</name>
-          <description>This denotes the corresponding question ID.</description>
-          <rangeTypeName>type.Question</rangeTypeName>
+          <elementType>type.Review</elementType>
         </featureDescription>
       </features>
     </typeDescription>
@@ -117,7 +51,185 @@ You need to implement the types requried for your ranking model.</description>
           <description>The number of false positives</description>
           <rangeTypeName>uima.cas.Integer</rangeTypeName>
         </featureDescription>
-        </features>
+        <featureDescription>
+          <name>L1</name>
+          <description/>
+          <rangeTypeName>uima.cas.Double</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>L2</name>
+          <description/>
+          <rangeTypeName>uima.cas.Double</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+  <typeDescription>
+      <name>type.Review</name>
+      <description/>
+      <supertypeName>type.ComponentAnnotation</supertypeName>
+      <features>
+        <featureDescription>
+          <name>id</name>
+          <description/>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>rawText</name>
+          <description/>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>tokens</name>
+          <description/>
+          <rangeTypeName>uima.cas.FSList</rangeTypeName>
+          <elementType>type.Token</elementType>
+        </featureDescription>
+        <featureDescription>
+          <name>sentences</name>
+          <description/>
+          <rangeTypeName>uima.cas.FSList</rangeTypeName>
+          <elementType>type.Sentence</elementType>
+        </featureDescription>
+        <featureDescription>
+          <name>score</name>
+          <description/>
+          <rangeTypeName>type.Score</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>bigrams</name>
+          <description/>
+          <rangeTypeName>uima.cas.FSList</rangeTypeName>
+          <elementType>type.Ngram</elementType>
+        </featureDescription>
+        <featureDescription>
+          <name>trigrams</name>
+          <description/>
+          <rangeTypeName>uima.cas.FSList</rangeTypeName>
+          <elementType>type.Ngram</elementType>
+        </featureDescription>
+        <featureDescription>
+          <name>reviewTime</name>
+          <description/>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>summary</name>
+          <description/>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>productId</name>
+          <description/>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>helpfulness</name>
+          <description/>
+          <rangeTypeName>uima.cas.IntegerArray</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    <typeDescription>
+      <name>type.Token</name>
+      <description/>
+      <supertypeName>type.ComponentAnnotation</supertypeName>
+      <features>
+        <featureDescription>
+          <name>rawText</name>
+          <description/>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>sentimentScore</name>
+          <description/>
+          <rangeTypeName>uima.cas.Double</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>negationScore</name>
+          <description/>
+          <rangeTypeName>uima.cas.Double</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>amplificationScore</name>
+          <description/>
+          <rangeTypeName>uima.cas.Double</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>reviewId</name>
+          <description/>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    <typeDescription>
+      <name>type.Score</name>
+      <description/>
+      <supertypeName>type.ComponentAnnotation</supertypeName>
+      <features>
+        <featureDescription>
+          <name>regressionScore</name>
+          <description/>
+          <rangeTypeName>uima.cas.Double</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>classificationScore</name>
+          <description/>
+          <rangeTypeName>uima.cas.Integer</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>goldLabel</name>
+          <description/>
+          <rangeTypeName>uima.cas.Integer</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    <typeDescription>
+      <name>type.Sentence</name>
+      <description/>
+      <supertypeName>type.ComponentAnnotation</supertypeName>
+      <features>
+        <featureDescription>
+          <name>rawText</name>
+          <description/>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>tokens</name>
+          <description/>
+          <rangeTypeName>uima.cas.FSList</rangeTypeName>
+          <elementType>type.Token</elementType>
+        </featureDescription>
+        <featureDescription>
+          <name>bigrams</name>
+          <description/>
+          <rangeTypeName>uima.cas.FSList</rangeTypeName>
+          <elementType>type.Ngram</elementType>
+        </featureDescription>
+        <featureDescription>
+          <name>trigrams</name>
+          <description/>
+          <rangeTypeName>uima.cas.FSList</rangeTypeName>
+          <elementType>type.Ngram</elementType>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    <typeDescription>
+      <name>type.Ngram</name>
+      <description/>
+      <supertypeName>type.ComponentAnnotation</supertypeName>
+      <features>
+        <featureDescription>
+          <name>n</name>
+          <description/>
+          <rangeTypeName>uima.cas.Integer</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>tokens</name>
+          <description/>
+          <rangeTypeName>uima.cas.FSList</rangeTypeName>
+          <elementType>type.Token</elementType>
+        </featureDescription>
+      </features>
     </typeDescription>
   </types>
 </typeSystemDescription>
