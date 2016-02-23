@@ -26,7 +26,7 @@ import type.Question;
 /**
  * This CAS Consumer generates the report file with the method metrics
  */
-public class PassageRankingWriter extends CasConsumer_ImplBase {
+public class ReviewScoreWriter extends CasConsumer_ImplBase {
   final String PARAM_OUTPUTDIR = "OutputDir";
 
   final String OUTPUT_FILENAME = "ErrorAnalysis.csv";
@@ -57,7 +57,7 @@ public class PassageRankingWriter extends CasConsumer_ImplBase {
 
   @Override
   public void processCas(CAS arg0) throws ResourceProcessException {
-    System.out.println(">> Passage Ranking Writer Processing");
+    System.out.println(">> Review Score Writer Processing");
     // Import the CAS as a aJCas
     JCas aJCas = null;
     File outputFile = null;

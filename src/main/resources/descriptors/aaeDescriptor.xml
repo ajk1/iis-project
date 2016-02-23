@@ -9,6 +9,30 @@
     <delegateAnalysisEngine key="passageAnnotatorDescriptor">
       <import name="descriptors.passageAnnotatorDescriptor"/>
     </delegateAnalysisEngine>
+  <delegateAnalysisEngine key="tokenAnnotatorDescriptor">
+      <import name="descriptors.tokenAnnotatorDescriptor"/>
+    
+    </delegateAnalysisEngine>
+    <delegateAnalysisEngine key="ngramAnnotatorDescriptor">
+      <import name="descriptors.ngramAnnotatorDescriptor"/>
+    
+    </delegateAnalysisEngine>
+    <delegateAnalysisEngine key="sentimentTokenAnnotatorDescriptor">
+      <import name="descriptors.sentimentTokenAnnotatorDescriptor"/>
+    
+    </delegateAnalysisEngine>
+    <delegateAnalysisEngine key="amplifierAnnotatorDescriptor">
+      <import name="descriptors.amplifierAnnotatorDescriptor"/>
+    
+    </delegateAnalysisEngine>
+    <delegateAnalysisEngine key="negationAnnotatorDescriptor">
+      <import name="descriptors.negationAnnotatorDescriptor"/>
+    
+    </delegateAnalysisEngine>
+    <delegateAnalysisEngine key="scoreAnnotatorDescriptor">
+      <import name="descriptors.scoreAnnotatorDescriptor"/>
+    
+    </delegateAnalysisEngine>
   </delegateAnalysisEngineSpecifiers>
   <analysisEngineMetaData>
     <name>aaeDescriptor</name>
@@ -19,8 +43,12 @@
     <configurationParameterSettings/>
     <flowConstraints>
       <fixedFlow>
-        <node>questionAnnotatorDescriptor</node>
-        <node>passageAnnotatorDescriptor</node>
+        <node>tokenAnnotatorDescriptor</node>
+        <node>ngramAnnotatorDescriptor</node>
+      <node>sentimentTokenAnnotatorDescriptor</node>
+        <node>amplifierAnnotatorDescriptor</node>
+        <node>negationAnnotatorDescriptor</node>
+        <node>scoreAnnotatorDescriptor</node>
       </fixedFlow>
     </flowConstraints>
     <typePriorities/>
