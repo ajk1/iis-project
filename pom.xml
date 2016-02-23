@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>edu.cmu.cs.lti.f15</groupId>
-	<artifactId>pi7-andrewid</artifactId>
+	<groupId>edu.cmu.cs.lti.s16</groupId>
+	<artifactId>OMSA-Alex-Terry</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>PI7 Template</name>
+	<name>OMSA</name>
 	<description>DEIIS template project for PI7</description>
 	<dependencies>
 		<dependency>
