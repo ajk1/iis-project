@@ -3,21 +3,13 @@
   <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
   <primitive>false</primitive>  
   <delegateAnalysisEngineSpecifiers>
-    <delegateAnalysisEngine key="questionAnnotatorDescriptor">
-      <import name="descriptors.questionAnnotatorDescriptor"/>
-    </delegateAnalysisEngine>
-    <delegateAnalysisEngine key="passageAnnotatorDescriptor">
-      <import name="descriptors.passageAnnotatorDescriptor"/>
-    </delegateAnalysisEngine>
-  <delegateAnalysisEngine key="tokenAnnotatorDescriptor">
+    <delegateAnalysisEngine key="tokenAnnotatorDescriptor">
       <import name="descriptors.tokenAnnotatorDescriptor"/>
-    
     </delegateAnalysisEngine>
     <delegateAnalysisEngine key="ngramAnnotatorDescriptor">
       <import name="descriptors.ngramAnnotatorDescriptor"/>
-    
     </delegateAnalysisEngine>
-    <delegateAnalysisEngine key="sentimentTokenAnnotatorDescriptor">
+  <delegateAnalysisEngine key="sentimentTokenAnnotatorDescriptor">
       <import name="descriptors.sentimentTokenAnnotatorDescriptor"/>
     
     </delegateAnalysisEngine>
@@ -33,7 +25,7 @@
       <import name="descriptors.scoreAnnotatorDescriptor"/>
     
     </delegateAnalysisEngine>
-  </delegateAnalysisEngineSpecifiers>
+    </delegateAnalysisEngineSpecifiers>
   <analysisEngineMetaData>
     <name>aaeDescriptor</name>
     <description>This is a template (empty) descriptor for your Aggerate Analysis Engine.  You will need to specify your type system and capabilities, in addition to your individual analysis engines.</description>
@@ -57,8 +49,7 @@
       <capability>
         <inputs/>
         <outputs>
-          <type allAnnotatorFeatures="true">type.Question</type>
-        </outputs>
+          </outputs>
         <languagesSupported/>
       </capability>
     </capabilities>

@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<analysisEngineDescription xmlns="http://uima.apache.org/resourceSpecifier">
+<casConsumerDescription xmlns="http://uima.apache.org/resourceSpecifier">
   <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
-  <primitive>true</primitive>  <annotatorImplementationName>PassageAnnotator</annotatorImplementationName>
-  <analysisEngineMetaData>
-    <name>passageAnnotatorDescriptor</name>
+  <implementationName>ReviewScoreWriter</implementationName>
+  <processingResourceMetaData>
+    <name>passageRankingWriterDescriptor</name>
     <description/>
     <version>1.0</version>
     <vendor/>
-    <configurationParameters/>
+    <configurationParameters>
+      <configurationParameter>
+        <name>OutputDir</name>
+        <description>This is the directory in which the final output will be written.</description>
+        <type>String</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+      </configurationParameter>
+    </configurationParameters>
     <configurationParameterSettings/>
     <typeSystemDescription>
       <imports>
@@ -19,19 +27,17 @@
     <capabilities>
       <capability>
         <inputs>
-          <type allAnnotatorFeatures="true">type.InputDocument</type>
+          <type allAnnotatorFeatures="true">type.Question</type>
         </inputs>
-        <outputs>
-          <type allAnnotatorFeatures="true">type.Passage</type>
-        </outputs>
+        <outputs/>
         <languagesSupported/>
       </capability>
     </capabilities>
   <operationalProperties>
-      <modifiesCas>true</modifiesCas>
-      <multipleDeploymentAllowed>true</multipleDeploymentAllowed>
+      <modifiesCas>false</modifiesCas>
+      <multipleDeploymentAllowed>false</multipleDeploymentAllowed>
       <outputsNewCASes>false</outputsNewCASes>
     </operationalProperties>
-  </analysisEngineMetaData>
+  </processingResourceMetaData>
   <resourceManagerConfiguration/>
-</analysisEngineDescription>
+</casConsumerDescription>

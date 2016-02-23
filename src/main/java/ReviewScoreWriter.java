@@ -57,7 +57,7 @@ public class ReviewScoreWriter extends CasConsumer_ImplBase {
 
   @Override
   public void processCas(CAS arg0) throws ResourceProcessException {
-//    System.out.println(">> Review Score Writer Processing");
+    System.out.println(">> Review Score Writer Processing");
 //    // Import the CAS as a aJCas
 //    JCas aJCas = null;
 //    File outputFile = null;
