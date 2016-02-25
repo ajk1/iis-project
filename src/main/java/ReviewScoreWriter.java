@@ -15,10 +15,8 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.resource.ResourceProcessException;
 
-import rank.CompositeRanker;
-import rank.IRanker;
-import rank.NgramRanker;
-import rank.OtherRanker;
+//import rank.CompositeRanker;
+//import rank.IRanker;
 import type.Measurement;
 
 /**
@@ -31,9 +29,9 @@ public class ReviewScoreWriter extends CasConsumer_ImplBase {
 
   File mOutputDir;
 
-  IRanker ngramRanker, otherRanker;
-
-  CompositeRanker compositeRanker;
+//  IRanker ngramRanker, otherRanker;
+//
+//  CompositeRanker compositeRanker;
 
   @Override
   public void initialize() throws ResourceInitializationException {
