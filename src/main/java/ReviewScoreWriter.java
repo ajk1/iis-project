@@ -20,8 +20,6 @@ import rank.IRanker;
 import rank.NgramRanker;
 import rank.OtherRanker;
 import type.Measurement;
-import type.Passage;
-import type.Question;
 
 /**
  * This CAS Consumer generates the report file with the method metrics

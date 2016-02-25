@@ -11,8 +11,8 @@ import org.apache.uima.jcas.cas.FSList;
 
 
 /** Stores all the questions and its associated answer candidates.
- * Updated by JCasGen Mon Oct 12 15:10:51 EDT 2015
- * XML source: /home/junaraki/git/f15-11-791/template-projects/pi7/pi7-andrewid/src/main/resources/descriptors/typeSystem.xml
+ * Updated by JCasGen Wed Feb 24 21:05:56 EST 2016
+ * XML source: C:/Users/Alex/Workspace-11791/iis-project/src/main/resources/descriptors/typeSystem.xml
  * @generated */
 public class InputDocument extends ComponentAnnotation {
   /** @generated
@@ -77,47 +77,25 @@ public class InputDocument extends ComponentAnnotation {
  
     
   //*--------------*
-  //* Feature: passages
+  //* Feature: reviews
 
-  /** getter for passages - gets All the passages found in the input file.
+  /** getter for reviews - gets 
    * @generated
    * @return value of the feature 
    */
-  public FSList getPassages() {
-    if (InputDocument_Type.featOkTst && ((InputDocument_Type)jcasType).casFeat_passages == null)
-      jcasType.jcas.throwFeatMissing("passages", "type.InputDocument");
-    return (FSList)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((InputDocument_Type)jcasType).casFeatCode_passages)));}
+  public FSList getReviews() {
+    if (InputDocument_Type.featOkTst && ((InputDocument_Type)jcasType).casFeat_reviews == null)
+      jcasType.jcas.throwFeatMissing("reviews", "type.InputDocument");
+    return (FSList)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((InputDocument_Type)jcasType).casFeatCode_reviews)));}
     
-  /** setter for passages - sets All the passages found in the input file. 
+  /** setter for reviews - sets  
    * @generated
    * @param v value to set into the feature 
    */
-  public void setPassages(FSList v) {
-    if (InputDocument_Type.featOkTst && ((InputDocument_Type)jcasType).casFeat_passages == null)
-      jcasType.jcas.throwFeatMissing("passages", "type.InputDocument");
-    jcasType.ll_cas.ll_setRefValue(addr, ((InputDocument_Type)jcasType).casFeatCode_passages, jcasType.ll_cas.ll_getFSRef(v));}    
-   
-    
-  //*--------------*
-  //* Feature: questions
-
-  /** getter for questions - gets All the questions found in the input file.
-   * @generated
-   * @return value of the feature 
-   */
-  public FSList getQuestions() {
-    if (InputDocument_Type.featOkTst && ((InputDocument_Type)jcasType).casFeat_questions == null)
-      jcasType.jcas.throwFeatMissing("questions", "type.InputDocument");
-    return (FSList)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((InputDocument_Type)jcasType).casFeatCode_questions)));}
-    
-  /** setter for questions - sets All the questions found in the input file. 
-   * @generated
-   * @param v value to set into the feature 
-   */
-  public void setQuestions(FSList v) {
-    if (InputDocument_Type.featOkTst && ((InputDocument_Type)jcasType).casFeat_questions == null)
-      jcasType.jcas.throwFeatMissing("questions", "type.InputDocument");
-    jcasType.ll_cas.ll_setRefValue(addr, ((InputDocument_Type)jcasType).casFeatCode_questions, jcasType.ll_cas.ll_getFSRef(v));}    
+  public void setReviews(FSList v) {
+    if (InputDocument_Type.featOkTst && ((InputDocument_Type)jcasType).casFeat_reviews == null)
+      jcasType.jcas.throwFeatMissing("reviews", "type.InputDocument");
+    jcasType.ll_cas.ll_setRefValue(addr, ((InputDocument_Type)jcasType).casFeatCode_reviews, jcasType.ll_cas.ll_getFSRef(v));}    
   }
 
     

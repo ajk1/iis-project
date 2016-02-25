@@ -14,7 +14,7 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.cas.TOP_Type;
 
 /** 
- * Updated by JCasGen Mon Oct 12 15:10:51 EDT 2015
+ * Updated by JCasGen Wed Feb 24 21:05:56 EST 2016
  * @generated */
 public class Measurement_Type extends TOP_Type {
   /** @generated 
@@ -117,6 +117,54 @@ public class Measurement_Type extends TOP_Type {
     ll_cas.ll_setIntValue(addr, casFeatCode_fp, v);}
     
   
+ 
+  /** @generated */
+  final Feature casFeat_L1;
+  /** @generated */
+  final int     casFeatCode_L1;
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value 
+   */ 
+  public double getL1(int addr) {
+        if (featOkTst && casFeat_L1 == null)
+      jcas.throwFeatMissing("L1", "type.Measurement");
+    return ll_cas.ll_getDoubleValue(addr, casFeatCode_L1);
+  }
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set 
+   */    
+  public void setL1(int addr, double v) {
+        if (featOkTst && casFeat_L1 == null)
+      jcas.throwFeatMissing("L1", "type.Measurement");
+    ll_cas.ll_setDoubleValue(addr, casFeatCode_L1, v);}
+    
+  
+ 
+  /** @generated */
+  final Feature casFeat_L2;
+  /** @generated */
+  final int     casFeatCode_L2;
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value 
+   */ 
+  public double getL2(int addr) {
+        if (featOkTst && casFeat_L2 == null)
+      jcas.throwFeatMissing("L2", "type.Measurement");
+    return ll_cas.ll_getDoubleValue(addr, casFeatCode_L2);
+  }
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set 
+   */    
+  public void setL2(int addr, double v) {
+        if (featOkTst && casFeat_L2 == null)
+      jcas.throwFeatMissing("L2", "type.Measurement");
+    ll_cas.ll_setDoubleValue(addr, casFeatCode_L2, v);}
+    
+  
 
 
 
@@ -140,6 +188,14 @@ public class Measurement_Type extends TOP_Type {
  
     casFeat_fp = jcas.getRequiredFeatureDE(casType, "fp", "uima.cas.Integer", featOkTst);
     casFeatCode_fp  = (null == casFeat_fp) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_fp).getCode();
+
+ 
+    casFeat_L1 = jcas.getRequiredFeatureDE(casType, "L1", "uima.cas.Double", featOkTst);
+    casFeatCode_L1  = (null == casFeat_L1) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_L1).getCode();
+
+ 
+    casFeat_L2 = jcas.getRequiredFeatureDE(casType, "L2", "uima.cas.Double", featOkTst);
+    casFeatCode_L2  = (null == casFeat_L2) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_L2).getCode();
 
   }
 }

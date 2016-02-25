@@ -69,7 +69,7 @@ You need to implement the types requried for your ranking model.</description>
       <supertypeName>type.ComponentAnnotation</supertypeName>
       <features>
         <featureDescription>
-          <name>id</name>
+          <name>reviewerId</name>
           <description/>
           <rangeTypeName>uima.cas.String</rangeTypeName>
         </featureDescription>

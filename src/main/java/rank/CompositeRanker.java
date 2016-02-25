@@ -3,8 +3,6 @@ package rank;
 import java.util.ArrayList;
 import java.util.List;
 
-import type.Passage;
-import type.Question;
 
 public class CompositeRanker extends AbstractRanker implements IAggregator {
 
@@ -26,14 +24,14 @@ public class CompositeRanker extends AbstractRanker implements IAggregator {
    * @param passage
    * @return a score of the passage
    */
-  @Override
-  public Double score(Question question, Passage passage) {
-    List<Double> scores = new ArrayList<Double>();
-    for (IRanker r : rankers) {
-      scores.add(r.score(question, passage));
-    }
-    return aggregateScores(scores);
-  }
+//  @Override
+//  public Double score(Question question, Passage passage) {
+//    List<Double> scores = new ArrayList<Double>();
+//    for (IRanker r : rankers) {
+//      scores.add(r.score(question, passage));
+//    }
+//    return aggregateScores(scores);
+//  }
 
   @Override
   public Double aggregateScores(List<Double> scores) {

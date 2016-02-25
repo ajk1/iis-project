@@ -11,8 +11,8 @@ import org.apache.uima.jcas.cas.TOP;
 
 
 /** 
- * Updated by JCasGen Mon Oct 12 15:10:51 EDT 2015
- * XML source: /home/junaraki/git/f15-11-791/template-projects/pi7/pi7-andrewid/src/main/resources/descriptors/typeSystem.xml
+ * Updated by JCasGen Wed Feb 24 21:05:56 EST 2016
+ * XML source: C:/Users/Alex/Workspace-11791/iis-project/src/main/resources/descriptors/typeSystem.xml
  * @generated */
 public class Measurement extends TOP {
   /** @generated
@@ -128,6 +128,50 @@ public class Measurement extends TOP {
     if (Measurement_Type.featOkTst && ((Measurement_Type)jcasType).casFeat_fp == null)
       jcasType.jcas.throwFeatMissing("fp", "type.Measurement");
     jcasType.ll_cas.ll_setIntValue(addr, ((Measurement_Type)jcasType).casFeatCode_fp, v);}    
+   
+    
+  //*--------------*
+  //* Feature: L1
+
+  /** getter for L1 - gets 
+   * @generated
+   * @return value of the feature 
+   */
+  public double getL1() {
+    if (Measurement_Type.featOkTst && ((Measurement_Type)jcasType).casFeat_L1 == null)
+      jcasType.jcas.throwFeatMissing("L1", "type.Measurement");
+    return jcasType.ll_cas.ll_getDoubleValue(addr, ((Measurement_Type)jcasType).casFeatCode_L1);}
+    
+  /** setter for L1 - sets  
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setL1(double v) {
+    if (Measurement_Type.featOkTst && ((Measurement_Type)jcasType).casFeat_L1 == null)
+      jcasType.jcas.throwFeatMissing("L1", "type.Measurement");
+    jcasType.ll_cas.ll_setDoubleValue(addr, ((Measurement_Type)jcasType).casFeatCode_L1, v);}    
+   
+    
+  //*--------------*
+  //* Feature: L2
+
+  /** getter for L2 - gets 
+   * @generated
+   * @return value of the feature 
+   */
+  public double getL2() {
+    if (Measurement_Type.featOkTst && ((Measurement_Type)jcasType).casFeat_L2 == null)
+      jcasType.jcas.throwFeatMissing("L2", "type.Measurement");
+    return jcasType.ll_cas.ll_getDoubleValue(addr, ((Measurement_Type)jcasType).casFeatCode_L2);}
+    
+  /** setter for L2 - sets  
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setL2(double v) {
+    if (Measurement_Type.featOkTst && ((Measurement_Type)jcasType).casFeat_L2 == null)
+      jcasType.jcas.throwFeatMissing("L2", "type.Measurement");
+    jcasType.ll_cas.ll_setDoubleValue(addr, ((Measurement_Type)jcasType).casFeatCode_L2, v);}    
   }
 
     

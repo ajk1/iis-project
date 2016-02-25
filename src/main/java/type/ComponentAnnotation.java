@@ -11,8 +11,8 @@ import org.apache.uima.jcas.tcas.Annotation;
 
 
 /** A parent annotation which expects individual annotation types to inherit from.
- * Updated by JCasGen Mon Oct 12 15:10:51 EDT 2015
- * XML source: /home/junaraki/git/f15-11-791/template-projects/pi7/pi7-andrewid/src/main/resources/descriptors/typeSystem.xml
+ * Updated by JCasGen Wed Feb 24 21:05:56 EST 2016
+ * XML source: C:/Users/Alex/Workspace-11791/iis-project/src/main/resources/descriptors/typeSystem.xml
  * @generated */
 public class ComponentAnnotation extends Annotation {
   /** @generated
@@ -96,28 +96,6 @@ public class ComponentAnnotation extends Annotation {
     if (ComponentAnnotation_Type.featOkTst && ((ComponentAnnotation_Type)jcasType).casFeat_componentId == null)
       jcasType.jcas.throwFeatMissing("componentId", "type.ComponentAnnotation");
     jcasType.ll_cas.ll_setStringValue(addr, ((ComponentAnnotation_Type)jcasType).casFeatCode_componentId, v);}    
-   
-    
-  //*--------------*
-  //* Feature: score
-
-  /** getter for score - gets The ranking score acquired for the answer and the confidence score acquired for the question.
-   * @generated
-   * @return value of the feature 
-   */
-  public double getScore() {
-    if (ComponentAnnotation_Type.featOkTst && ((ComponentAnnotation_Type)jcasType).casFeat_score == null)
-      jcasType.jcas.throwFeatMissing("score", "type.ComponentAnnotation");
-    return jcasType.ll_cas.ll_getDoubleValue(addr, ((ComponentAnnotation_Type)jcasType).casFeatCode_score);}
-    
-  /** setter for score - sets The ranking score acquired for the answer and the confidence score acquired for the question. 
-   * @generated
-   * @param v value to set into the feature 
-   */
-  public void setScore(double v) {
-    if (ComponentAnnotation_Type.featOkTst && ((ComponentAnnotation_Type)jcasType).casFeat_score == null)
-      jcasType.jcas.throwFeatMissing("score", "type.ComponentAnnotation");
-    jcasType.ll_cas.ll_setDoubleValue(addr, ((ComponentAnnotation_Type)jcasType).casFeatCode_score, v);}    
   }
 
     

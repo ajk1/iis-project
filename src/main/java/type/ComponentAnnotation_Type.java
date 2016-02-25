@@ -14,7 +14,7 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.tcas.Annotation_Type;
 
 /** A parent annotation which expects individual annotation types to inherit from.
- * Updated by JCasGen Mon Oct 12 15:10:51 EDT 2015
+ * Updated by JCasGen Wed Feb 24 21:05:56 EST 2016
  * @generated */
 public class ComponentAnnotation_Type extends Annotation_Type {
   /** @generated 
@@ -69,30 +69,6 @@ public class ComponentAnnotation_Type extends Annotation_Type {
     ll_cas.ll_setStringValue(addr, casFeatCode_componentId, v);}
     
   
- 
-  /** @generated */
-  final Feature casFeat_score;
-  /** @generated */
-  final int     casFeatCode_score;
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @return the feature value 
-   */ 
-  public double getScore(int addr) {
-        if (featOkTst && casFeat_score == null)
-      jcas.throwFeatMissing("score", "type.ComponentAnnotation");
-    return ll_cas.ll_getDoubleValue(addr, casFeatCode_score);
-  }
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @param v value to set 
-   */    
-  public void setScore(int addr, double v) {
-        if (featOkTst && casFeat_score == null)
-      jcas.throwFeatMissing("score", "type.ComponentAnnotation");
-    ll_cas.ll_setDoubleValue(addr, casFeatCode_score, v);}
-    
-  
 
 
 
@@ -108,10 +84,6 @@ public class ComponentAnnotation_Type extends Annotation_Type {
  
     casFeat_componentId = jcas.getRequiredFeatureDE(casType, "componentId", "uima.cas.String", featOkTst);
     casFeatCode_componentId  = (null == casFeat_componentId) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_componentId).getCode();
-
- 
-    casFeat_score = jcas.getRequiredFeatureDE(casType, "score", "uima.cas.Double", featOkTst);
-    casFeatCode_score  = (null == casFeat_score) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_score).getCode();
 
   }
 }
