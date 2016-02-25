@@ -1,3 +1,5 @@
+import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,6 +11,7 @@ import type.InputDocument;
 import type.Measurement;
 import type.Review;
 import type.Score;
+import util.Utils;
 
 public class ReviewAnnotator extends JCasAnnotator_ImplBase {
 
@@ -35,6 +38,9 @@ public class ReviewAnnotator extends JCasAnnotator_ImplBase {
     
     //input document
     InputDocument input = new InputDocument(aJCas);
+    input.addToIndexes();
+    input.setComponentId("Collection Reader");
+    List<Review> buffer = new LinkedList<>();
 
     // search for all the questions in the text
     Matcher matcher = mQuestionPattern.matcher(docText);
@@ -58,8 +64,13 @@ public class ReviewAnnotator extends JCasAnnotator_ImplBase {
       // Add empty measurement
       annotation.addToIndexes();
       pos = matcher.end();
-      // System.out.printf("Added Q: %s - %s\n", matcher.group(1), matcher.group(2));
+      buffer.add(annotation);
+
     }
+    System.out.printf("... Parsed %d reviews %n", buffer.size());
+    input.setReviews(Utils.fromCollectionToFSList(aJCas, buffer));
+
+    
   }
 
 }
