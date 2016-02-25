@@ -42,8 +42,8 @@ public class ReviewAnnotator extends JCasAnnotator_ImplBase {
       annotation.setEnd(matcher.end());
       annotation.setReviewerId(matcher.group(1));
       annotation.setProductId(matcher.group(2));
-      annotation.setHelpfulness(Integer.parseInt(matcher.group(4)), 
-    		  					Integer.parseInt(matcher.group(5)));
+      annotation.setHelpfulness(Integer.parseInt(matcher.group(4)));
+      annotation.setHelpfulness(Integer.parseInt(matcher.group(5))); 
       annotation.setRawText(matcher.group(6));
       // Add score with gold label
       Score s = new Score(aJCas);

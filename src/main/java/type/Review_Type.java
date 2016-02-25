@@ -13,7 +13,7 @@ import org.apache.uima.cas.impl.FeatureImpl;
 import org.apache.uima.cas.Feature;
 
 /** 
- * Updated by JCasGen Wed Feb 24 22:18:19 EST 2016
+ * Updated by JCasGen Wed Feb 24 22:45:51 EST 2016
  * @generated */
 public class Review_Type extends ComponentAnnotation_Type {
   /** @generated 
@@ -296,7 +296,7 @@ public class Review_Type extends ComponentAnnotation_Type {
   public int getHelpfulness(int addr) {
         if (featOkTst && casFeat_helpfulness == null)
       jcas.throwFeatMissing("helpfulness", "type.Review");
-    return ll_cas.ll_getRefValue(addr, casFeatCode_helpfulness);
+    return ll_cas.ll_getIntValue(addr, casFeatCode_helpfulness);
   }
   /** @generated
    * @param addr low level Feature Structure reference
@@ -305,36 +305,33 @@ public class Review_Type extends ComponentAnnotation_Type {
   public void setHelpfulness(int addr, int v) {
         if (featOkTst && casFeat_helpfulness == null)
       jcas.throwFeatMissing("helpfulness", "type.Review");
-    ll_cas.ll_setRefValue(addr, casFeatCode_helpfulness, v);}
+    ll_cas.ll_setIntValue(addr, casFeatCode_helpfulness, v);}
     
-   /** @generated
-   * @param addr low level Feature Structure reference
-   * @param i index of item in the array
-   * @return value at index i in the array 
-   */
-  public int getHelpfulness(int addr, int i) {
-        if (featOkTst && casFeat_helpfulness == null)
-      jcas.throwFeatMissing("helpfulness", "type.Review");
-    if (lowLevelTypeChecks)
-      return ll_cas.ll_getIntArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_helpfulness), i, true);
-    jcas.checkArrayBounds(ll_cas.ll_getRefValue(addr, casFeatCode_helpfulness), i);
-  return ll_cas.ll_getIntArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_helpfulness), i);
-  }
-   
+  
+ 
+  /** @generated */
+  final Feature casFeat_helpfulnessTotal;
+  /** @generated */
+  final int     casFeatCode_helpfulnessTotal;
   /** @generated
    * @param addr low level Feature Structure reference
-   * @param i index of item in the array
-   * @param v value to set
+   * @return the feature value 
    */ 
-  public void setHelpfulness(int addr, int i, int v) {
-        if (featOkTst && casFeat_helpfulness == null)
-      jcas.throwFeatMissing("helpfulness", "type.Review");
-    if (lowLevelTypeChecks)
-      ll_cas.ll_setIntArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_helpfulness), i, v, true);
-    jcas.checkArrayBounds(ll_cas.ll_getRefValue(addr, casFeatCode_helpfulness), i);
-    ll_cas.ll_setIntArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_helpfulness), i, v);
+  public int getHelpfulnessTotal(int addr) {
+        if (featOkTst && casFeat_helpfulnessTotal == null)
+      jcas.throwFeatMissing("helpfulnessTotal", "type.Review");
+    return ll_cas.ll_getIntValue(addr, casFeatCode_helpfulnessTotal);
   }
- 
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set 
+   */    
+  public void setHelpfulnessTotal(int addr, int v) {
+        if (featOkTst && casFeat_helpfulnessTotal == null)
+      jcas.throwFeatMissing("helpfulnessTotal", "type.Review");
+    ll_cas.ll_setIntValue(addr, casFeatCode_helpfulnessTotal, v);}
+    
+  
 
 
 
@@ -388,8 +385,12 @@ public class Review_Type extends ComponentAnnotation_Type {
     casFeatCode_productId  = (null == casFeat_productId) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_productId).getCode();
 
  
-    casFeat_helpfulness = jcas.getRequiredFeatureDE(casType, "helpfulness", "uima.cas.IntegerArray", featOkTst);
+    casFeat_helpfulness = jcas.getRequiredFeatureDE(casType, "helpfulness", "uima.cas.Integer", featOkTst);
     casFeatCode_helpfulness  = (null == casFeat_helpfulness) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_helpfulness).getCode();
+
+ 
+    casFeat_helpfulnessTotal = jcas.getRequiredFeatureDE(casType, "helpfulnessTotal", "uima.cas.Integer", featOkTst);
+    casFeatCode_helpfulnessTotal  = (null == casFeat_helpfulnessTotal) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_helpfulnessTotal).getCode();
 
   }
 }

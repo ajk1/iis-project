@@ -12,7 +12,7 @@ import org.apache.uima.jcas.cas.IntegerArray;
 
 
 /** 
- * Updated by JCasGen Wed Feb 24 22:18:19 EST 2016
+ * Updated by JCasGen Wed Feb 24 22:45:51 EST 2016
  * XML source: /Users/Terry/Desktop/CMU/16-spring/11792/project/OpinionMining/src/main/resources/descriptors/typeSystem.xml
  * @generated */
 public class Review extends ComponentAnnotation {
@@ -304,41 +304,41 @@ public class Review extends ComponentAnnotation {
    * @generated
    * @return value of the feature 
    */
-  public IntegerArray getHelpfulness() {
+  public int getHelpfulness() {
     if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_helpfulness == null)
       jcasType.jcas.throwFeatMissing("helpfulness", "type.Review");
-    return (IntegerArray)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Review_Type)jcasType).casFeatCode_helpfulness)));}
+    return jcasType.ll_cas.ll_getIntValue(addr, ((Review_Type)jcasType).casFeatCode_helpfulness);}
     
   /** setter for helpfulness - sets  
    * @generated
    * @param v value to set into the feature 
    */
-  public void setHelpfulness(IntegerArray v) {
+  public void setHelpfulness(int v) {
     if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_helpfulness == null)
       jcasType.jcas.throwFeatMissing("helpfulness", "type.Review");
-    jcasType.ll_cas.ll_setRefValue(addr, ((Review_Type)jcasType).casFeatCode_helpfulness, jcasType.ll_cas.ll_getFSRef(v));}    
+    jcasType.ll_cas.ll_setIntValue(addr, ((Review_Type)jcasType).casFeatCode_helpfulness, v);}    
+   
     
-  /** indexed getter for helpfulness - gets an indexed value - 
-   * @generated
-   * @param i index in the array to get
-   * @return value of the element at index i 
-   */
-  public int getHelpfulness(int i) {
-    if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_helpfulness == null)
-      jcasType.jcas.throwFeatMissing("helpfulness", "type.Review");
-    jcasType.jcas.checkArrayBounds(jcasType.ll_cas.ll_getRefValue(addr, ((Review_Type)jcasType).casFeatCode_helpfulness), i);
-    return jcasType.ll_cas.ll_getIntArrayValue(jcasType.ll_cas.ll_getRefValue(addr, ((Review_Type)jcasType).casFeatCode_helpfulness), i);}
+  //*--------------*
+  //* Feature: helpfulnessTotal
 
-  /** indexed setter for helpfulness - sets an indexed value - 
+  /** getter for helpfulnessTotal - gets 
    * @generated
-   * @param i index in the array to set
-   * @param v value to set into the array 
+   * @return value of the feature 
    */
-  public void setHelpfulness(int i, int v) { 
-    if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_helpfulness == null)
-      jcasType.jcas.throwFeatMissing("helpfulness", "type.Review");
-    jcasType.jcas.checkArrayBounds(jcasType.ll_cas.ll_getRefValue(addr, ((Review_Type)jcasType).casFeatCode_helpfulness), i);
-    jcasType.ll_cas.ll_setIntArrayValue(jcasType.ll_cas.ll_getRefValue(addr, ((Review_Type)jcasType).casFeatCode_helpfulness), i, v);}
+  public int getHelpfulnessTotal() {
+    if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_helpfulnessTotal == null)
+      jcasType.jcas.throwFeatMissing("helpfulnessTotal", "type.Review");
+    return jcasType.ll_cas.ll_getIntValue(addr, ((Review_Type)jcasType).casFeatCode_helpfulnessTotal);}
+    
+  /** setter for helpfulnessTotal - sets  
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setHelpfulnessTotal(int v) {
+    if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_helpfulnessTotal == null)
+      jcasType.jcas.throwFeatMissing("helpfulnessTotal", "type.Review");
+    jcasType.ll_cas.ll_setIntValue(addr, ((Review_Type)jcasType).casFeatCode_helpfulnessTotal, v);}    
   }
 
     
