@@ -25,7 +25,12 @@
       <import name="descriptors.scoreAnnotatorDescriptor"/>
     
     </delegateAnalysisEngine>
-    </delegateAnalysisEngineSpecifiers>
+    <delegateAnalysisEngine key="reviewAnnotatorDescriptor">
+      <import name="descriptors.reviewAnnotatorDescriptor"/>
+    
+    
+    </delegateAnalysisEngine>
+  </delegateAnalysisEngineSpecifiers>
   <analysisEngineMetaData>
     <name>aaeDescriptor</name>
     <description>This is a template (empty) descriptor for your Aggerate Analysis Engine.  You will need to specify your type system and capabilities, in addition to your individual analysis engines.</description>
@@ -35,12 +40,13 @@
     <configurationParameterSettings/>
     <flowConstraints>
       <fixedFlow>
+        <node>reviewAnnotatorDescriptor</node>
         <node>tokenAnnotatorDescriptor</node>
-        <node>ngramAnnotatorDescriptor</node>
-      <node>sentimentTokenAnnotatorDescriptor</node>
+      <node>ngramAnnotatorDescriptor</node>
+        <node>sentimentTokenAnnotatorDescriptor</node>
         <node>amplifierAnnotatorDescriptor</node>
         <node>negationAnnotatorDescriptor</node>
-        <node>scoreAnnotatorDescriptor</node>
+      <node>scoreAnnotatorDescriptor</node>
       </fixedFlow>
     </flowConstraints>
     <typePriorities/>
@@ -48,8 +54,7 @@
     <capabilities>
       <capability>
         <inputs/>
-        <outputs>
-          </outputs>
+        <outputs/>
         <languagesSupported/>
       </capability>
     </capabilities>

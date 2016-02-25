@@ -5,6 +5,7 @@ import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.jcas.JCas;
 
+import type.InputDocument;
 import type.Measurement;
 import type.Review;
 import type.Score;
@@ -12,7 +13,7 @@ import type.Score;
 public class ReviewAnnotator extends JCasAnnotator_ImplBase {
 
   private Pattern mQuestionPattern = Pattern.compile(
-	"{\"reviewerID\": \"(.*)\", "
+	"\\{\"reviewerID\": \"(.*)\", "
 	+ "\"asin\": \"(.*)\", "
 	+ "\"reviewerName\": \"(.*)\", "
 	+ "\"helpful\": \\[(\\d+), "
@@ -21,13 +22,19 @@ public class ReviewAnnotator extends JCasAnnotator_ImplBase {
 	+ "\"overall\": (\\d).0, "
 	+ "\"summary\": \"(.*)\", "
 	+ "\"unixReviewTime\": (\\d*), "
-	+ "\"reviewTime\": \"(.*)\"}");
+	+ "\"reviewTime\": \"(.*)\"\\}");
 
+//  "which (?<answerType>.+) (is|are|have been|should be|can|may) (?<focus>.+)(\\.|\\?|)",
+
+  
   @Override
   public void process(JCas aJCas) throws AnalysisEngineProcessException {
     System.out.println(">> Question Annotator Processing");
     // get document text from the CAS
     String docText = aJCas.getDocumentText();
+    
+    //input document
+    InputDocument input = new InputDocument(aJCas);
 
     // search for all the questions in the text
     Matcher matcher = mQuestionPattern.matcher(docText);
@@ -39,8 +46,8 @@ public class ReviewAnnotator extends JCasAnnotator_ImplBase {
       annotation.setEnd(matcher.end());
       annotation.setReviewerId(matcher.group(1));
       annotation.setProductId(matcher.group(2));
-      annotation.setHelpfulness(Integer.parseInt(matcher.group(4)), 
-    		  					Integer.parseInt(matcher.group(5)));
+      annotation.setHelpfulness(Integer.parseInt(matcher.group(4)));
+      annotation.setHelpfulness(Integer.parseInt(matcher.group(5))); 
       annotation.setRawText(matcher.group(6));
       // Add score with gold label
       Score s = new Score(aJCas);
