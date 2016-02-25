@@ -12,7 +12,7 @@ import type.Score;
 public class ReviewAnnotator extends JCasAnnotator_ImplBase {
 
   private Pattern mQuestionPattern = Pattern.compile(
-	"{\"reviewerID\": \"(.*)\", "
+	"\\{\"reviewerID\": \"(.*)\", "
 	+ "\"asin\": \"(.*)\", "
 	+ "\"reviewerName\": \"(.*)\", "
 	+ "\"helpful\": \\[(\\d+), "
@@ -21,8 +21,11 @@ public class ReviewAnnotator extends JCasAnnotator_ImplBase {
 	+ "\"overall\": (\\d).0, "
 	+ "\"summary\": \"(.*)\", "
 	+ "\"unixReviewTime\": (\\d*), "
-	+ "\"reviewTime\": \"(.*)\"}");
+	+ "\"reviewTime\": \"(.*)\"\\}");
 
+//  "which (?<answerType>.+) (is|are|have been|should be|can|may) (?<focus>.+)(\\.|\\?|)",
+
+  
   @Override
   public void process(JCas aJCas) throws AnalysisEngineProcessException {
     System.out.println(">> Question Annotator Processing");
