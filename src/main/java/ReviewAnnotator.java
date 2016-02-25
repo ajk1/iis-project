@@ -5,6 +5,7 @@ import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.jcas.JCas;
 
+import type.InputDocument;
 import type.Measurement;
 import type.Review;
 import type.Score;
@@ -31,6 +32,9 @@ public class ReviewAnnotator extends JCasAnnotator_ImplBase {
     System.out.println(">> Question Annotator Processing");
     // get document text from the CAS
     String docText = aJCas.getDocumentText();
+    
+    //input document
+    InputDocument input = new InputDocument(aJCas);
 
     // search for all the questions in the text
     Matcher matcher = mQuestionPattern.matcher(docText);
