@@ -23,7 +23,7 @@ public class TokenAnnotator extends JCasAnnotator_ImplBase {
       for (Review review : Utils.fromFSListToLinkedList(doc.getReviews(), Review.class)) {
           String body = review.getRawText();
           //component implementation
-
+          
       }
     }
     

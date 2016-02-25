@@ -18,6 +18,7 @@ import org.apache.uima.resource.ResourceProcessException;
 //import rank.CompositeRanker;
 //import rank.IRanker;
 import type.Measurement;
+import type.Review;
 
 /**
  * This CAS Consumer generates the report file with the method metrics
@@ -54,12 +55,12 @@ public class ReviewScoreWriter extends CasConsumer_ImplBase {
   @Override
   public void processCas(CAS arg0) throws ResourceProcessException {
     System.out.println(">> Review Score Writer Processing");
-//    // Import the CAS as a aJCas
-//    JCas aJCas = null;
-//    File outputFile = null;
-//    PrintWriter writer = null;
-//    try {
-//      aJCas = arg0.getJCas();
+    // Import the CAS as a aJCas
+    JCas aJCas = null;
+    File outputFile = null;
+    PrintWriter writer = null;
+    try {
+      aJCas = arg0.getJCas();
 //      try {
 //        outputFile = new File(Paths.get(mOutputDir.getAbsolutePath(), OUTPUT_FILENAME).toString());
 //        outputFile.getParentFile().mkdirs();
@@ -71,39 +72,69 @@ public class ReviewScoreWriter extends CasConsumer_ImplBase {
 //      }
 //
 //      writer.println("question_id,tp,fn,fp,precision,recall,f1");
-//      // Retrieve all the questions for printout
-//      List<Question> allQuestions = UimaUtils.getAnnotations(aJCas, Question.class);
-//      List<Question> subsetOfQuestions = RandomUtils.getRandomSubset(allQuestions, 10);
-//
-//      // TODO: Here one needs to sort the questions in ascending order of their question ID
-//
-//      for (Question question : subsetOfQuestions) {
-//        List<Passage> passages = UimaUtils.convertFSListToList(question.getPassages(), Passage.class);
-//
-//        // TODO: Use the following three lists of ranked passages for your error analysis
-//        List<Passage> ngramRankedPassages = ngramRanker.rank(question, passages);
-//        List<Passage> otherRankedPassages = otherRanker.rank(question, passages);
-//        List<Passage> compositeRankedPassages = compositeRanker.rank(question, passages);
-//
-//        Measurement m = question.getMeasurement();
-//
-//        // TODO: Calculate actual precision, recall and F1
-//        double precision = 0.0;
-//        double recall = 0.0;
-//        double f1 = 0.0;
-//
-//        writer.printf("%s,%d,%d,%d,%.3f,%.3f,%.3f\n", question.getId(), m.getTp(), m.getFn(),
-//                m.getFp(), precision, recall, f1);
-//      }
-//    } catch (CASException e) {
-//      try {
-//        throw new CollectionException(e);
-//      } catch (CollectionException e1) {
-//        e1.printStackTrace();
-//      }
-//    } finally {
-//      if (writer != null)
-//        writer.close();
-//    }
+      
+      // Retrieve all the reviews for printout
+      List<Review> allReviews = UimaUtils.getAnnotations(aJCas, Review.class);
+      
+      double sumErrorSquare = 0;
+      double[] tp = new double[5];
+      double[] fp = new double[5];
+      double[] tn = new double[5];
+      double[] fn = new double[5];
+      
+      for (Review review : allReviews) {
+      
+    	  //regression-like evaluation
+    	  sumErrorSquare += Math.pow(review.getScore().getGoldLabel() - review.getScore().getRegressionScore() ,2);
+    	  
+    	  //classifier evaulation
+    	  for(int i=1; i<=5; i++) {
+    		  if(review.getScore().getGoldLabel() == i && review.getScore().getClassificationScore() == i) {
+    			  tp[i-1]++;
+    		  } else if(review.getScore().getGoldLabel() == i && review.getScore().getClassificationScore() != i) {
+    			  fn[i-1]++;
+    		  } else if(review.getScore().getGoldLabel() != i && review.getScore().getClassificationScore() != i) {
+    			  tn[i-1]++;
+    		  } else {
+    			  fp[i-1]++;
+    		  }
+    	  }
+      }
+      
+      System.out.print("tp: ");
+      for(double d: tp) { System.out.printf("%-10.0f",d);}
+      System.out.println("");
+      System.out.print("fp: ");
+      for(double d: fp) { System.out.printf("%-10.0f",d);}
+      System.out.println("");
+      System.out.print("tn: ");
+      for(double d: tn) { System.out.printf("%-10.0f",d);}
+      System.out.println("");
+      System.out.print("fn: ");
+      for(double d: fn) { System.out.printf("%-10.0f",d);}
+      System.out.println("");
+      
+      
+	  System.out.println("... MSE: " + sumErrorSquare / allReviews.size());
+      for(int i=0; i<5; i++) {
+    	  double precision = (tp[i] + fp[i] == 0) ? 0 : tp[i] / (tp[i] + fp[i]);
+    	  double recall = (tp[i] + fn[i] == 0) ? 0 : tp[i] / (tp[i] + fn[i]);
+    		
+    	  double f1 = (precision == 0 || recall == 0) ? 0.0 : 2 * precision * recall / (precision + recall);
+    	  System.out.println("... precision of rating " + (i+1) +" : " + precision);    	  
+    	  System.out.println("... recall of rating " + (i+1) +" : " + recall);    	  
+    	  System.out.println("... f1 of rating " + (i+1) +" : " + f1);    	  
+      }
+      
+    } catch (CASException e) {
+      try {
+        throw new CollectionException(e);
+      } catch (CollectionException e1) {
+        e1.printStackTrace();
+      }
+    } finally {
+      if (writer != null)
+        writer.close();
+    }
   }
 }

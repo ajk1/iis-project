@@ -67,7 +67,7 @@ public class ReviewAnnotator extends JCasAnnotator_ImplBase {
       buffer.add(annotation);
 
     }
-    System.out.printf("   ...parsed %d reviews %n", buffer.size());
+    System.out.printf("... Parsed %d reviews %n", buffer.size());
     input.setReviews(Utils.fromCollectionToFSList(aJCas, buffer));
 
     
