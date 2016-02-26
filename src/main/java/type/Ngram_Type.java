@@ -13,7 +13,7 @@ import org.apache.uima.cas.impl.FeatureImpl;
 import org.apache.uima.cas.Feature;
 
 /** 
- * Updated by JCasGen Wed Feb 24 22:45:51 EST 2016
+ * Updated by JCasGen Thu Feb 25 22:28:29 EST 2016
  * @generated */
 public class Ngram_Type extends ComponentAnnotation_Type {
   /** @generated 
@@ -92,6 +92,30 @@ public class Ngram_Type extends ComponentAnnotation_Type {
     ll_cas.ll_setRefValue(addr, casFeatCode_tokens, v);}
     
   
+ 
+  /** @generated */
+  final Feature casFeat_rawText;
+  /** @generated */
+  final int     casFeatCode_rawText;
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value 
+   */ 
+  public String getRawText(int addr) {
+        if (featOkTst && casFeat_rawText == null)
+      jcas.throwFeatMissing("rawText", "type.Ngram");
+    return ll_cas.ll_getStringValue(addr, casFeatCode_rawText);
+  }
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set 
+   */    
+  public void setRawText(int addr, String v) {
+        if (featOkTst && casFeat_rawText == null)
+      jcas.throwFeatMissing("rawText", "type.Ngram");
+    ll_cas.ll_setStringValue(addr, casFeatCode_rawText, v);}
+    
+  
 
 
 
@@ -111,6 +135,10 @@ public class Ngram_Type extends ComponentAnnotation_Type {
  
     casFeat_tokens = jcas.getRequiredFeatureDE(casType, "tokens", "uima.cas.FSList", featOkTst);
     casFeatCode_tokens  = (null == casFeat_tokens) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_tokens).getCode();
+
+ 
+    casFeat_rawText = jcas.getRequiredFeatureDE(casType, "rawText", "uima.cas.String", featOkTst);
+    casFeatCode_rawText  = (null == casFeat_rawText) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_rawText).getCode();
 
   }
 }

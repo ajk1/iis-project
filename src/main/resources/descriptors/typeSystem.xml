@@ -234,6 +234,11 @@ You need to implement the types requried for your ranking model.</description>
           <rangeTypeName>uima.cas.FSList</rangeTypeName>
           <elementType>type.Token</elementType>
         </featureDescription>
+      <featureDescription>
+          <name>rawText</name>
+          <description/>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
       </features>
     </typeDescription>
   </types>
