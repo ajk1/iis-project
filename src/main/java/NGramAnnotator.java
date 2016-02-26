@@ -1,6 +1,22 @@
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
+import org.apache.uima.cas.FSIterator;
 import org.apache.uima.jcas.JCas;
+
+import edu.stanford.nlp.process.Tokenizer;
+import edu.stanford.nlp.process.TokenizerFactory;
+import edu.stanford.nlp.process.PTBTokenizer.PTBTokenizerFactory;
+import edu.stanford.nlp.util.StringUtils;
+import type.InputDocument;
+import type.Ngram;
+import type.Review;
+import type.Sentence;
+import util.StopWordUtils;
+import util.Utils;
 
 public class NGramAnnotator extends JCasAnnotator_ImplBase {
 
@@ -12,6 +28,70 @@ public class NGramAnnotator extends JCasAnnotator_ImplBase {
     String docText = aJCas.getDocumentText();
 
     // search for all the questions in the text
+    
+    FSIterator it = aJCas.getAnnotationIndex(InputDocument.type).iterator();
+    if (it.hasNext()) {
+      InputDocument doc = (InputDocument) it.next();
+      
+      TokenizerFactory factory = PTBTokenizerFactory.newTokenizerFactory();
+
+      int ctr = 0;
+      for (Review review : Utils.fromFSListToLinkedList(doc.getReviews(), Review.class)) {
+    	  if(ctr > 5) break;
+    	  
+    	  List<Ngram> uniGrams = new ArrayList<Ngram>();
+          List<Ngram> biGrams = new ArrayList<Ngram>();
+    	  
+    	  //for each sentence in review
+    	  for(Sentence sentence : Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class)) {
+        	  String cleanSentenceText = sentence.getRawText();
+//        	  System.out.println("... Clean sentence: "+cleanSentenceText);
+
+              //annotate tokens
+              Tokenizer tokenizer = factory.getTokenizer(new StringReader(cleanSentenceText));
+              
+              List<String> tokensInSentence = tokenizer.tokenize();
+
+              //unigram
+              List<String> uniGramsTextInSentence = (List<String>) StringUtils.getNgrams(tokensInSentence, 1, 1);
+              List<Ngram> uniGramsInSentence = new ArrayList<Ngram>();
+              for(String uniGramText: uniGramsTextInSentence) {
+//            	  System.out.println("... Unigram: "+uniGramText);
+            	  Ngram uniGram = new Ngram(aJCas);
+            	  uniGram.setN(1);
+            	  uniGram.setRawText(uniGramText);
+            	  uniGram.addToIndexes();
+            	  
+            	  uniGramsInSentence.add(uniGram);	//add to sentence scope list
+            	  uniGrams.add(uniGram);			//add to review scope list
+              }              
+              sentence.setUnigrams(Utils.fromCollectionToFSList(aJCas, uniGramsInSentence));
+
+              //bigram
+              List<String> biGramsTextInSentence = (List<String>) StringUtils.getNgrams(tokensInSentence, 2, 2);
+              List<Ngram> biGramsInSentence = new ArrayList<Ngram>();
+              for(String biGramText: biGramsTextInSentence) {
+//            	  System.out.println("... Bigram: "+biGramText);
+            	  Ngram biGram = new Ngram(aJCas);
+            	  biGram.setN(2);
+            	  biGram.setRawText(biGramText);
+            	  biGram.addToIndexes();
+            	  
+            	  biGramsInSentence.add(biGram);	//add to sentence scope list
+            	  biGrams.add(biGram);				//add to review scope list
+              }
+              
+              sentence.setBigrams(Utils.fromCollectionToFSList(aJCas, biGramsInSentence));
+
+    	  }
+          review.setUnigrams(Utils.fromCollectionToFSList(aJCas, uniGrams));	//add to review scope unigram list
+          review.setBigrams(Utils.fromCollectionToFSList(aJCas, biGrams));		//add to review scope bigram list
+    	  System.out.println("... added "+ uniGrams.size() +" unigram to review: " + (++ctr));
+    	  System.out.println("... added "+ biGrams.size() +" bigram to review: " + ctr);
+
+    	  
+      }
+    }
   }
 
 }
