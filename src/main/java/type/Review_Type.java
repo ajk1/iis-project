@@ -13,7 +13,7 @@ import org.apache.uima.cas.impl.FeatureImpl;
 import org.apache.uima.cas.Feature;
 
 /** 
- * Updated by JCasGen Wed Feb 24 22:45:51 EST 2016
+ * Updated by JCasGen Fri Feb 26 12:00:05 EST 2016
  * @generated */
 public class Review_Type extends ComponentAnnotation_Type {
   /** @generated 
@@ -332,6 +332,30 @@ public class Review_Type extends ComponentAnnotation_Type {
     ll_cas.ll_setIntValue(addr, casFeatCode_helpfulnessTotal, v);}
     
   
+ 
+  /** @generated */
+  final Feature casFeat_unigrams;
+  /** @generated */
+  final int     casFeatCode_unigrams;
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value 
+   */ 
+  public int getUnigrams(int addr) {
+        if (featOkTst && casFeat_unigrams == null)
+      jcas.throwFeatMissing("unigrams", "type.Review");
+    return ll_cas.ll_getRefValue(addr, casFeatCode_unigrams);
+  }
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set 
+   */    
+  public void setUnigrams(int addr, int v) {
+        if (featOkTst && casFeat_unigrams == null)
+      jcas.throwFeatMissing("unigrams", "type.Review");
+    ll_cas.ll_setRefValue(addr, casFeatCode_unigrams, v);}
+    
+  
 
 
 
@@ -391,6 +415,10 @@ public class Review_Type extends ComponentAnnotation_Type {
  
     casFeat_helpfulnessTotal = jcas.getRequiredFeatureDE(casType, "helpfulnessTotal", "uima.cas.Integer", featOkTst);
     casFeatCode_helpfulnessTotal  = (null == casFeat_helpfulnessTotal) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_helpfulnessTotal).getCode();
+
+ 
+    casFeat_unigrams = jcas.getRequiredFeatureDE(casType, "unigrams", "uima.cas.FSList", featOkTst);
+    casFeatCode_unigrams  = (null == casFeat_unigrams) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_unigrams).getCode();
 
   }
 }

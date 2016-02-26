@@ -12,7 +12,7 @@ import org.apache.uima.jcas.cas.IntegerArray;
 
 
 /** 
- * Updated by JCasGen Wed Feb 24 22:45:51 EST 2016
+ * Updated by JCasGen Fri Feb 26 12:00:05 EST 2016
  * XML source: /Users/Terry/Desktop/CMU/16-spring/11792/project/OpinionMining/src/main/resources/descriptors/typeSystem.xml
  * @generated */
 public class Review extends ComponentAnnotation {
@@ -339,6 +339,28 @@ public class Review extends ComponentAnnotation {
     if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_helpfulnessTotal == null)
       jcasType.jcas.throwFeatMissing("helpfulnessTotal", "type.Review");
     jcasType.ll_cas.ll_setIntValue(addr, ((Review_Type)jcasType).casFeatCode_helpfulnessTotal, v);}    
+   
+    
+  //*--------------*
+  //* Feature: unigrams
+
+  /** getter for unigrams - gets 
+   * @generated
+   * @return value of the feature 
+   */
+  public FSList getUnigrams() {
+    if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_unigrams == null)
+      jcasType.jcas.throwFeatMissing("unigrams", "type.Review");
+    return (FSList)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Review_Type)jcasType).casFeatCode_unigrams)));}
+    
+  /** setter for unigrams - sets  
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setUnigrams(FSList v) {
+    if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_unigrams == null)
+      jcasType.jcas.throwFeatMissing("unigrams", "type.Review");
+    jcasType.ll_cas.ll_setRefValue(addr, ((Review_Type)jcasType).casFeatCode_unigrams, jcasType.ll_cas.ll_getFSRef(v));}    
   }
 
     

@@ -11,7 +11,7 @@ import org.apache.uima.jcas.cas.FSList;
 
 
 /** 
- * Updated by JCasGen Wed Feb 24 22:45:51 EST 2016
+ * Updated by JCasGen Fri Feb 26 12:00:05 EST 2016
  * XML source: /Users/Terry/Desktop/CMU/16-spring/11792/project/OpinionMining/src/main/resources/descriptors/typeSystem.xml
  * @generated */
 public class Sentence extends ComponentAnnotation {
@@ -162,6 +162,28 @@ public class Sentence extends ComponentAnnotation {
     if (Sentence_Type.featOkTst && ((Sentence_Type)jcasType).casFeat_trigrams == null)
       jcasType.jcas.throwFeatMissing("trigrams", "type.Sentence");
     jcasType.ll_cas.ll_setRefValue(addr, ((Sentence_Type)jcasType).casFeatCode_trigrams, jcasType.ll_cas.ll_getFSRef(v));}    
+   
+    
+  //*--------------*
+  //* Feature: unigrams
+
+  /** getter for unigrams - gets 
+   * @generated
+   * @return value of the feature 
+   */
+  public FSList getUnigrams() {
+    if (Sentence_Type.featOkTst && ((Sentence_Type)jcasType).casFeat_unigrams == null)
+      jcasType.jcas.throwFeatMissing("unigrams", "type.Sentence");
+    return (FSList)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Sentence_Type)jcasType).casFeatCode_unigrams)));}
+    
+  /** setter for unigrams - sets  
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setUnigrams(FSList v) {
+    if (Sentence_Type.featOkTst && ((Sentence_Type)jcasType).casFeat_unigrams == null)
+      jcasType.jcas.throwFeatMissing("unigrams", "type.Sentence");
+    jcasType.ll_cas.ll_setRefValue(addr, ((Sentence_Type)jcasType).casFeatCode_unigrams, jcasType.ll_cas.ll_getFSRef(v));}    
   }
 
     

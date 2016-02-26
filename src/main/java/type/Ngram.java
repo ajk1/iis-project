@@ -11,7 +11,7 @@ import org.apache.uima.jcas.cas.FSList;
 
 
 /** 
- * Updated by JCasGen Wed Feb 24 22:45:51 EST 2016
+ * Updated by JCasGen Fri Feb 26 12:00:05 EST 2016
  * XML source: /Users/Terry/Desktop/CMU/16-spring/11792/project/OpinionMining/src/main/resources/descriptors/typeSystem.xml
  * @generated */
 public class Ngram extends ComponentAnnotation {
@@ -118,6 +118,28 @@ public class Ngram extends ComponentAnnotation {
     if (Ngram_Type.featOkTst && ((Ngram_Type)jcasType).casFeat_tokens == null)
       jcasType.jcas.throwFeatMissing("tokens", "type.Ngram");
     jcasType.ll_cas.ll_setRefValue(addr, ((Ngram_Type)jcasType).casFeatCode_tokens, jcasType.ll_cas.ll_getFSRef(v));}    
+   
+    
+  //*--------------*
+  //* Feature: rawText
+
+  /** getter for rawText - gets 
+   * @generated
+   * @return value of the feature 
+   */
+  public String getRawText() {
+    if (Ngram_Type.featOkTst && ((Ngram_Type)jcasType).casFeat_rawText == null)
+      jcasType.jcas.throwFeatMissing("rawText", "type.Ngram");
+    return jcasType.ll_cas.ll_getStringValue(addr, ((Ngram_Type)jcasType).casFeatCode_rawText);}
+    
+  /** setter for rawText - sets  
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setRawText(String v) {
+    if (Ngram_Type.featOkTst && ((Ngram_Type)jcasType).casFeat_rawText == null)
+      jcasType.jcas.throwFeatMissing("rawText", "type.Ngram");
+    jcasType.ll_cas.ll_setStringValue(addr, ((Ngram_Type)jcasType).casFeatCode_rawText, v);}    
   }
 
     
