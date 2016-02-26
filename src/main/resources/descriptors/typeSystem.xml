@@ -132,6 +132,12 @@ You need to implement the types requried for your ranking model.</description>
           <description/>
           <rangeTypeName>uima.cas.Integer</rangeTypeName>
         </featureDescription>
+      <featureDescription>
+          <name>unigrams</name>
+          <description/>
+          <rangeTypeName>uima.cas.FSList</rangeTypeName>
+          <elementType>type.Ngram</elementType>
+        </featureDescription>
       </features>
     </typeDescription>
     <typeDescription>
@@ -212,6 +218,12 @@ You need to implement the types requried for your ranking model.</description>
         </featureDescription>
         <featureDescription>
           <name>trigrams</name>
+          <description/>
+          <rangeTypeName>uima.cas.FSList</rangeTypeName>
+          <elementType>type.Ngram</elementType>
+        </featureDescription>
+      <featureDescription>
+          <name>unigrams</name>
           <description/>
           <rangeTypeName>uima.cas.FSList</rangeTypeName>
           <elementType>type.Ngram</elementType>

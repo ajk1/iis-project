@@ -11,6 +11,7 @@ import org.apache.uima.cas.FSIterator;
 import org.apache.uima.jcas.JCas;
 
 import edu.stanford.nlp.ling.Sentence;
+import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.util.StringUtils;
 import edu.stanford.nlp.process.Tokenizer;
 import edu.stanford.nlp.process.TokenizerFactory;
@@ -44,12 +45,15 @@ public class TokenAnnotator extends JCasAnnotator_ImplBase {
 
       int ctr = 0;
       for (Review review : Utils.fromFSListToLinkedList(doc.getReviews(), Review.class)) {
+    	  if(ctr > 30) break;
+    	  
     	  System.out.println("... processing review: " + (ctr++));
           String body = review.getRawText();
           
           //component implementation
           
           List<type.Sentence> sentences = new ArrayList<type.Sentence>();
+          List<Ngram> uniGrams = new ArrayList<Ngram>();
           List<Ngram> biGrams = new ArrayList<Ngram>();
           List<Token> tokens = new ArrayList<Token>();
           
@@ -59,6 +63,7 @@ public class TokenAnnotator extends JCasAnnotator_ImplBase {
           for(List<HasWord> hw: dp) {
         	  String rawSentenceText = Sentence.listToString(hw);
         	  String cleanSentenceText = swu.removeStopword(rawSentenceText);
+        	  System.out.println("... Clean sentence: "+cleanSentenceText);
         	  
               type.Sentence sentence = new type.Sentence(aJCas);
               sentence.setRawText(cleanSentenceText);
@@ -66,12 +71,29 @@ public class TokenAnnotator extends JCasAnnotator_ImplBase {
 
               //annotate tokens
               Tokenizer tokenizer = factory.getTokenizer(new StringReader(cleanSentenceText));
-              List<String> s = tokenizer.tokenize();
+              
+              List<String> tokensInSentence = tokenizer.tokenize();
 
+              //unigram
+              List<String> uniGramsTextInSentence = (List<String>) StringUtils.getNgrams(tokensInSentence, 1, 1);
+              List<Ngram> uniGramsInSentence = new ArrayList<Ngram>();
+              for(String uniGramText: uniGramsTextInSentence) {
+            	  System.out.println("... Unigram: "+uniGramText);
+            	  Ngram uniGram = new Ngram(aJCas);
+            	  uniGram.setN(1);
+            	  uniGram.setRawText(uniGramText);
+            	  uniGram.addToIndexes();
+            	  
+            	  uniGramsInSentence.add(uniGram);	//add to sentence scope list
+            	  uniGrams.add(uniGram);			//add to review scope list
+              }              
+              sentence.setUnigrams(Utils.fromCollectionToFSList(aJCas, uniGramsInSentence));
+              
               //bigram
-              List<String> biGramsTextInSentence = (List<String>) StringUtils.getNgrams(s, 2, 2);
+              List<String> biGramsTextInSentence = (List<String>) StringUtils.getNgrams(tokensInSentence, 2, 2);
               List<Ngram> biGramsInSentence = new ArrayList<Ngram>();
               for(String biGramText: biGramsTextInSentence) {
+            	  System.out.println("... Bigram: "+biGramText);
             	  Ngram biGram = new Ngram(aJCas);
             	  biGram.setN(2);
             	  biGram.setRawText(biGramText);
@@ -85,15 +107,15 @@ public class TokenAnnotator extends JCasAnnotator_ImplBase {
               sentences.add(sentence);
           }
 
-          review.setBigrams(Utils.fromCollectionToFSList(aJCas, biGrams));
-          review.setSentences(Utils.fromCollectionToFSList(aJCas, sentences));
+          review.setUnigrams(Utils.fromCollectionToFSList(aJCas, uniGrams));	//add to review scope unigram list
+          review.setBigrams(Utils.fromCollectionToFSList(aJCas, biGrams));		//add to review scope bigram list
+          review.setSentences(Utils.fromCollectionToFSList(aJCas, sentences));	//add sentences to review scope list
 
                     
           
       }
     }
     
-    // search for all the questions in the text
   }
 
 }
