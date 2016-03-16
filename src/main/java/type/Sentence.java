@@ -11,7 +11,7 @@ import org.apache.uima.jcas.cas.FSList;
 
 
 /** 
- * Updated by JCasGen Tue Mar 15 22:07:38 EDT 2016
+ * Updated by JCasGen Wed Mar 16 15:16:14 EDT 2016
  * XML source: /Users/Terry/Desktop/CMU/16-spring/11792/project/OpinionMining/src/main/resources/descriptors/typeSystem.xml
  * @generated */
 public class Sentence extends ComponentAnnotation {

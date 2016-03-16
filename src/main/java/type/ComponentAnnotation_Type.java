@@ -14,7 +14,7 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.tcas.Annotation_Type;
 
 /** A parent annotation which expects individual annotation types to inherit from.
- * Updated by JCasGen Tue Mar 15 22:07:37 EDT 2016
+ * Updated by JCasGen Wed Mar 16 15:16:14 EDT 2016
  * @generated */
 public class ComponentAnnotation_Type extends Annotation_Type {
   /** @generated 
