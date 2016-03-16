@@ -3,6 +3,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,26 +23,29 @@ import util.Utils;
 
 public class SentimentTokenAnnotator extends JCasAnnotator_ImplBase {
 
-  public HashMap<String, Double> sentiDictionary = new HashMap<>();
+  public List<HashMap<String, Float>> sentiDictionaries = new ArrayList<HashMap<String, Float>>();
 	
   @Override
   public void process(JCas aJCas) throws AnalysisEngineProcessException {
     System.out.println(">> Sentiment Token Annotator Processing");
     
-    //read library TODO: use libraries by configurations
+    // Read library
     // Open the file
     FileInputStream fstream;
+    
+    //first file: vader TODO: automatically loop through librariy files in sentiment libraries folder
 	try {
-	    System.out.println("... Reading Sentiment Library");
-		fstream = new FileInputStream("src/main/resources/libraries/vader_sentiment_lexicon.txt");
+	    System.out.println("... Reading Vader Sentiment Libraries");
+		fstream = new FileInputStream("src/main/resources/libraries/sentiment_libraries/vader_sentiment_lexicon.txt");
 	    BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
 
 	    String strLine;
-
+	    sentiDictionaries.add(new HashMap<String, Float>());
+	    
 	    //Read File Line By Line
 	    while ((strLine = br.readLine()) != null)   {
 	    	String[] parts = strLine.split("\t");
-	    	sentiDictionary.put(parts[0], Double.valueOf(parts[1]));
+	    	sentiDictionaries.get(0).put(parts[0], Float.valueOf(parts[1]));
 	    }
 
 	    //Close the input stream
@@ -52,7 +56,30 @@ public class SentimentTokenAnnotator extends JCasAnnotator_ImplBase {
 	} catch (IOException e) {
 		e.printStackTrace();
 	}
-    
+
+	try {
+	    System.out.println("... Reading SenticNet Sentiment Libraries");
+		fstream = new FileInputStream("src/main/resources/libraries/sentiment_libraries/senticnet.txt");
+	    BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+
+	    String strLine;
+	    sentiDictionaries.add(new HashMap<String, Float>());
+	    
+	    //Read File Line By Line
+	    while ((strLine = br.readLine()) != null)   {
+	    	String[] parts = strLine.split("\t");
+	    	sentiDictionaries.get(1).put(parts[0], Float.valueOf(parts[1]));
+	    }
+
+	    //Close the input stream
+	    br.close();
+
+	} catch (FileNotFoundException e) {
+		e.printStackTrace();
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
+	
     
     // get document text from the CAS
     String docText = aJCas.getDocumentText();
@@ -70,13 +97,22 @@ public class SentimentTokenAnnotator extends JCasAnnotator_ImplBase {
     	  for(Sentence s: sentences) {
         	  List<Ngram> unigrams = Utils.fromFSListToLinkedList(s.getUnigrams(), Ngram.class);
     		  for(Ngram unigram: unigrams) {
-    			  if(sentiDictionary.containsKey(unigram.getRawText())) {
-    				  System.out.println("... sentiment score of " + unigram.getRawText()+ ": " + sentiDictionary.get(unigram.getRawText()));
-    				  unigram.setSentimentScore(sentiDictionary.get(unigram.getRawText()));
-    			  } else {
-    				  System.out.println("... sentiment score of " + unigram.getRawText()+ ": 0");
-    				  unigram.setSentimentScore(0.0);    				  
+    			  
+    			  for(int i=0; i<sentiDictionaries.size(); i++) {
+        			  if(sentiDictionaries.get(i).containsKey(unigram.getRawText())) {
+        				  List<Float> fl = Utils.fromFloatListToArrayList(unigram.getSentimentScore());
+        				  fl.add(sentiDictionaries.get(i).get(unigram.getRawText()));
+        				  unigram.setSentimentScore(Utils.fromCollectionToFloatList(aJCas, fl));
+        			  } else {
+        				  List<Float> fl = Utils.fromFloatListToArrayList(unigram.getSentimentScore());
+        				  fl.add((float)0);
+        				  unigram.setSentimentScore(Utils.fromCollectionToFloatList(aJCas, fl));
+        			  }
+    				  
     			  }
+				  List<Float> fl = Utils.fromFloatListToArrayList(unigram.getSentimentScore());
+//				  System.out.println("... sentiment score of " + unigram.getRawText()+ ": " + fl.get(0) + ", " + fl.get(1)); 
+						  
     		  }
     	  }
     	  

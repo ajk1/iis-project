@@ -10,8 +10,11 @@ import org.apache.uima.jcas.cas.TOP_Type;
 import org.apache.uima.jcas.cas.FSList;
 
 
+import org.apache.uima.jcas.cas.FloatList;
+
+
 /** 
- * Updated by JCasGen Tue Mar 15 22:07:38 EDT 2016
+ * Updated by JCasGen Wed Mar 16 15:16:14 EDT 2016
  * XML source: /Users/Terry/Desktop/CMU/16-spring/11792/project/OpinionMining/src/main/resources/descriptors/typeSystem.xml
  * @generated */
 public class Ngram extends ComponentAnnotation {
@@ -149,19 +152,19 @@ public class Ngram extends ComponentAnnotation {
    * @generated
    * @return value of the feature 
    */
-  public double getSentimentScore() {
+  public FloatList getSentimentScore() {
     if (Ngram_Type.featOkTst && ((Ngram_Type)jcasType).casFeat_sentimentScore == null)
       jcasType.jcas.throwFeatMissing("sentimentScore", "type.Ngram");
-    return jcasType.ll_cas.ll_getDoubleValue(addr, ((Ngram_Type)jcasType).casFeatCode_sentimentScore);}
+    return (FloatList)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Ngram_Type)jcasType).casFeatCode_sentimentScore)));}
     
   /** setter for sentimentScore - sets  
    * @generated
    * @param v value to set into the feature 
    */
-  public void setSentimentScore(double v) {
+  public void setSentimentScore(FloatList v) {
     if (Ngram_Type.featOkTst && ((Ngram_Type)jcasType).casFeat_sentimentScore == null)
       jcasType.jcas.throwFeatMissing("sentimentScore", "type.Ngram");
-    jcasType.ll_cas.ll_setDoubleValue(addr, ((Ngram_Type)jcasType).casFeatCode_sentimentScore, v);}    
+    jcasType.ll_cas.ll_setRefValue(addr, ((Ngram_Type)jcasType).casFeatCode_sentimentScore, jcasType.ll_cas.ll_getFSRef(v));}    
    
     
   //*--------------*
@@ -171,19 +174,19 @@ public class Ngram extends ComponentAnnotation {
    * @generated
    * @return value of the feature 
    */
-  public double getNegationScore() {
+  public FloatList getNegationScore() {
     if (Ngram_Type.featOkTst && ((Ngram_Type)jcasType).casFeat_negationScore == null)
       jcasType.jcas.throwFeatMissing("negationScore", "type.Ngram");
-    return jcasType.ll_cas.ll_getDoubleValue(addr, ((Ngram_Type)jcasType).casFeatCode_negationScore);}
+    return (FloatList)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Ngram_Type)jcasType).casFeatCode_negationScore)));}
     
   /** setter for negationScore - sets  
    * @generated
    * @param v value to set into the feature 
    */
-  public void setNegationScore(double v) {
+  public void setNegationScore(FloatList v) {
     if (Ngram_Type.featOkTst && ((Ngram_Type)jcasType).casFeat_negationScore == null)
       jcasType.jcas.throwFeatMissing("negationScore", "type.Ngram");
-    jcasType.ll_cas.ll_setDoubleValue(addr, ((Ngram_Type)jcasType).casFeatCode_negationScore, v);}    
+    jcasType.ll_cas.ll_setRefValue(addr, ((Ngram_Type)jcasType).casFeatCode_negationScore, jcasType.ll_cas.ll_getFSRef(v));}    
    
     
   //*--------------*
@@ -193,19 +196,19 @@ public class Ngram extends ComponentAnnotation {
    * @generated
    * @return value of the feature 
    */
-  public double getAmplificationScore() {
+  public FloatList getAmplificationScore() {
     if (Ngram_Type.featOkTst && ((Ngram_Type)jcasType).casFeat_amplificationScore == null)
       jcasType.jcas.throwFeatMissing("amplificationScore", "type.Ngram");
-    return jcasType.ll_cas.ll_getDoubleValue(addr, ((Ngram_Type)jcasType).casFeatCode_amplificationScore);}
+    return (FloatList)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Ngram_Type)jcasType).casFeatCode_amplificationScore)));}
     
   /** setter for amplificationScore - sets  
    * @generated
    * @param v value to set into the feature 
    */
-  public void setAmplificationScore(double v) {
+  public void setAmplificationScore(FloatList v) {
     if (Ngram_Type.featOkTst && ((Ngram_Type)jcasType).casFeat_amplificationScore == null)
       jcasType.jcas.throwFeatMissing("amplificationScore", "type.Ngram");
-    jcasType.ll_cas.ll_setDoubleValue(addr, ((Ngram_Type)jcasType).casFeatCode_amplificationScore, v);}    
+    jcasType.ll_cas.ll_setRefValue(addr, ((Ngram_Type)jcasType).casFeatCode_amplificationScore, jcasType.ll_cas.ll_getFSRef(v));}    
   }
 
     

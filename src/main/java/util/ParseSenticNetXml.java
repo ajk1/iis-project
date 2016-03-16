@@ -56,7 +56,7 @@ public class ParseSenticNetXml {
 	        NodeList nl = doc.getElementsByTagName("rdf:Description");
 	        System.out.println(nl.getLength());
 	        
-	        PrintWriter writer = new PrintWriter("src/main/resources/libraries/senticnet.txt", "UTF-8");
+	        PrintWriter writer = new PrintWriter("src/main/resources/libraries/sentiment_libraries/senticnet.txt", "UTF-8");
 	        for(int i=0; i<nl.getLength(); i++) {
 		        Node n = nl.item(i);
 		        Element eElement = (Element) n;

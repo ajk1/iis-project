@@ -13,7 +13,7 @@ import org.apache.uima.cas.impl.FeatureImpl;
 import org.apache.uima.cas.Feature;
 
 /** 
- * Updated by JCasGen Tue Mar 15 22:07:38 EDT 2016
+ * Updated by JCasGen Wed Mar 16 15:16:14 EDT 2016
  * @generated */
 public class Ngram_Type extends ComponentAnnotation_Type {
   /** @generated 
@@ -125,19 +125,19 @@ public class Ngram_Type extends ComponentAnnotation_Type {
    * @param addr low level Feature Structure reference
    * @return the feature value 
    */ 
-  public double getSentimentScore(int addr) {
+  public int getSentimentScore(int addr) {
         if (featOkTst && casFeat_sentimentScore == null)
       jcas.throwFeatMissing("sentimentScore", "type.Ngram");
-    return ll_cas.ll_getDoubleValue(addr, casFeatCode_sentimentScore);
+    return ll_cas.ll_getRefValue(addr, casFeatCode_sentimentScore);
   }
   /** @generated
    * @param addr low level Feature Structure reference
    * @param v value to set 
    */    
-  public void setSentimentScore(int addr, double v) {
+  public void setSentimentScore(int addr, int v) {
         if (featOkTst && casFeat_sentimentScore == null)
       jcas.throwFeatMissing("sentimentScore", "type.Ngram");
-    ll_cas.ll_setDoubleValue(addr, casFeatCode_sentimentScore, v);}
+    ll_cas.ll_setRefValue(addr, casFeatCode_sentimentScore, v);}
     
   
  
@@ -149,19 +149,19 @@ public class Ngram_Type extends ComponentAnnotation_Type {
    * @param addr low level Feature Structure reference
    * @return the feature value 
    */ 
-  public double getNegationScore(int addr) {
+  public int getNegationScore(int addr) {
         if (featOkTst && casFeat_negationScore == null)
       jcas.throwFeatMissing("negationScore", "type.Ngram");
-    return ll_cas.ll_getDoubleValue(addr, casFeatCode_negationScore);
+    return ll_cas.ll_getRefValue(addr, casFeatCode_negationScore);
   }
   /** @generated
    * @param addr low level Feature Structure reference
    * @param v value to set 
    */    
-  public void setNegationScore(int addr, double v) {
+  public void setNegationScore(int addr, int v) {
         if (featOkTst && casFeat_negationScore == null)
       jcas.throwFeatMissing("negationScore", "type.Ngram");
-    ll_cas.ll_setDoubleValue(addr, casFeatCode_negationScore, v);}
+    ll_cas.ll_setRefValue(addr, casFeatCode_negationScore, v);}
     
   
  
@@ -173,19 +173,19 @@ public class Ngram_Type extends ComponentAnnotation_Type {
    * @param addr low level Feature Structure reference
    * @return the feature value 
    */ 
-  public double getAmplificationScore(int addr) {
+  public int getAmplificationScore(int addr) {
         if (featOkTst && casFeat_amplificationScore == null)
       jcas.throwFeatMissing("amplificationScore", "type.Ngram");
-    return ll_cas.ll_getDoubleValue(addr, casFeatCode_amplificationScore);
+    return ll_cas.ll_getRefValue(addr, casFeatCode_amplificationScore);
   }
   /** @generated
    * @param addr low level Feature Structure reference
    * @param v value to set 
    */    
-  public void setAmplificationScore(int addr, double v) {
+  public void setAmplificationScore(int addr, int v) {
         if (featOkTst && casFeat_amplificationScore == null)
       jcas.throwFeatMissing("amplificationScore", "type.Ngram");
-    ll_cas.ll_setDoubleValue(addr, casFeatCode_amplificationScore, v);}
+    ll_cas.ll_setRefValue(addr, casFeatCode_amplificationScore, v);}
     
   
 
@@ -213,15 +213,15 @@ public class Ngram_Type extends ComponentAnnotation_Type {
     casFeatCode_rawText  = (null == casFeat_rawText) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_rawText).getCode();
 
  
-    casFeat_sentimentScore = jcas.getRequiredFeatureDE(casType, "sentimentScore", "uima.cas.Double", featOkTst);
+    casFeat_sentimentScore = jcas.getRequiredFeatureDE(casType, "sentimentScore", "uima.cas.FloatList", featOkTst);
     casFeatCode_sentimentScore  = (null == casFeat_sentimentScore) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_sentimentScore).getCode();
 
  
-    casFeat_negationScore = jcas.getRequiredFeatureDE(casType, "negationScore", "uima.cas.Double", featOkTst);
+    casFeat_negationScore = jcas.getRequiredFeatureDE(casType, "negationScore", "uima.cas.FloatList", featOkTst);
     casFeatCode_negationScore  = (null == casFeat_negationScore) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_negationScore).getCode();
 
  
-    casFeat_amplificationScore = jcas.getRequiredFeatureDE(casType, "amplificationScore", "uima.cas.Double", featOkTst);
+    casFeat_amplificationScore = jcas.getRequiredFeatureDE(casType, "amplificationScore", "uima.cas.FloatList", featOkTst);
     casFeatCode_amplificationScore  = (null == casFeat_amplificationScore) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_amplificationScore).getCode();
 
   }
