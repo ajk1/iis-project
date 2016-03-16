@@ -20,14 +20,11 @@ import util.Utils;
 
 public class NGramAnnotator extends JCasAnnotator_ImplBase {
 
-
   @Override
   public void process(JCas aJCas) throws AnalysisEngineProcessException {
     System.out.println(">> NGram Annotator Processing");
     // get document text from the CAS
     String docText = aJCas.getDocumentText();
-
-    // search for all the questions in the text
     
     FSIterator it = aJCas.getAnnotationIndex(InputDocument.type).iterator();
     if (it.hasNext()) {
@@ -37,7 +34,7 @@ public class NGramAnnotator extends JCasAnnotator_ImplBase {
 
       int ctr = 0;
       for (Review review : Utils.fromFSListToLinkedList(doc.getReviews(), Review.class)) {
-    	  if(ctr > 5) break;
+    	  if(ctr++ > 10) break;
     	  
     	  List<Ngram> uniGrams = new ArrayList<Ngram>();
           List<Ngram> biGrams = new ArrayList<Ngram>();
@@ -86,9 +83,8 @@ public class NGramAnnotator extends JCasAnnotator_ImplBase {
     	  }
           review.setUnigrams(Utils.fromCollectionToFSList(aJCas, uniGrams));	//add to review scope unigram list
           review.setBigrams(Utils.fromCollectionToFSList(aJCas, biGrams));		//add to review scope bigram list
-    	  System.out.println("... added "+ uniGrams.size() +" unigram to review: " + (++ctr));
-    	  System.out.println("... added "+ biGrams.size() +" bigram to review: " + ctr);
 
+          System.out.println("... review: " + ctr + " added "+ uniGrams.size() +" unigram, " + biGrams.size() +" bigram");
     	  
       }
     }

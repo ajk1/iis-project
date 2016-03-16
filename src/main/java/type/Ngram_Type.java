@@ -13,7 +13,7 @@ import org.apache.uima.cas.impl.FeatureImpl;
 import org.apache.uima.cas.Feature;
 
 /** 
- * Updated by JCasGen Fri Feb 26 12:00:05 EST 2016
+ * Updated by JCasGen Tue Mar 15 22:07:38 EDT 2016
  * @generated */
 public class Ngram_Type extends ComponentAnnotation_Type {
   /** @generated 
@@ -116,6 +116,78 @@ public class Ngram_Type extends ComponentAnnotation_Type {
     ll_cas.ll_setStringValue(addr, casFeatCode_rawText, v);}
     
   
+ 
+  /** @generated */
+  final Feature casFeat_sentimentScore;
+  /** @generated */
+  final int     casFeatCode_sentimentScore;
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value 
+   */ 
+  public double getSentimentScore(int addr) {
+        if (featOkTst && casFeat_sentimentScore == null)
+      jcas.throwFeatMissing("sentimentScore", "type.Ngram");
+    return ll_cas.ll_getDoubleValue(addr, casFeatCode_sentimentScore);
+  }
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set 
+   */    
+  public void setSentimentScore(int addr, double v) {
+        if (featOkTst && casFeat_sentimentScore == null)
+      jcas.throwFeatMissing("sentimentScore", "type.Ngram");
+    ll_cas.ll_setDoubleValue(addr, casFeatCode_sentimentScore, v);}
+    
+  
+ 
+  /** @generated */
+  final Feature casFeat_negationScore;
+  /** @generated */
+  final int     casFeatCode_negationScore;
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value 
+   */ 
+  public double getNegationScore(int addr) {
+        if (featOkTst && casFeat_negationScore == null)
+      jcas.throwFeatMissing("negationScore", "type.Ngram");
+    return ll_cas.ll_getDoubleValue(addr, casFeatCode_negationScore);
+  }
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set 
+   */    
+  public void setNegationScore(int addr, double v) {
+        if (featOkTst && casFeat_negationScore == null)
+      jcas.throwFeatMissing("negationScore", "type.Ngram");
+    ll_cas.ll_setDoubleValue(addr, casFeatCode_negationScore, v);}
+    
+  
+ 
+  /** @generated */
+  final Feature casFeat_amplificationScore;
+  /** @generated */
+  final int     casFeatCode_amplificationScore;
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value 
+   */ 
+  public double getAmplificationScore(int addr) {
+        if (featOkTst && casFeat_amplificationScore == null)
+      jcas.throwFeatMissing("amplificationScore", "type.Ngram");
+    return ll_cas.ll_getDoubleValue(addr, casFeatCode_amplificationScore);
+  }
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set 
+   */    
+  public void setAmplificationScore(int addr, double v) {
+        if (featOkTst && casFeat_amplificationScore == null)
+      jcas.throwFeatMissing("amplificationScore", "type.Ngram");
+    ll_cas.ll_setDoubleValue(addr, casFeatCode_amplificationScore, v);}
+    
+  
 
 
 
@@ -139,6 +211,18 @@ public class Ngram_Type extends ComponentAnnotation_Type {
  
     casFeat_rawText = jcas.getRequiredFeatureDE(casType, "rawText", "uima.cas.String", featOkTst);
     casFeatCode_rawText  = (null == casFeat_rawText) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_rawText).getCode();
+
+ 
+    casFeat_sentimentScore = jcas.getRequiredFeatureDE(casType, "sentimentScore", "uima.cas.Double", featOkTst);
+    casFeatCode_sentimentScore  = (null == casFeat_sentimentScore) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_sentimentScore).getCode();
+
+ 
+    casFeat_negationScore = jcas.getRequiredFeatureDE(casType, "negationScore", "uima.cas.Double", featOkTst);
+    casFeatCode_negationScore  = (null == casFeat_negationScore) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_negationScore).getCode();
+
+ 
+    casFeat_amplificationScore = jcas.getRequiredFeatureDE(casType, "amplificationScore", "uima.cas.Double", featOkTst);
+    casFeatCode_amplificationScore  = (null == casFeat_amplificationScore) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_amplificationScore).getCode();
 
   }
 }

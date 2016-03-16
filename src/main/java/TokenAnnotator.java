@@ -22,10 +22,7 @@ import type.Token;
 import util.StopWordUtils;
 import util.Utils;
 
-
-
 public class TokenAnnotator extends JCasAnnotator_ImplBase {
-
 
   @Override
   public void process(JCas aJCas) throws AnalysisEngineProcessException {
@@ -42,7 +39,7 @@ public class TokenAnnotator extends JCasAnnotator_ImplBase {
 
       int ctr = 0;
       for (Review review : Utils.fromFSListToLinkedList(doc.getReviews(), Review.class)) {
-    	  if(ctr > 5) break;
+    	  if(ctr++ > 10) break;
     	  
           String body = review.getRawText();
           
@@ -63,7 +60,7 @@ public class TokenAnnotator extends JCasAnnotator_ImplBase {
               sentences.add(sentence);
           }
           review.setSentences(Utils.fromCollectionToFSList(aJCas, sentences));	//add sentences to review scope list
-    	  System.out.println("... added "+ sentences.size() +" sentences to review: " + (++ctr));
+    	  System.out.println("... review: " + ctr + " added "+ sentences.size() +" sentences");
           
       }
     }
