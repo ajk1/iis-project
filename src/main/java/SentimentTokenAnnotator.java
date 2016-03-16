@@ -36,7 +36,7 @@ public class SentimentTokenAnnotator extends JCasAnnotator_ImplBase {
     //first file: vader TODO: automatically loop through librariy files in sentiment libraries folder
 	try {
 	    System.out.println("... Reading Vader Sentiment Libraries");
-		fstream = new FileInputStream("src/main/resources/libraries/sentiment_libraries/vader_sentiment_lexicon.txt");
+		fstream = new FileInputStream("src/main/resources/libraries/sentiment_libraries/vader.txt");
 	    BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
 
 	    String strLine;
