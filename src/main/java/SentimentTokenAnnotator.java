@@ -41,14 +41,12 @@ public class SentimentTokenAnnotator extends JCasAnnotator_ImplBase {
 	    //Read File Line By Line
 	    while ((strLine = br.readLine()) != null)   {
 	    	String[] parts = strLine.split("\t");
-//	    	System.out.println (parts[0]+ ", "+parts[1]);
 	    	sentiDictionary.put(parts[0], Double.valueOf(parts[1]));
 	    }
 
 	    //Close the input stream
 	    br.close();
 
-	
 	} catch (FileNotFoundException e) {
 		e.printStackTrace();
 	} catch (IOException e) {
@@ -67,6 +65,7 @@ public class SentimentTokenAnnotator extends JCasAnnotator_ImplBase {
       for (Review review : Utils.fromFSListToLinkedList(doc.getReviews(), Review.class)) {
     	  if(ctr++ > 10) break;
     	  
+    	  //annotate unigram sentiment score
     	  List<Sentence> sentences = Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class);
     	  for(Sentence s: sentences) {
         	  List<Ngram> unigrams = Utils.fromFSListToLinkedList(s.getUnigrams(), Ngram.class);
