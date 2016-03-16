@@ -36,7 +36,7 @@ public class ScoreAnnotator extends JCasAnnotator_ImplBase {
       for (Review review : Utils.fromFSListToLinkedList(doc.getReviews(), Review.class)) {
     	  Score sc = review.getScore();
     	  sc.setRegressionScore(avgScore);
-    	  sc.setClassificationScore((int) Math.floor(avgScore + 0.5));
+    	  sc.setClassificationScore((int) Math.floor(avgScore + 1.0));
       }
 
       
