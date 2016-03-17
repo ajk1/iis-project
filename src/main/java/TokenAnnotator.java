@@ -39,7 +39,7 @@ public class TokenAnnotator extends JCasAnnotator_ImplBase {
 
       int ctr = 0;
       for (Review review : Utils.fromFSListToLinkedList(doc.getReviews(), Review.class)) {
-    	  if(ctr++ > 10) break;
+    	  if(ctr++ > 1000) break;
     	  
           String body = review.getRawText();
           

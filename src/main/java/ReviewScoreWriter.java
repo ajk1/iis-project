@@ -116,15 +116,19 @@ public class ReviewScoreWriter extends CasConsumer_ImplBase {
       
       
 	  System.out.println("... MSE: " + sumErrorSquare / allReviews.size());
+	  double f1agg = 0;
       for(int i=0; i<5; i++) {
     	  double precision = (tp[i] + fp[i] == 0) ? 0 : tp[i] / (tp[i] + fp[i]);
     	  double recall = (tp[i] + fn[i] == 0) ? 0 : tp[i] / (tp[i] + fn[i]);
-    		
+    	  double accuracy = (tp[i] + tn[i])/(tp[i]+fp[i]+tn[i]+fn[i]);
     	  double f1 = (precision == 0 || recall == 0) ? 0.0 : 2 * precision * recall / (precision + recall);
+    	  System.out.println("... accuracy of rating " + (i+1) +" : " + accuracy);
     	  System.out.println("... precision of rating " + (i+1) +" : " + precision);    	  
     	  System.out.println("... recall of rating " + (i+1) +" : " + recall);    	  
-    	  System.out.println("... f1 of rating " + (i+1) +" : " + f1);    	  
+    	  System.out.println("... f1 of rating " + (i+1) +" : " + f1);  
+    	  f1agg += f1*(tp[i]+fn[i]);
       }
+      System.out.println("... weighted f1 (aggregate) : " + f1agg);
       
     } catch (CASException e) {
       try {
@@ -136,5 +140,6 @@ public class ReviewScoreWriter extends CasConsumer_ImplBase {
       if (writer != null)
         writer.close();
     }
+    
   }
 }

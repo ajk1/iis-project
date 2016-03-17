@@ -31,7 +31,7 @@ public class ScoreAnnotator extends JCasAnnotator_ImplBase {
       }
       
       double avgScore = sumScore / reviewCount;
-      System.out.println("... Avaerage Score of reviews is "+avgScore);
+      System.out.println("... Average Score of reviews is "+avgScore);
       
       for (Review review : Utils.fromFSListToLinkedList(doc.getReviews(), Review.class)) {
     	  Score sc = review.getScore();
