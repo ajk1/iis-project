@@ -34,7 +34,7 @@ public class NGramAnnotator extends JCasAnnotator_ImplBase {
 
       int ctr = 0;
       for (Review review : Utils.fromFSListToLinkedList(doc.getReviews(), Review.class)) {
-    	  if(ctr++ > 10) break;
+    	  if(ctr++ > 1000) break;
     	  
     	  List<Ngram> uniGrams = new ArrayList<Ngram>();
           List<Ngram> biGrams = new ArrayList<Ngram>();
@@ -63,7 +63,7 @@ public class NGramAnnotator extends JCasAnnotator_ImplBase {
             	  uniGrams.add(uniGram);			//add to review scope list
               }              
               sentence.setUnigrams(Utils.fromCollectionToFSList(aJCas, uniGramsInSentence));
-
+/*
               //bigram
               List<String> biGramsTextInSentence = (List<String>) StringUtils.getNgrams(tokensInSentence, 2, 2);
               List<Ngram> biGramsInSentence = new ArrayList<Ngram>();
@@ -79,10 +79,10 @@ public class NGramAnnotator extends JCasAnnotator_ImplBase {
               }
               
               sentence.setBigrams(Utils.fromCollectionToFSList(aJCas, biGramsInSentence));
-
+*/
     	  }
           review.setUnigrams(Utils.fromCollectionToFSList(aJCas, uniGrams));	//add to review scope unigram list
-          review.setBigrams(Utils.fromCollectionToFSList(aJCas, biGrams));		//add to review scope bigram list
+//          review.setBigrams(Utils.fromCollectionToFSList(aJCas, biGrams));		//add to review scope bigram list
 
           System.out.println("... review: " + ctr + " added "+ uniGrams.size() +" unigram, " + biGrams.size() +" bigram");
     	  
