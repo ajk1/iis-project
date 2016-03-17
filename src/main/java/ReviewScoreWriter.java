@@ -143,3 +143,4 @@ public class ReviewScoreWriter extends CasConsumer_ImplBase {
     
   }
 }
+

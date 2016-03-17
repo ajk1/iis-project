@@ -3,10 +3,12 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.cas.FSIterator;
 import org.apache.uima.jcas.JCas;
+import org.apache.uima.resource.ResourceInitializationException;
 
 import edu.stanford.nlp.ling.Sentence;
 import edu.stanford.nlp.util.StringUtils;
@@ -23,7 +25,16 @@ import util.StopWordUtils;
 import util.Utils;
 
 public class TokenAnnotator extends JCasAnnotator_ImplBase {
+	final String PARAM_SIZELIMIT = "SizeLimit";
+	private int sizeLimit;
+	
+	@Override
+	public void initialize(UimaContext aContext) throws ResourceInitializationException {
+		super.initialize(aContext);		
+		sizeLimit = Integer.valueOf((String) aContext.getConfigParameterValue(PARAM_SIZELIMIT));
+	}
 
+	
   @Override
   public void process(JCas aJCas) throws AnalysisEngineProcessException {
     System.out.println(">> Token Annotator Processing");
@@ -39,7 +50,7 @@ public class TokenAnnotator extends JCasAnnotator_ImplBase {
 
       int ctr = 0;
       for (Review review : Utils.fromFSListToLinkedList(doc.getReviews(), Review.class)) {
-    	  if(ctr++ > 1000) break;
+    	  if(ctr++ > sizeLimit) break;
     	  
           String body = review.getRawText();
           

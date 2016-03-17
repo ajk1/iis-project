@@ -22,6 +22,7 @@ public class Main {
     // arg[1] is the OUTPUT_DIRECTORY where the results will be stored
     String inputDir = args[0];
     String outputDir = args[1];
+    String sizeLimit = args[2];
 
     // Instantiate CPE.
     CpeDescription cpeDesc = UIMAFramework.getXMLParser()
@@ -42,7 +43,11 @@ public class Main {
     // mCPE.getCasProcessors().
     ConfigurableResource cc = (ConfigurableResource) mCPE.getCasProcessors()[1]; // <-- Careful with index
     cc.setConfigParameterValue("OutputDir", outputDir);
+    cc.setConfigParameterValue("SizeLimit", sizeLimit);
     cc.reconfigure();
+    
+    
+    
 
     // Create and register a Status Callback Listener.
     mCPE.addStatusCallbackListener(new StatusCallbackListenerImpl());
