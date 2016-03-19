@@ -49,6 +49,7 @@ public class TokenAnnotator extends JCasAnnotator_ImplBase {
       
 
       int ctr = 0;
+      //TODO: get review list from cas, not inputDoc
       for (Review review : Utils.fromFSListToLinkedList(doc.getReviews(), Review.class)) {
     	  if(ctr++ > sizeLimit) break;
     	  

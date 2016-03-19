@@ -27,8 +27,6 @@ public class ReviewAnnotator extends JCasAnnotator_ImplBase {
 	+ "\"unixReviewTime\": (\\d*), "
 	+ "\"reviewTime\": \"(.*)\"\\}");
 
-//  "which (?<answerType>.+) (is|are|have been|should be|can|may) (?<focus>.+)(\\.|\\?|)",
-
   
   @Override
   public void process(JCas aJCas) throws AnalysisEngineProcessException {
@@ -37,6 +35,7 @@ public class ReviewAnnotator extends JCasAnnotator_ImplBase {
     String docText = aJCas.getDocumentText();
     
     //input document
+    //TODO: inputdoc 
     InputDocument input = new InputDocument(aJCas);
     input.addToIndexes();
     input.setComponentId("Collection Reader");
@@ -56,6 +55,8 @@ public class ReviewAnnotator extends JCasAnnotator_ImplBase {
       annotation.setHelpfulness(Integer.parseInt(matcher.group(5))); 
       annotation.setRawText(matcher.group(6));
       // Add score with gold label
+      
+      //TODO: Score as attributes
       Score s = new Score(aJCas);
       s.setGoldLabel(Integer.parseInt(matcher.group(7)));
       annotation.setScore(s);
@@ -68,6 +69,8 @@ public class ReviewAnnotator extends JCasAnnotator_ImplBase {
 
     }
     System.out.printf("... Parsed %d reviews %n", buffer.size());
+
+    //TODO: no need to link reviews to input doc
     input.setReviews(Utils.fromCollectionToFSList(aJCas, buffer));
 
     
