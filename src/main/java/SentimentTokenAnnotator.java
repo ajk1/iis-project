@@ -11,10 +11,12 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.cas.FSIterator;
 import org.apache.uima.jcas.JCas;
+import org.apache.uima.resource.ResourceInitializationException;
 
 import edu.stanford.nlp.process.TokenizerFactory;
 import edu.stanford.nlp.process.PTBTokenizer.PTBTokenizerFactory;
@@ -26,12 +28,21 @@ import type.Sentence;
 import util.Utils;
 
 public class SentimentTokenAnnotator extends JCasAnnotator_ImplBase {
+	final String PARAM_SIZELIMIT = "SizeLimit";
+	private int sizeLimit;
 
-  public List<HashMap<String, Float>> sentiDictionaries = new ArrayList<HashMap<String, Float>>();
+	public List<HashMap<String, Float>> sentiDictionaries = new ArrayList<HashMap<String, Float>>();
 	
-  @Override
-  public void process(JCas aJCas) throws AnalysisEngineProcessException {
+	@Override
+	public void initialize(UimaContext aContext) throws ResourceInitializationException {
+		super.initialize(aContext);		
+		sizeLimit = Integer.valueOf((String) aContext.getConfigParameterValue(PARAM_SIZELIMIT));
+	}
+  
+	@Override
+	public void process(JCas aJCas) throws AnalysisEngineProcessException {
     System.out.println(">> Sentiment Token Annotator Processing");
+    System.out.println("... sizeLimit: " + sizeLimit);
     
     // Read library
     // Open the file

@@ -3,9 +3,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.jcas.JCas;
+import org.apache.uima.resource.ResourceInitializationException;
 
 import type.InputDocument;
 import type.Measurement;
@@ -14,8 +16,10 @@ import type.Score;
 import util.Utils;
 
 public class ReviewAnnotator extends JCasAnnotator_ImplBase {
+	final String PARAM_SIZELIMIT = "SizeLimit";
+	private int sizeLimit;
 
-  private Pattern mQuestionPattern = Pattern.compile(
+	private Pattern mQuestionPattern = Pattern.compile(
 	"\\{\"reviewerID\": \"(.*)\", "
 	+ "\"asin\": \"(.*)\", "
 	+ "\"reviewerName\": \"(.*)\", "
@@ -27,10 +31,18 @@ public class ReviewAnnotator extends JCasAnnotator_ImplBase {
 	+ "\"unixReviewTime\": (\\d*), "
 	+ "\"reviewTime\": \"(.*)\"\\}");
 
+	@Override
+	public void initialize(UimaContext aContext) throws ResourceInitializationException {
+		super.initialize(aContext);		
+		sizeLimit = Integer.valueOf((String) aContext.getConfigParameterValue(PARAM_SIZELIMIT));
+	}
+
   
-  @Override
-  public void process(JCas aJCas) throws AnalysisEngineProcessException {
+  
+	@Override
+	public void process(JCas aJCas) throws AnalysisEngineProcessException {
     System.out.println(">> Review Annotator Processing");
+    System.out.println("... sizeLimit: " + sizeLimit);
     // get document text from the CAS
     String docText = aJCas.getDocumentText();
     

@@ -2,10 +2,12 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.cas.FSIterator;
 import org.apache.uima.jcas.JCas;
+import org.apache.uima.resource.ResourceInitializationException;
 
 import edu.stanford.nlp.process.Tokenizer;
 import edu.stanford.nlp.process.TokenizerFactory;
@@ -19,10 +21,20 @@ import util.StopWordUtils;
 import util.Utils;
 
 public class NGramAnnotator extends JCasAnnotator_ImplBase {
+	final String PARAM_SIZELIMIT = "SizeLimit";
+	private int sizeLimit;
 
-  @Override
-  public void process(JCas aJCas) throws AnalysisEngineProcessException {
+	@Override
+	public void initialize(UimaContext aContext) throws ResourceInitializationException {
+		super.initialize(aContext);		
+		sizeLimit = Integer.valueOf((String) aContext.getConfigParameterValue(PARAM_SIZELIMIT));
+	}
+
+	@Override
+	public void process(JCas aJCas) throws AnalysisEngineProcessException {
     System.out.println(">> NGram Annotator Processing");
+    System.out.println("... sizeLimit: " + sizeLimit);
+    
     // get document text from the CAS
     String docText = aJCas.getDocumentText();
     

@@ -38,6 +38,8 @@ public class TokenAnnotator extends JCasAnnotator_ImplBase {
   @Override
   public void process(JCas aJCas) throws AnalysisEngineProcessException {
     System.out.println(">> Token Annotator Processing");
+    System.out.println("... sizeLimit: " + sizeLimit);
+    
     StopWordUtils swu = new StopWordUtils("limit");
 
     // get document text from the CAS

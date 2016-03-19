@@ -12,17 +12,10 @@
         <name>SizeLimit</name>
         <type>String</type>
         <multiValued>false</multiValued>
-        <mandatory>true</mandatory>
+        <mandatory>false</mandatory>
       </configurationParameter>
     </configurationParameters>
-    <configurationParameterSettings>
-      <nameValuePair>
-        <name>SizeLimit</name>
-        <value>
-          <string>10</string>
-        </value>
-      </nameValuePair>
-    </configurationParameterSettings>
+    <configurationParameterSettings/>
     <typeSystemDescription>
       <imports>
         <import name="descriptors.typeSystem"/>
