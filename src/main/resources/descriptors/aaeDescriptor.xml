@@ -47,6 +47,7 @@
         <parameter>ngramAnnotatorDescriptor/SizeLimit</parameter>
         <parameter>reviewAnnotatorDescriptor/SizeLimit</parameter>
         <parameter>sentimentTokenAnnotatorDescriptor/SizeLimit</parameter>
+        <parameter>scoreAnnotatorDescriptor/SizeLimit</parameter>
         </overrides>
       </configurationParameter>
     </configurationParameters>
