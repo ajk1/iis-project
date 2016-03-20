@@ -7,14 +7,18 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.cas.FSIterator;
+import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
+import org.apache.uima.resource.ResourceInitializationException;
 
 import edu.stanford.nlp.process.TokenizerFactory;
 import edu.stanford.nlp.process.PTBTokenizer.PTBTokenizerFactory;
@@ -26,63 +30,76 @@ import type.Sentence;
 import util.Utils;
 
 public class SentimentTokenAnnotator extends JCasAnnotator_ImplBase {
+	final String PARAM_SIZELIMIT = "SizeLimit";
+	private int sizeLimit;
 
-  public List<HashMap<String, Float>> sentiDictionaries = new ArrayList<HashMap<String, Float>>();
+	public List<HashMap<String, Float>> sentiDictionaries = new ArrayList<HashMap<String, Float>>();
 	
-  @Override
-  public void process(JCas aJCas) throws AnalysisEngineProcessException {
+	@Override
+	public void initialize(UimaContext aContext) throws ResourceInitializationException {
+		super.initialize(aContext);		
+		sizeLimit = Integer.valueOf((String) aContext.getConfigParameterValue(PARAM_SIZELIMIT));
+
+	    // Read library
+	    // Open the file
+	    FileInputStream fstream;
+	    
+	    //first file: vader TODO: automatically loop through library files in sentiment libraries folder
+		try {
+		    System.out.println("... Reading Vader Sentiment Libraries");
+			fstream = new FileInputStream("src/main/resources/libraries/sentiment_libraries/vader.txt");
+		    BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+
+		    String strLine;
+		    sentiDictionaries.add(new HashMap<String, Float>());
+		    
+		    //Read File Line By Line
+		    while ((strLine = br.readLine()) != null)   {
+		    	String[] parts = strLine.split("\t");
+		    	sentiDictionaries.get(0).put(parts[0], Float.valueOf(parts[1]));
+		    }
+
+		    //Close the input stream
+		    br.close();
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		try {
+		    System.out.println("... Reading SenticNet Sentiment Libraries");
+			fstream = new FileInputStream("src/main/resources/libraries/sentiment_libraries/senticnet.txt");
+		    BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+
+		    String strLine;
+		    sentiDictionaries.add(new HashMap<String, Float>());
+		    
+		    //Read File Line By Line
+		    while ((strLine = br.readLine()) != null)   {
+		    	String[] parts = strLine.split("\t");
+		    	sentiDictionaries.get(1).put(parts[0], Float.valueOf(parts[1]));
+		    }
+
+		    //Close the input stream
+		    br.close();
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+	}
+  
+	@Override
+	public void process(JCas aJCas) throws AnalysisEngineProcessException {
     System.out.println(">> Sentiment Token Annotator Processing");
+    System.out.println("... sizeLimit: " + sizeLimit);
     
-    // Read library
-    // Open the file
-    FileInputStream fstream;
-    
-    //first file: vader TODO: automatically loop through library files in sentiment libraries folder
-	try {
-	    System.out.println("... Reading Vader Sentiment Libraries");
-		fstream = new FileInputStream("src/main/resources/libraries/sentiment_libraries/vader.txt");
-	    BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
-
-	    String strLine;
-	    sentiDictionaries.add(new HashMap<String, Float>());
-	    
-	    //Read File Line By Line
-	    while ((strLine = br.readLine()) != null)   {
-	    	String[] parts = strLine.split("\t");
-	    	sentiDictionaries.get(0).put(parts[0], Float.valueOf(parts[1]));
-	    }
-
-	    //Close the input stream
-	    br.close();
-
-	} catch (FileNotFoundException e) {
-		e.printStackTrace();
-	} catch (IOException e) {
-		e.printStackTrace();
-	}
-
-	try {
-	    System.out.println("... Reading SenticNet Sentiment Libraries");
-		fstream = new FileInputStream("src/main/resources/libraries/sentiment_libraries/senticnet.txt");
-	    BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
-
-	    String strLine;
-	    sentiDictionaries.add(new HashMap<String, Float>());
-	    
-	    //Read File Line By Line
-	    while ((strLine = br.readLine()) != null)   {
-	    	String[] parts = strLine.split("\t");
-	    	sentiDictionaries.get(1).put(parts[0], Float.valueOf(parts[1]));
-	    }
-
-	    //Close the input stream
-	    br.close();
-
-	} catch (FileNotFoundException e) {
-		e.printStackTrace();
-	} catch (IOException e) {
-		e.printStackTrace();
-	}
+	// get reviews from the CAS
+	Collection<Review> reviews = JCasUtil.select(aJCas, Review.class);      
+	System.out.println("... review size: " + reviews.size());
 	
 	//write csv document with scores for analysis
 	File outputFile = null;
@@ -98,16 +115,10 @@ public class SentimentTokenAnnotator extends JCasAnnotator_ImplBase {
         return;
       }
       writer.println("s1,s2,s_agg,s_agg1,s1_match,s2_match,s1s2_match,s_agg_match,s_agg1_match,label");
-      // get document text from the CAS
-      String docText = aJCas.getDocumentText();
-
-      FSIterator it = aJCas.getAnnotationIndex(InputDocument.type).iterator();
-      if (it.hasNext()) {
-        InputDocument doc = (InputDocument) it.next();
       
         int ctr = 0;
-        for (Review review : Utils.fromFSListToLinkedList(doc.getReviews(), Review.class)) {
-    	  if(ctr++ > 1000) break;
+        for (Review review : reviews) {
+    	  if(ctr++ > sizeLimit) break;
 		  //score of review from each library
 		  float[] scores = new float[sentiDictionaries.size()];
 		  //number of tokens with a match in each library
@@ -157,7 +168,7 @@ public class SentimentTokenAnnotator extends JCasAnnotator_ImplBase {
     			  aggScore += uniScore;
 				  List<Float> fl = Utils.fromFloatListToArrayList(unigram.getSentimentScore());
 				  
-//				  System.out.println("... sentiment score of " + unigram.getRawText()+ ": " + fl.get(0) + ", " + fl.get(1)); 
+				  System.out.println("... sentiment score of " + unigram.getRawText()+ ": " + fl.get(0) + ", " + fl.get(1)); 
     		  }
 //    		  System.out.println(Math.round(1000*sentenceScore1)/1000.0 + "\t" + 
 //    				  	Math.round(1000*sentenceScore2)/1000.0 + "\t" + s.getRawText());
@@ -172,7 +183,6 @@ public class SentimentTokenAnnotator extends JCasAnnotator_ImplBase {
 //    	  review.setScore(sc);
     	  
         }
-      }   
     }finally {
         if (writer != null)
             writer.close();

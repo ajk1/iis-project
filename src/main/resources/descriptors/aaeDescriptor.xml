@@ -36,8 +36,29 @@
     <description>This is a template (empty) descriptor for your Aggerate Analysis Engine.  You will need to specify your type system and capabilities, in addition to your individual analysis engines.</description>
     <version>1.0</version>
     <vendor/>
-    <configurationParameters/>
-    <configurationParameterSettings/>
+    <configurationParameters searchStrategy="language_fallback">
+      <configurationParameter>
+        <name>SizeLimit</name>
+        <type>String</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+        <overrides>
+          <parameter>tokenAnnotatorDescriptor/SizeLimit</parameter>
+        <parameter>ngramAnnotatorDescriptor/SizeLimit</parameter>
+        <parameter>reviewAnnotatorDescriptor/SizeLimit</parameter>
+        <parameter>sentimentTokenAnnotatorDescriptor/SizeLimit</parameter>
+        <parameter>scoreAnnotatorDescriptor/SizeLimit</parameter>
+        </overrides>
+      </configurationParameter>
+    </configurationParameters>
+    <configurationParameterSettings>
+      <nameValuePair>
+        <name>SizeLimit</name>
+        <value>
+          <string>0</string>
+        </value>
+      </nameValuePair>
+    </configurationParameterSettings>
     <flowConstraints>
       <fixedFlow>
         <node>reviewAnnotatorDescriptor</node>

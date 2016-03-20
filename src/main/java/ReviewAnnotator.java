@@ -3,9 +3,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.jcas.JCas;
+import org.apache.uima.resource.ResourceInitializationException;
 
 import type.InputDocument;
 import type.Measurement;
@@ -14,8 +16,10 @@ import type.Score;
 import util.Utils;
 
 public class ReviewAnnotator extends JCasAnnotator_ImplBase {
+	final String PARAM_SIZELIMIT = "SizeLimit";
+	private int sizeLimit;
 
-  private Pattern mQuestionPattern = Pattern.compile(
+	private Pattern mQuestionPattern = Pattern.compile(
 	"\\{\"reviewerID\": \"(.*)\", "
 	+ "\"asin\": \"(.*)\", "
 	+ "\"reviewerName\": \"(.*)\", "
@@ -27,20 +31,27 @@ public class ReviewAnnotator extends JCasAnnotator_ImplBase {
 	+ "\"unixReviewTime\": (\\d*), "
 	+ "\"reviewTime\": \"(.*)\"\\}");
 
-//  "which (?<answerType>.+) (is|are|have been|should be|can|may) (?<focus>.+)(\\.|\\?|)",
+	@Override
+	public void initialize(UimaContext aContext) throws ResourceInitializationException {
+		super.initialize(aContext);		
+		sizeLimit = Integer.valueOf((String) aContext.getConfigParameterValue(PARAM_SIZELIMIT));
+	}
 
   
-  @Override
-  public void process(JCas aJCas) throws AnalysisEngineProcessException {
+  
+	@Override
+	public void process(JCas aJCas) throws AnalysisEngineProcessException {
     System.out.println(">> Review Annotator Processing");
+    System.out.println("... sizeLimit: " + sizeLimit);
     // get document text from the CAS
     String docText = aJCas.getDocumentText();
     
     //input document
-    InputDocument input = new InputDocument(aJCas);
-    input.addToIndexes();
-    input.setComponentId("Collection Reader");
-    List<Review> buffer = new LinkedList<>();
+    //TODO: inputdoc 
+//    InputDocument input = new InputDocument(aJCas);
+//    input.addToIndexes();
+//    input.setComponentId("Collection Reader");
+    List<Review> buffer = new LinkedList<Review>();
 
     // search for all the questions in the text
     Matcher matcher = mQuestionPattern.matcher(docText);
@@ -56,6 +67,8 @@ public class ReviewAnnotator extends JCasAnnotator_ImplBase {
       annotation.setHelpfulness(Integer.parseInt(matcher.group(5))); 
       annotation.setRawText(matcher.group(6));
       // Add score with gold label
+      
+      //TODO: Score as attributes
       Score s = new Score(aJCas);
       s.setGoldLabel(Integer.parseInt(matcher.group(7)));
       annotation.setScore(s);
@@ -68,7 +81,9 @@ public class ReviewAnnotator extends JCasAnnotator_ImplBase {
 
     }
     System.out.printf("... Parsed %d reviews %n", buffer.size());
-    input.setReviews(Utils.fromCollectionToFSList(aJCas, buffer));
+
+    //TODO: no need to link reviews to input doc
+//    input.setReviews(Utils.fromCollectionToFSList(aJCas, buffer));
 
     
   }

@@ -13,7 +13,7 @@ import org.apache.uima.cas.impl.FeatureImpl;
 import org.apache.uima.cas.Feature;
 
 /** 
- * Updated by JCasGen Wed Mar 16 15:16:14 EDT 2016
+ * Updated by JCasGen Sun Mar 20 18:11:57 EDT 2016
  * @generated */
 public class Score_Type extends ComponentAnnotation_Type {
   /** @generated 
@@ -46,50 +46,50 @@ public class Score_Type extends ComponentAnnotation_Type {
   public final static boolean featOkTst = JCasRegistry.getFeatOkTst("type.Score");
  
   /** @generated */
-  final Feature casFeat_regressionScore;
+  final Feature casFeat_regressionScores;
   /** @generated */
-  final int     casFeatCode_regressionScore;
+  final int     casFeatCode_regressionScores;
   /** @generated
    * @param addr low level Feature Structure reference
    * @return the feature value 
    */ 
-  public double getRegressionScore(int addr) {
-        if (featOkTst && casFeat_regressionScore == null)
-      jcas.throwFeatMissing("regressionScore", "type.Score");
-    return ll_cas.ll_getDoubleValue(addr, casFeatCode_regressionScore);
+  public int getRegressionScores(int addr) {
+        if (featOkTst && casFeat_regressionScores == null)
+      jcas.throwFeatMissing("regressionScores", "type.Score");
+    return ll_cas.ll_getRefValue(addr, casFeatCode_regressionScores);
   }
   /** @generated
    * @param addr low level Feature Structure reference
    * @param v value to set 
    */    
-  public void setRegressionScore(int addr, double v) {
-        if (featOkTst && casFeat_regressionScore == null)
-      jcas.throwFeatMissing("regressionScore", "type.Score");
-    ll_cas.ll_setDoubleValue(addr, casFeatCode_regressionScore, v);}
+  public void setRegressionScores(int addr, int v) {
+        if (featOkTst && casFeat_regressionScores == null)
+      jcas.throwFeatMissing("regressionScores", "type.Score");
+    ll_cas.ll_setRefValue(addr, casFeatCode_regressionScores, v);}
     
   
  
   /** @generated */
-  final Feature casFeat_classificationScore;
+  final Feature casFeat_classificationScores;
   /** @generated */
-  final int     casFeatCode_classificationScore;
+  final int     casFeatCode_classificationScores;
   /** @generated
    * @param addr low level Feature Structure reference
    * @return the feature value 
    */ 
-  public int getClassificationScore(int addr) {
-        if (featOkTst && casFeat_classificationScore == null)
-      jcas.throwFeatMissing("classificationScore", "type.Score");
-    return ll_cas.ll_getIntValue(addr, casFeatCode_classificationScore);
+  public int getClassificationScores(int addr) {
+        if (featOkTst && casFeat_classificationScores == null)
+      jcas.throwFeatMissing("classificationScores", "type.Score");
+    return ll_cas.ll_getRefValue(addr, casFeatCode_classificationScores);
   }
   /** @generated
    * @param addr low level Feature Structure reference
    * @param v value to set 
    */    
-  public void setClassificationScore(int addr, int v) {
-        if (featOkTst && casFeat_classificationScore == null)
-      jcas.throwFeatMissing("classificationScore", "type.Score");
-    ll_cas.ll_setIntValue(addr, casFeatCode_classificationScore, v);}
+  public void setClassificationScores(int addr, int v) {
+        if (featOkTst && casFeat_classificationScores == null)
+      jcas.throwFeatMissing("classificationScores", "type.Score");
+    ll_cas.ll_setRefValue(addr, casFeatCode_classificationScores, v);}
     
   
  
@@ -129,12 +129,12 @@ public class Score_Type extends ComponentAnnotation_Type {
     casImpl.getFSClassRegistry().addGeneratorForType((TypeImpl)this.casType, getFSGenerator());
 
  
-    casFeat_regressionScore = jcas.getRequiredFeatureDE(casType, "regressionScore", "uima.cas.Double", featOkTst);
-    casFeatCode_regressionScore  = (null == casFeat_regressionScore) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_regressionScore).getCode();
+    casFeat_regressionScores = jcas.getRequiredFeatureDE(casType, "regressionScores", "uima.cas.FloatList", featOkTst);
+    casFeatCode_regressionScores  = (null == casFeat_regressionScores) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_regressionScores).getCode();
 
  
-    casFeat_classificationScore = jcas.getRequiredFeatureDE(casType, "classificationScore", "uima.cas.Integer", featOkTst);
-    casFeatCode_classificationScore  = (null == casFeat_classificationScore) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_classificationScore).getCode();
+    casFeat_classificationScores = jcas.getRequiredFeatureDE(casType, "classificationScores", "uima.cas.IntegerList", featOkTst);
+    casFeatCode_classificationScores  = (null == casFeat_classificationScores) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_classificationScores).getCode();
 
  
     casFeat_goldLabel = jcas.getRequiredFeatureDE(casType, "goldLabel", "uima.cas.Integer", featOkTst);

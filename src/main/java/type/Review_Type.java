@@ -13,7 +13,7 @@ import org.apache.uima.cas.impl.FeatureImpl;
 import org.apache.uima.cas.Feature;
 
 /** 
- * Updated by JCasGen Wed Mar 16 15:16:14 EDT 2016
+ * Updated by JCasGen Sun Mar 20 18:11:57 EDT 2016
  * @generated */
 public class Review_Type extends ComponentAnnotation_Type {
   /** @generated 

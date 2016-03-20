@@ -9,8 +9,12 @@ import org.apache.uima.jcas.cas.TOP_Type;
 
 
 
+import org.apache.uima.jcas.cas.IntegerList;
+import org.apache.uima.jcas.cas.FloatList;
+
+
 /** 
- * Updated by JCasGen Wed Mar 16 15:16:14 EDT 2016
+ * Updated by JCasGen Sun Mar 20 18:11:57 EDT 2016
  * XML source: /Users/Terry/Desktop/CMU/16-spring/11792/project/OpinionMining/src/main/resources/descriptors/typeSystem.xml
  * @generated */
 public class Score extends ComponentAnnotation {
@@ -76,47 +80,47 @@ public class Score extends ComponentAnnotation {
  
     
   //*--------------*
-  //* Feature: regressionScore
+  //* Feature: regressionScores
 
-  /** getter for regressionScore - gets 
+  /** getter for regressionScores - gets 
    * @generated
    * @return value of the feature 
    */
-  public double getRegressionScore() {
-    if (Score_Type.featOkTst && ((Score_Type)jcasType).casFeat_regressionScore == null)
-      jcasType.jcas.throwFeatMissing("regressionScore", "type.Score");
-    return jcasType.ll_cas.ll_getDoubleValue(addr, ((Score_Type)jcasType).casFeatCode_regressionScore);}
+  public FloatList getRegressionScores() {
+    if (Score_Type.featOkTst && ((Score_Type)jcasType).casFeat_regressionScores == null)
+      jcasType.jcas.throwFeatMissing("regressionScores", "type.Score");
+    return (FloatList)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Score_Type)jcasType).casFeatCode_regressionScores)));}
     
-  /** setter for regressionScore - sets  
+  /** setter for regressionScores - sets  
    * @generated
    * @param v value to set into the feature 
    */
-  public void setRegressionScore(double v) {
-    if (Score_Type.featOkTst && ((Score_Type)jcasType).casFeat_regressionScore == null)
-      jcasType.jcas.throwFeatMissing("regressionScore", "type.Score");
-    jcasType.ll_cas.ll_setDoubleValue(addr, ((Score_Type)jcasType).casFeatCode_regressionScore, v);}    
+  public void setRegressionScores(FloatList v) {
+    if (Score_Type.featOkTst && ((Score_Type)jcasType).casFeat_regressionScores == null)
+      jcasType.jcas.throwFeatMissing("regressionScores", "type.Score");
+    jcasType.ll_cas.ll_setRefValue(addr, ((Score_Type)jcasType).casFeatCode_regressionScores, jcasType.ll_cas.ll_getFSRef(v));}    
    
     
   //*--------------*
-  //* Feature: classificationScore
+  //* Feature: classificationScores
 
-  /** getter for classificationScore - gets 
+  /** getter for classificationScores - gets 
    * @generated
    * @return value of the feature 
    */
-  public int getClassificationScore() {
-    if (Score_Type.featOkTst && ((Score_Type)jcasType).casFeat_classificationScore == null)
-      jcasType.jcas.throwFeatMissing("classificationScore", "type.Score");
-    return jcasType.ll_cas.ll_getIntValue(addr, ((Score_Type)jcasType).casFeatCode_classificationScore);}
+  public IntegerList getClassificationScores() {
+    if (Score_Type.featOkTst && ((Score_Type)jcasType).casFeat_classificationScores == null)
+      jcasType.jcas.throwFeatMissing("classificationScores", "type.Score");
+    return (IntegerList)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Score_Type)jcasType).casFeatCode_classificationScores)));}
     
-  /** setter for classificationScore - sets  
+  /** setter for classificationScores - sets  
    * @generated
    * @param v value to set into the feature 
    */
-  public void setClassificationScore(int v) {
-    if (Score_Type.featOkTst && ((Score_Type)jcasType).casFeat_classificationScore == null)
-      jcasType.jcas.throwFeatMissing("classificationScore", "type.Score");
-    jcasType.ll_cas.ll_setIntValue(addr, ((Score_Type)jcasType).casFeatCode_classificationScore, v);}    
+  public void setClassificationScores(IntegerList v) {
+    if (Score_Type.featOkTst && ((Score_Type)jcasType).casFeat_classificationScores == null)
+      jcasType.jcas.throwFeatMissing("classificationScores", "type.Score");
+    jcasType.ll_cas.ll_setRefValue(addr, ((Score_Type)jcasType).casFeatCode_classificationScores, jcasType.ll_cas.ll_getFSRef(v));}    
    
     
   //*--------------*

@@ -178,14 +178,14 @@ You need to implement the types requried for your ranking model.</description>
       <supertypeName>type.ComponentAnnotation</supertypeName>
       <features>
         <featureDescription>
-          <name>regressionScore</name>
+          <name>regressionScores</name>
           <description/>
-          <rangeTypeName>uima.cas.Double</rangeTypeName>
+          <rangeTypeName>uima.cas.FloatList</rangeTypeName>
         </featureDescription>
         <featureDescription>
-          <name>classificationScore</name>
+          <name>classificationScores</name>
           <description/>
-          <rangeTypeName>uima.cas.Integer</rangeTypeName>
+          <rangeTypeName>uima.cas.IntegerList</rangeTypeName>
         </featureDescription>
         <featureDescription>
           <name>goldLabel</name>
