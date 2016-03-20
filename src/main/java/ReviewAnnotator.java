@@ -48,10 +48,10 @@ public class ReviewAnnotator extends JCasAnnotator_ImplBase {
     
     //input document
     //TODO: inputdoc 
-    InputDocument input = new InputDocument(aJCas);
-    input.addToIndexes();
-    input.setComponentId("Collection Reader");
-    List<Review> buffer = new LinkedList<>();
+//    InputDocument input = new InputDocument(aJCas);
+//    input.addToIndexes();
+//    input.setComponentId("Collection Reader");
+    List<Review> buffer = new LinkedList<Review>();
 
     // search for all the questions in the text
     Matcher matcher = mQuestionPattern.matcher(docText);
@@ -83,7 +83,7 @@ public class ReviewAnnotator extends JCasAnnotator_ImplBase {
     System.out.printf("... Parsed %d reviews %n", buffer.size());
 
     //TODO: no need to link reviews to input doc
-    input.setReviews(Utils.fromCollectionToFSList(aJCas, buffer));
+//    input.setReviews(Utils.fromCollectionToFSList(aJCas, buffer));
 
     
   }

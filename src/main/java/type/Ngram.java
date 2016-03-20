@@ -14,7 +14,7 @@ import org.apache.uima.jcas.cas.FloatList;
 
 
 /** 
- * Updated by JCasGen Wed Mar 16 15:16:14 EDT 2016
+ * Updated by JCasGen Sat Mar 19 18:38:31 EDT 2016
  * XML source: /Users/Terry/Desktop/CMU/16-spring/11792/project/OpinionMining/src/main/resources/descriptors/typeSystem.xml
  * @generated */
 public class Ngram extends ComponentAnnotation {
