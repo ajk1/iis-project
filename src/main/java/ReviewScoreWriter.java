@@ -19,6 +19,8 @@ import org.apache.uima.resource.ResourceProcessException;
 //import rank.IRanker;
 import type.Measurement;
 import type.Review;
+import type.Score;
+import util.Utils;
 
 /**
  * This CAS Consumer generates the report file with the method metrics
@@ -84,16 +86,20 @@ public class ReviewScoreWriter extends CasConsumer_ImplBase {
       
       for (Review review : allReviews) {
       
+    	  Score sc = review.getScore();
+			List<Integer> cScores = Utils.fromIntegerListToLinkedList(sc.getClassificationScores());
+			List<Float> rScores = Utils.fromFloatListToLinkedList(sc.getRegressionScores());
+    	  
     	  //regression-like evaluation
-    	  sumErrorSquare += Math.pow(review.getScore().getGoldLabel() - review.getScore().getRegressionScore() ,2);
+    	  sumErrorSquare += Math.pow(review.getScore().getGoldLabel() - rScores.get(0) ,2);
     	  
     	  //classifier evaulation
     	  for(int i=1; i<=5; i++) {
-    		  if(review.getScore().getGoldLabel() == i && review.getScore().getClassificationScore() == i) {
+    		  if(review.getScore().getGoldLabel() == i && cScores.get(0) == i) {
     			  tp[i-1]++;
-    		  } else if(review.getScore().getGoldLabel() == i && review.getScore().getClassificationScore() != i) {
+    		  } else if(review.getScore().getGoldLabel() == i && cScores.get(0) != i) {
     			  fn[i-1]++;
-    		  } else if(review.getScore().getGoldLabel() != i && review.getScore().getClassificationScore() != i) {
+    		  } else if(review.getScore().getGoldLabel() != i && cScores.get(0) != i) {
     			  tn[i-1]++;
     		  } else {
     			  fp[i-1]++;
