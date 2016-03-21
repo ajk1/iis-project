@@ -31,7 +31,9 @@ import util.Utils;
 
 public class SentimentTokenAnnotator extends JCasAnnotator_ImplBase {
 	final String PARAM_SIZELIMIT = "SizeLimit";
+	final String PARAM_MODE = "Mode";
 	private int sizeLimit;
+	private String mode;
 
 	public List<HashMap<String, Float>> sentiDictionaries = new ArrayList<HashMap<String, Float>>();
 	
@@ -39,6 +41,7 @@ public class SentimentTokenAnnotator extends JCasAnnotator_ImplBase {
 	public void initialize(UimaContext aContext) throws ResourceInitializationException {
 		super.initialize(aContext);		
 		sizeLimit = Integer.valueOf((String) aContext.getConfigParameterValue(PARAM_SIZELIMIT));
+		mode = (String) aContext.getConfigParameterValue(PARAM_MODE);
 
 	    // Read library
 	    // Open the file
@@ -96,6 +99,7 @@ public class SentimentTokenAnnotator extends JCasAnnotator_ImplBase {
 	public void process(JCas aJCas) throws AnalysisEngineProcessException {
     System.out.println(">> Sentiment Token Annotator Processing");
     System.out.println("... sizeLimit: " + sizeLimit);
+    System.out.println("... mode: " + mode);
     
 	// get reviews from the CAS
 	Collection<Review> reviews = JCasUtil.select(aJCas, Review.class);      

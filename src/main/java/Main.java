@@ -21,9 +21,10 @@ public class Main {
     // Remember to set your ARGS while running the configuration
     // arg[0] is the INPUT_DIRECTORY where the passages and questions are located
     // arg[1] is the OUTPUT_DIRECTORY where the results will be stored
-    String inputDir = args[0];
-    String outputDir = args[1];
-    String sizeLimit = args[2];
+	String mode = args[0];
+    String inputDir = args[1];
+    String outputDir = args[2];
+    String sizeLimit = args[3];
 
     // Instantiate CPE.
     CpeDescription cpeDesc = UIMAFramework.getXMLParser()
@@ -44,18 +45,15 @@ public class Main {
     // mCPE.getCasProcessors().
     ConfigurableResource cc = (ConfigurableResource) mCPE.getCasProcessors()[1]; // <-- Careful with index
     cc.setConfigParameterValue("OutputDir", outputDir);
-    cc.setConfigParameterValue("SizeLimit", sizeLimit);
     cc.reconfigure();
     
 
     AnalysisEngine cp0 = (AnalysisEngine) mCPE.getCasProcessors()[0];
     System.out.println(cp0.getAnalysisEngineMetaData().getName());
+    cp0.setConfigParameterValue("Mode", mode);
     cp0.setConfigParameterValue("SizeLimit", sizeLimit);
     cp0.reconfigure();
-    
-    AnalysisEngine cp1 = (AnalysisEngine) mCPE.getCasProcessors()[1];
-    System.out.println(cp1.getAnalysisEngineMetaData().getName());
-    
+        
 
     // Create and register a Status Callback Listener.
     mCPE.addStatusCallbackListener(new StatusCallbackListenerImpl());
