@@ -12,7 +12,7 @@ import org.apache.uima.jcas.cas.IntegerArray;
 
 
 /** 
- * Updated by JCasGen Sun Mar 20 18:11:57 EDT 2016
+ * Updated by JCasGen Mon Mar 21 15:57:29 EDT 2016
  * XML source: /Users/Terry/Desktop/CMU/16-spring/11792/project/OpinionMining/src/main/resources/descriptors/typeSystem.xml
  * @generated */
 public class Review extends ComponentAnnotation {
@@ -188,50 +188,6 @@ public class Review extends ComponentAnnotation {
    
     
   //*--------------*
-  //* Feature: bigrams
-
-  /** getter for bigrams - gets 
-   * @generated
-   * @return value of the feature 
-   */
-  public FSList getBigrams() {
-    if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_bigrams == null)
-      jcasType.jcas.throwFeatMissing("bigrams", "type.Review");
-    return (FSList)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Review_Type)jcasType).casFeatCode_bigrams)));}
-    
-  /** setter for bigrams - sets  
-   * @generated
-   * @param v value to set into the feature 
-   */
-  public void setBigrams(FSList v) {
-    if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_bigrams == null)
-      jcasType.jcas.throwFeatMissing("bigrams", "type.Review");
-    jcasType.ll_cas.ll_setRefValue(addr, ((Review_Type)jcasType).casFeatCode_bigrams, jcasType.ll_cas.ll_getFSRef(v));}    
-   
-    
-  //*--------------*
-  //* Feature: trigrams
-
-  /** getter for trigrams - gets 
-   * @generated
-   * @return value of the feature 
-   */
-  public FSList getTrigrams() {
-    if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_trigrams == null)
-      jcasType.jcas.throwFeatMissing("trigrams", "type.Review");
-    return (FSList)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Review_Type)jcasType).casFeatCode_trigrams)));}
-    
-  /** setter for trigrams - sets  
-   * @generated
-   * @param v value to set into the feature 
-   */
-  public void setTrigrams(FSList v) {
-    if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_trigrams == null)
-      jcasType.jcas.throwFeatMissing("trigrams", "type.Review");
-    jcasType.ll_cas.ll_setRefValue(addr, ((Review_Type)jcasType).casFeatCode_trigrams, jcasType.ll_cas.ll_getFSRef(v));}    
-   
-    
-  //*--------------*
   //* Feature: reviewTime
 
   /** getter for reviewTime - gets 
@@ -339,28 +295,6 @@ public class Review extends ComponentAnnotation {
     if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_helpfulnessTotal == null)
       jcasType.jcas.throwFeatMissing("helpfulnessTotal", "type.Review");
     jcasType.ll_cas.ll_setIntValue(addr, ((Review_Type)jcasType).casFeatCode_helpfulnessTotal, v);}    
-   
-    
-  //*--------------*
-  //* Feature: unigrams
-
-  /** getter for unigrams - gets 
-   * @generated
-   * @return value of the feature 
-   */
-  public FSList getUnigrams() {
-    if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_unigrams == null)
-      jcasType.jcas.throwFeatMissing("unigrams", "type.Review");
-    return (FSList)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Review_Type)jcasType).casFeatCode_unigrams)));}
-    
-  /** setter for unigrams - sets  
-   * @generated
-   * @param v value to set into the feature 
-   */
-  public void setUnigrams(FSList v) {
-    if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_unigrams == null)
-      jcasType.jcas.throwFeatMissing("unigrams", "type.Review");
-    jcasType.ll_cas.ll_setRefValue(addr, ((Review_Type)jcasType).casFeatCode_unigrams, jcasType.ll_cas.ll_getFSRef(v));}    
   }
 
     

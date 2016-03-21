@@ -13,7 +13,7 @@ import org.apache.uima.cas.impl.FeatureImpl;
 import org.apache.uima.cas.Feature;
 
 /** 
- * Updated by JCasGen Sun Mar 20 18:11:57 EDT 2016
+ * Updated by JCasGen Mon Mar 21 15:57:29 EDT 2016
  * @generated */
 public class Review_Type extends ComponentAnnotation_Type {
   /** @generated 
@@ -166,54 +166,6 @@ public class Review_Type extends ComponentAnnotation_Type {
   
  
   /** @generated */
-  final Feature casFeat_bigrams;
-  /** @generated */
-  final int     casFeatCode_bigrams;
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @return the feature value 
-   */ 
-  public int getBigrams(int addr) {
-        if (featOkTst && casFeat_bigrams == null)
-      jcas.throwFeatMissing("bigrams", "type.Review");
-    return ll_cas.ll_getRefValue(addr, casFeatCode_bigrams);
-  }
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @param v value to set 
-   */    
-  public void setBigrams(int addr, int v) {
-        if (featOkTst && casFeat_bigrams == null)
-      jcas.throwFeatMissing("bigrams", "type.Review");
-    ll_cas.ll_setRefValue(addr, casFeatCode_bigrams, v);}
-    
-  
- 
-  /** @generated */
-  final Feature casFeat_trigrams;
-  /** @generated */
-  final int     casFeatCode_trigrams;
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @return the feature value 
-   */ 
-  public int getTrigrams(int addr) {
-        if (featOkTst && casFeat_trigrams == null)
-      jcas.throwFeatMissing("trigrams", "type.Review");
-    return ll_cas.ll_getRefValue(addr, casFeatCode_trigrams);
-  }
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @param v value to set 
-   */    
-  public void setTrigrams(int addr, int v) {
-        if (featOkTst && casFeat_trigrams == null)
-      jcas.throwFeatMissing("trigrams", "type.Review");
-    ll_cas.ll_setRefValue(addr, casFeatCode_trigrams, v);}
-    
-  
- 
-  /** @generated */
   final Feature casFeat_reviewTime;
   /** @generated */
   final int     casFeatCode_reviewTime;
@@ -332,30 +284,6 @@ public class Review_Type extends ComponentAnnotation_Type {
     ll_cas.ll_setIntValue(addr, casFeatCode_helpfulnessTotal, v);}
     
   
- 
-  /** @generated */
-  final Feature casFeat_unigrams;
-  /** @generated */
-  final int     casFeatCode_unigrams;
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @return the feature value 
-   */ 
-  public int getUnigrams(int addr) {
-        if (featOkTst && casFeat_unigrams == null)
-      jcas.throwFeatMissing("unigrams", "type.Review");
-    return ll_cas.ll_getRefValue(addr, casFeatCode_unigrams);
-  }
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @param v value to set 
-   */    
-  public void setUnigrams(int addr, int v) {
-        if (featOkTst && casFeat_unigrams == null)
-      jcas.throwFeatMissing("unigrams", "type.Review");
-    ll_cas.ll_setRefValue(addr, casFeatCode_unigrams, v);}
-    
-  
 
 
 
@@ -389,14 +317,6 @@ public class Review_Type extends ComponentAnnotation_Type {
     casFeatCode_score  = (null == casFeat_score) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_score).getCode();
 
  
-    casFeat_bigrams = jcas.getRequiredFeatureDE(casType, "bigrams", "uima.cas.FSList", featOkTst);
-    casFeatCode_bigrams  = (null == casFeat_bigrams) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_bigrams).getCode();
-
- 
-    casFeat_trigrams = jcas.getRequiredFeatureDE(casType, "trigrams", "uima.cas.FSList", featOkTst);
-    casFeatCode_trigrams  = (null == casFeat_trigrams) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_trigrams).getCode();
-
- 
     casFeat_reviewTime = jcas.getRequiredFeatureDE(casType, "reviewTime", "uima.cas.String", featOkTst);
     casFeatCode_reviewTime  = (null == casFeat_reviewTime) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_reviewTime).getCode();
 
@@ -415,10 +335,6 @@ public class Review_Type extends ComponentAnnotation_Type {
  
     casFeat_helpfulnessTotal = jcas.getRequiredFeatureDE(casType, "helpfulnessTotal", "uima.cas.Integer", featOkTst);
     casFeatCode_helpfulnessTotal  = (null == casFeat_helpfulnessTotal) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_helpfulnessTotal).getCode();
-
- 
-    casFeat_unigrams = jcas.getRequiredFeatureDE(casType, "unigrams", "uima.cas.FSList", featOkTst);
-    casFeatCode_unigrams  = (null == casFeat_unigrams) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_unigrams).getCode();
 
   }
 }

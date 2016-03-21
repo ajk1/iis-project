@@ -137,17 +137,17 @@ public class SentimentTokenAnnotator extends JCasAnnotator_ImplBase {
     	  for(Sentence s: sentences) {
     		  //scores for sentence-averaging (not yet implemented)
     		  //float[] sentenceScores = new float[sentiDictionaries.size()];
-        	  
-    		  List<Ngram> unigrams = Utils.fromFSListToLinkedList(s.getUnigrams(), Ngram.class);
-    		  for(Ngram unigram: unigrams) {
+        	  List<String> unigrams = Utils.fromStringListToLinkedList(s.getUnigramList());
+//    		  List<Ngram> unigrams = Utils.fromFSListToLinkedList(s.getUnigrams(), Ngram.class);
+    		  for(String unigram: unigrams) {
     			  float uniScore = 0;
-    			  
+				  List<Float> fl = new ArrayList<Float>();
+
     			  for(int i=0; i<sentiDictionaries.size(); i++) {
-        			  if(sentiDictionaries.get(i).containsKey(unigram.getRawText())) {
-        				  List<Float> fl = Utils.fromFloatListToArrayList(unigram.getSentimentScore());
-        				  float p = sentiDictionaries.get(i).get(unigram.getRawText());
+        			  if(sentiDictionaries.get(i).containsKey(unigram)) {
+        				          				  
+        				  float p = sentiDictionaries.get(i).get(unigram);
         				  fl.add(p);
-        				  unigram.setSentimentScore(Utils.fromCollectionToFloatList(aJCas, fl));
         				  scores[i] += p;
         				  matches[i]++;
         				  if (uniScore == 0) {
@@ -159,16 +159,13 @@ public class SentimentTokenAnnotator extends JCasAnnotator_ImplBase {
         					  uniScore = (uniScore + p)/2;
         				  }
         			  } else {
-        				  List<Float> fl = Utils.fromFloatListToArrayList(unigram.getSentimentScore());
         				  fl.add((float)0);
-        				  unigram.setSentimentScore(Utils.fromCollectionToFloatList(aJCas, fl));
         			  }
     			  }
     			  size++;
     			  aggScore += uniScore;
-				  List<Float> fl = Utils.fromFloatListToArrayList(unigram.getSentimentScore());
 				  
-				  System.out.println("... sentiment score of " + unigram.getRawText()+ ": " + fl.get(0) + ", " + fl.get(1)); 
+//				  System.out.println("... sentiment score of " + unigram + ": " + fl.get(0) + ", " + fl.get(1)); 
     		  }
 //    		  System.out.println(Math.round(1000*sentenceScore1)/1000.0 + "\t" + 
 //    				  	Math.round(1000*sentenceScore2)/1000.0 + "\t" + s.getRawText());
