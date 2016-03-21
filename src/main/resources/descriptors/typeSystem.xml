@@ -96,18 +96,6 @@ You need to implement the types requried for your ranking model.</description>
           <rangeTypeName>type.Score</rangeTypeName>
         </featureDescription>
         <featureDescription>
-          <name>bigrams</name>
-          <description/>
-          <rangeTypeName>uima.cas.FSList</rangeTypeName>
-          <elementType>type.Ngram</elementType>
-        </featureDescription>
-        <featureDescription>
-          <name>trigrams</name>
-          <description/>
-          <rangeTypeName>uima.cas.FSList</rangeTypeName>
-          <elementType>type.Ngram</elementType>
-        </featureDescription>
-        <featureDescription>
           <name>reviewTime</name>
           <description/>
           <rangeTypeName>uima.cas.String</rangeTypeName>
@@ -131,12 +119,6 @@ You need to implement the types requried for your ranking model.</description>
           <name>helpfulnessTotal</name>
           <description/>
           <rangeTypeName>uima.cas.Integer</rangeTypeName>
-        </featureDescription>
-      <featureDescription>
-          <name>unigrams</name>
-          <description/>
-          <rangeTypeName>uima.cas.FSList</rangeTypeName>
-          <elementType>type.Ngram</elementType>
         </featureDescription>
       </features>
     </typeDescription>
@@ -211,22 +193,19 @@ You need to implement the types requried for your ranking model.</description>
           <elementType>type.Token</elementType>
         </featureDescription>
         <featureDescription>
-          <name>bigrams</name>
+          <name>bigramList</name>
           <description/>
-          <rangeTypeName>uima.cas.FSList</rangeTypeName>
-          <elementType>type.Ngram</elementType>
+          <rangeTypeName>uima.cas.StringList</rangeTypeName>
         </featureDescription>
         <featureDescription>
-          <name>trigrams</name>
+          <name>unigramList</name>
           <description/>
-          <rangeTypeName>uima.cas.FSList</rangeTypeName>
-          <elementType>type.Ngram</elementType>
+          <rangeTypeName>uima.cas.StringList</rangeTypeName>
         </featureDescription>
-      <featureDescription>
-          <name>unigrams</name>
+        <featureDescription>
+          <name>trigramList</name>
           <description/>
-          <rangeTypeName>uima.cas.FSList</rangeTypeName>
-          <elementType>type.Ngram</elementType>
+          <rangeTypeName>uima.cas.StringList</rangeTypeName>
         </featureDescription>
       </features>
     </typeDescription>

@@ -10,8 +10,11 @@ import org.apache.uima.jcas.cas.TOP_Type;
 import org.apache.uima.jcas.cas.FSList;
 
 
+import org.apache.uima.jcas.cas.StringList;
+
+
 /** 
- * Updated by JCasGen Sun Mar 20 18:11:57 EDT 2016
+ * Updated by JCasGen Mon Mar 21 15:57:29 EDT 2016
  * XML source: /Users/Terry/Desktop/CMU/16-spring/11792/project/OpinionMining/src/main/resources/descriptors/typeSystem.xml
  * @generated */
 public class Sentence extends ComponentAnnotation {
@@ -121,69 +124,69 @@ public class Sentence extends ComponentAnnotation {
    
     
   //*--------------*
-  //* Feature: bigrams
+  //* Feature: bigramList
 
-  /** getter for bigrams - gets 
+  /** getter for bigramList - gets 
    * @generated
    * @return value of the feature 
    */
-  public FSList getBigrams() {
-    if (Sentence_Type.featOkTst && ((Sentence_Type)jcasType).casFeat_bigrams == null)
-      jcasType.jcas.throwFeatMissing("bigrams", "type.Sentence");
-    return (FSList)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Sentence_Type)jcasType).casFeatCode_bigrams)));}
+  public StringList getBigramList() {
+    if (Sentence_Type.featOkTst && ((Sentence_Type)jcasType).casFeat_bigramList == null)
+      jcasType.jcas.throwFeatMissing("bigramList", "type.Sentence");
+    return (StringList)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Sentence_Type)jcasType).casFeatCode_bigramList)));}
     
-  /** setter for bigrams - sets  
+  /** setter for bigramList - sets  
    * @generated
    * @param v value to set into the feature 
    */
-  public void setBigrams(FSList v) {
-    if (Sentence_Type.featOkTst && ((Sentence_Type)jcasType).casFeat_bigrams == null)
-      jcasType.jcas.throwFeatMissing("bigrams", "type.Sentence");
-    jcasType.ll_cas.ll_setRefValue(addr, ((Sentence_Type)jcasType).casFeatCode_bigrams, jcasType.ll_cas.ll_getFSRef(v));}    
+  public void setBigramList(StringList v) {
+    if (Sentence_Type.featOkTst && ((Sentence_Type)jcasType).casFeat_bigramList == null)
+      jcasType.jcas.throwFeatMissing("bigramList", "type.Sentence");
+    jcasType.ll_cas.ll_setRefValue(addr, ((Sentence_Type)jcasType).casFeatCode_bigramList, jcasType.ll_cas.ll_getFSRef(v));}    
    
     
   //*--------------*
-  //* Feature: trigrams
+  //* Feature: unigramList
 
-  /** getter for trigrams - gets 
+  /** getter for unigramList - gets 
    * @generated
    * @return value of the feature 
    */
-  public FSList getTrigrams() {
-    if (Sentence_Type.featOkTst && ((Sentence_Type)jcasType).casFeat_trigrams == null)
-      jcasType.jcas.throwFeatMissing("trigrams", "type.Sentence");
-    return (FSList)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Sentence_Type)jcasType).casFeatCode_trigrams)));}
+  public StringList getUnigramList() {
+    if (Sentence_Type.featOkTst && ((Sentence_Type)jcasType).casFeat_unigramList == null)
+      jcasType.jcas.throwFeatMissing("unigramList", "type.Sentence");
+    return (StringList)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Sentence_Type)jcasType).casFeatCode_unigramList)));}
     
-  /** setter for trigrams - sets  
+  /** setter for unigramList - sets  
    * @generated
    * @param v value to set into the feature 
    */
-  public void setTrigrams(FSList v) {
-    if (Sentence_Type.featOkTst && ((Sentence_Type)jcasType).casFeat_trigrams == null)
-      jcasType.jcas.throwFeatMissing("trigrams", "type.Sentence");
-    jcasType.ll_cas.ll_setRefValue(addr, ((Sentence_Type)jcasType).casFeatCode_trigrams, jcasType.ll_cas.ll_getFSRef(v));}    
+  public void setUnigramList(StringList v) {
+    if (Sentence_Type.featOkTst && ((Sentence_Type)jcasType).casFeat_unigramList == null)
+      jcasType.jcas.throwFeatMissing("unigramList", "type.Sentence");
+    jcasType.ll_cas.ll_setRefValue(addr, ((Sentence_Type)jcasType).casFeatCode_unigramList, jcasType.ll_cas.ll_getFSRef(v));}    
    
     
   //*--------------*
-  //* Feature: unigrams
+  //* Feature: trigramList
 
-  /** getter for unigrams - gets 
+  /** getter for trigramList - gets 
    * @generated
    * @return value of the feature 
    */
-  public FSList getUnigrams() {
-    if (Sentence_Type.featOkTst && ((Sentence_Type)jcasType).casFeat_unigrams == null)
-      jcasType.jcas.throwFeatMissing("unigrams", "type.Sentence");
-    return (FSList)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Sentence_Type)jcasType).casFeatCode_unigrams)));}
+  public StringList getTrigramList() {
+    if (Sentence_Type.featOkTst && ((Sentence_Type)jcasType).casFeat_trigramList == null)
+      jcasType.jcas.throwFeatMissing("trigramList", "type.Sentence");
+    return (StringList)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Sentence_Type)jcasType).casFeatCode_trigramList)));}
     
-  /** setter for unigrams - sets  
+  /** setter for trigramList - sets  
    * @generated
    * @param v value to set into the feature 
    */
-  public void setUnigrams(FSList v) {
-    if (Sentence_Type.featOkTst && ((Sentence_Type)jcasType).casFeat_unigrams == null)
-      jcasType.jcas.throwFeatMissing("unigrams", "type.Sentence");
-    jcasType.ll_cas.ll_setRefValue(addr, ((Sentence_Type)jcasType).casFeatCode_unigrams, jcasType.ll_cas.ll_getFSRef(v));}    
+  public void setTrigramList(StringList v) {
+    if (Sentence_Type.featOkTst && ((Sentence_Type)jcasType).casFeat_trigramList == null)
+      jcasType.jcas.throwFeatMissing("trigramList", "type.Sentence");
+    jcasType.ll_cas.ll_setRefValue(addr, ((Sentence_Type)jcasType).casFeatCode_trigramList, jcasType.ll_cas.ll_getFSRef(v));}    
   }
 
     
