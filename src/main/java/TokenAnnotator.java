@@ -50,7 +50,7 @@ public class TokenAnnotator extends JCasAnnotator_ImplBase {
 	
 	    int ctr = 0;
 	    for (Review review : reviews) {
-	    	if(ctr++ > sizeLimit) break;
+	    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
 	    	  
 	        String body = review.getRawText();
 	          

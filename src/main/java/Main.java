@@ -24,7 +24,10 @@ public class Main {
 	String mode = args[0];
     String inputDir = args[1];
     String outputDir = args[2];
-    String sizeLimit = args[3];
+    String sizeLimit = "0";
+    if(args.length > 3) {
+        sizeLimit = args[3];    	    	
+    } 
 
     // Instantiate CPE.
     CpeDescription cpeDesc = UIMAFramework.getXMLParser()
@@ -34,7 +37,7 @@ public class Main {
     // Configure your collection reader with the given input directory. The code below assumes that
     // the collection reader has a parameter 'InputDir' to specify the input directory.
     ConfigurableResource cr = (ConfigurableResource) mCPE.getCollectionReader();
-    cr.setConfigParameterValue("InputDir", inputDir);
+    cr.setConfigParameterValue("InputDir", "src/main/resources/" + inputDir);
     cr.reconfigure();
 
     // Configure your aggregate analysis engine here, if you want to.
@@ -44,12 +47,11 @@ public class Main {
     // assumes that the CAS Consumer can be accessed at index 1 from the array of CasProcessors[]
     // mCPE.getCasProcessors().
     ConfigurableResource cc = (ConfigurableResource) mCPE.getCasProcessors()[1]; // <-- Careful with index
-    cc.setConfigParameterValue("OutputDir", outputDir);
+    cc.setConfigParameterValue("OutputDir", "src/main/resources/" + outputDir);
     cc.reconfigure();
     
 
     AnalysisEngine cp0 = (AnalysisEngine) mCPE.getCasProcessors()[0];
-    System.out.println(cp0.getAnalysisEngineMetaData().getName());
     cp0.setConfigParameterValue("Mode", mode);
     cp0.setConfigParameterValue("SizeLimit", sizeLimit);
     cp0.reconfigure();

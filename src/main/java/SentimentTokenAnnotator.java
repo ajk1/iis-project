@@ -122,7 +122,7 @@ public class SentimentTokenAnnotator extends JCasAnnotator_ImplBase {
       
         int ctr = 0;
         for (Review review : reviews) {
-    	  if(ctr++ > sizeLimit) break;
+        	if(ctr++ > sizeLimit && sizeLimit != 0) break;
 		  //score of review from each library
 		  float[] scores = new float[sentiDictionaries.size()];
 		  //number of tokens with a match in each library
