@@ -69,7 +69,7 @@ public class TokenAnnotator extends JCasAnnotator_ImplBase {
 	            sentences.add(sentence);
 	        }
 	        review.setSentences(Utils.fromCollectionToFSList(aJCas, sentences));	//add sentences to review scope list
-	    	System.out.println("... review: " + ctr + " added "+ sentences.size() +" sentences");
+//	    	System.out.println("... review: " + ctr + " added "+ sentences.size() +" sentences");
 	    }
 	}
     

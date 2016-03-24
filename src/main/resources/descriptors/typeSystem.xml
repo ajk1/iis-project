@@ -78,11 +78,6 @@ You need to implement the types requried for your ranking model.</description>
           <elementType>type.Sentence</elementType>
         </featureDescription>
         <featureDescription>
-          <name>score</name>
-          <description/>
-          <rangeTypeName>type.Score</rangeTypeName>
-        </featureDescription>
-        <featureDescription>
           <name>reviewTime</name>
           <description/>
           <rangeTypeName>uima.cas.String</rangeTypeName>
@@ -107,14 +102,7 @@ You need to implement the types requried for your ranking model.</description>
           <description/>
           <rangeTypeName>uima.cas.Integer</rangeTypeName>
         </featureDescription>
-      </features>
-    </typeDescription>
-    <typeDescription>
-      <name>type.Score</name>
-      <description/>
-      <supertypeName>type.ComponentAnnotation</supertypeName>
-      <features>
-        <featureDescription>
+      <featureDescription>
           <name>regressionScores</name>
           <description/>
           <rangeTypeName>uima.cas.FloatList</rangeTypeName>

@@ -61,6 +61,7 @@ public class Main {
     mCPE.addStatusCallbackListener(new StatusCallbackListenerImpl());
 
     // Run the CPE.
+    System.out.println("[INFO] --- Starting CPE with mode: " + mode + " --- ");
     mCPE.process();
   }
   

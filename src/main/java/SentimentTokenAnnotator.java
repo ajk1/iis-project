@@ -99,7 +99,6 @@ public class SentimentTokenAnnotator extends JCasAnnotator_ImplBase {
 	public void process(JCas aJCas) throws AnalysisEngineProcessException {
     System.out.println(">> Sentiment Token Annotator Processing");
     System.out.println("... sizeLimit: " + sizeLimit);
-    System.out.println("... mode: " + mode);
     
 	// get reviews from the CAS
 	Collection<Review> reviews = JCasUtil.select(aJCas, Review.class);      
@@ -178,7 +177,7 @@ public class SentimentTokenAnnotator extends JCasAnnotator_ImplBase {
     			  (aggScore1/size) + "," + scores[0]/matches[0] + "," + scores[1]/matches[1] + "," + 
     			  (scores[0]+scores[1])/(matches[0]+matches[1]) + "," + 
     			  (aggScore/aggMatches) + "," + (aggScore1/aggMatches) + 
-    			  review.getScore().getGoldLabel());
+    			  review.getGoldLabel());
 //    	  Score sc = review.getScore();
 //    	  sc.setRegressionScore(score1);
 //    	  review.setScore(sc);

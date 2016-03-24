@@ -86,20 +86,19 @@ public class ReviewScoreWriter extends CasConsumer_ImplBase {
       
       for (Review review : allReviews) {
       
-    	  Score sc = review.getScore();
-			List<Integer> cScores = Utils.fromIntegerListToLinkedList(sc.getClassificationScores());
-			List<Float> rScores = Utils.fromFloatListToLinkedList(sc.getRegressionScores());
+			List<Integer> cScores = Utils.fromIntegerListToLinkedList(review.getClassificationScores());
+			List<Float> rScores = Utils.fromFloatListToLinkedList(review.getRegressionScores());
     	  
     	  //regression-like evaluation
-    	  sumErrorSquare += Math.pow(review.getScore().getGoldLabel() - rScores.get(0) ,2);
+    	  sumErrorSquare += Math.pow(review.getGoldLabel() - rScores.get(0) ,2);
     	  
     	  //classifier evaulation
     	  for(int i=1; i<=5; i++) {
-    		  if(review.getScore().getGoldLabel() == i && cScores.get(0) == i) {
+    		  if(review.getGoldLabel() == i && cScores.get(0) == i) {
     			  tp[i-1]++;
-    		  } else if(review.getScore().getGoldLabel() == i && cScores.get(0) != i) {
+    		  } else if(review.getGoldLabel() == i && cScores.get(0) != i) {
     			  fn[i-1]++;
-    		  } else if(review.getScore().getGoldLabel() != i && cScores.get(0) != i) {
+    		  } else if(review.getGoldLabel() != i && cScores.get(0) != i) {
     			  tn[i-1]++;
     		  } else {
     			  fp[i-1]++;

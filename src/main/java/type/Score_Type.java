@@ -13,7 +13,7 @@ import org.apache.uima.cas.impl.FeatureImpl;
 import org.apache.uima.cas.Feature;
 
 /** 
- * Updated by JCasGen Mon Mar 21 16:35:27 EDT 2016
+ * Updated by JCasGen Thu Mar 24 10:01:46 EDT 2016
  * @generated */
 public class Score_Type extends ComponentAnnotation_Type {
   /** @generated 

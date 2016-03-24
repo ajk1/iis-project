@@ -39,7 +39,7 @@ public class ScoreAnnotator extends JCasAnnotator_ImplBase {
 		double sumScore = 0;  
 		for (Review review : reviews) {
 			reviewCount++;
-			sumScore += review.getScore().getGoldLabel();
+			sumScore += review.getGoldLabel();
 		}
       
 		float avgScore = (float) (sumScore / reviewCount);
@@ -47,17 +47,16 @@ public class ScoreAnnotator extends JCasAnnotator_ImplBase {
       
 		//annotating different scores
 		for (Review review : reviews) {
-			Score sc = review.getScore();
-			List<Integer> cScores = Utils.fromIntegerListToLinkedList(sc.getClassificationScores());
-			List<Float> rScores = Utils.fromFloatListToLinkedList(sc.getRegressionScores());
+			List<Integer> cScores = Utils.fromIntegerListToLinkedList(review.getClassificationScores());
+			List<Float> rScores = Utils.fromFloatListToLinkedList(review.getRegressionScores());
 
 			//[0] zero-order regression
 			cScores.add((int) Math.floor(avgScore + 1.0));
 			rScores.add(avgScore);
 			
 			//add back to type Score
-			sc.setRegressionScores(Utils.fromCollectionToFloatList(aJCas, rScores));
-			sc.setClassificationScores(Utils.fromCollectionToIntegerList(aJCas, cScores));
+			review.setRegressionScores(Utils.fromCollectionToFloatList(aJCas, rScores));
+			review.setClassificationScores(Utils.fromCollectionToIntegerList(aJCas, cScores));
 		}
 
       

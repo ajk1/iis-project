@@ -76,7 +76,7 @@ public class NGramAnnotator extends JCasAnnotator_ImplBase {
 				biGramCount += biGramsTextInSentence.size();
 				triGramCount += triGramsTextInSentence.size();
 			}
-			System.out.println("... review: " + ctr + " added "+ uniGramCount +" unigram, " + biGramCount +" bigrams, " + triGramCount +" trigrams" );
+//			System.out.println("... review: " + ctr + " added "+ uniGramCount +" unigram, " + biGramCount +" bigrams, " + triGramCount +" trigrams" );
     	  
 		}
 	}
