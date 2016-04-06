@@ -24,9 +24,10 @@ public class Main {
 	String mode = args[0];
     String inputDir = args[1];
     String outputDir = args[2];
+    String modelDir = args[3];
     String sizeLimit = "0";
-    if(args.length > 3) {
-        sizeLimit = args[3];    	    	
+    if(args.length > 4) {
+        sizeLimit = args[4];    	    	
     } 
 
     // Instantiate CPE.
@@ -54,6 +55,7 @@ public class Main {
     AnalysisEngine cp0 = (AnalysisEngine) mCPE.getCasProcessors()[0];
     cp0.setConfigParameterValue("Mode", mode);
     cp0.setConfigParameterValue("SizeLimit", sizeLimit);
+    cp0.setConfigParameterValue("ModelDir", modelDir);
     cp0.reconfigure();
         
 
