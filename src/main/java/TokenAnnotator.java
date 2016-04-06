@@ -50,7 +50,7 @@ public class TokenAnnotator extends JCasAnnotator_ImplBase {
 	
 	    int ctr = 0;
 	    for (Review review : reviews) {
-	    	if(ctr++ > sizeLimit) break;
+	    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
 	    	  
 	        String body = review.getRawText();
 	          
@@ -69,7 +69,7 @@ public class TokenAnnotator extends JCasAnnotator_ImplBase {
 	            sentences.add(sentence);
 	        }
 	        review.setSentences(Utils.fromCollectionToFSList(aJCas, sentences));	//add sentences to review scope list
-	    	System.out.println("... review: " + ctr + " added "+ sentences.size() +" sentences");
+//	    	System.out.println("... review: " + ctr + " added "+ sentences.size() +" sentences");
 	    }
 	}
     

@@ -50,6 +50,15 @@
         <parameter>scoreAnnotatorDescriptor/SizeLimit</parameter>
         </overrides>
       </configurationParameter>
+    <configurationParameter>
+        <name>Mode</name>
+        <type>String</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+        <overrides>
+          <parameter>sentimentTokenAnnotatorDescriptor/Mode</parameter>
+        </overrides>
+      </configurationParameter>
     </configurationParameters>
     <configurationParameterSettings>
       <nameValuePair>

@@ -46,7 +46,7 @@ public class NGramAnnotator extends JCasAnnotator_ImplBase {
 
 		int ctr = 0;
 		for (Review review : reviews) {
-			if(ctr++ > sizeLimit) break;
+	    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
     	    int uniGramCount = 0;  	  
     	    int biGramCount = 0;  	  
     	    int triGramCount = 0;  	  
@@ -76,7 +76,7 @@ public class NGramAnnotator extends JCasAnnotator_ImplBase {
 				biGramCount += biGramsTextInSentence.size();
 				triGramCount += triGramsTextInSentence.size();
 			}
-			System.out.println("... review: " + ctr + " added "+ uniGramCount +" unigram, " + biGramCount +" bigrams, " + triGramCount +" trigrams" );
+//			System.out.println("... review: " + ctr + " added "+ uniGramCount +" unigram, " + biGramCount +" bigrams, " + triGramCount +" trigrams" );
     	  
 		}
 	}

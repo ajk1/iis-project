@@ -8,11 +8,15 @@ import org.apache.uima.jcas.JCasRegistry;
 import org.apache.uima.jcas.cas.TOP_Type;
 
 import org.apache.uima.jcas.cas.FSList;
+import org.apache.uima.jcas.cas.IntegerList;
+import org.apache.uima.jcas.cas.FloatList;
+
+
 import org.apache.uima.jcas.cas.IntegerArray;
 
 
 /** 
- * Updated by JCasGen Mon Mar 21 15:57:29 EDT 2016
+ * Updated by JCasGen Thu Mar 24 10:07:15 EDT 2016
  * XML source: /Users/Terry/Desktop/CMU/16-spring/11792/project/OpinionMining/src/main/resources/descriptors/typeSystem.xml
  * @generated */
 public class Review extends ComponentAnnotation {
@@ -166,28 +170,6 @@ public class Review extends ComponentAnnotation {
    
     
   //*--------------*
-  //* Feature: score
-
-  /** getter for score - gets 
-   * @generated
-   * @return value of the feature 
-   */
-  public Score getScore() {
-    if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_score == null)
-      jcasType.jcas.throwFeatMissing("score", "type.Review");
-    return (Score)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Review_Type)jcasType).casFeatCode_score)));}
-    
-  /** setter for score - sets  
-   * @generated
-   * @param v value to set into the feature 
-   */
-  public void setScore(Score v) {
-    if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_score == null)
-      jcasType.jcas.throwFeatMissing("score", "type.Review");
-    jcasType.ll_cas.ll_setRefValue(addr, ((Review_Type)jcasType).casFeatCode_score, jcasType.ll_cas.ll_getFSRef(v));}    
-   
-    
-  //*--------------*
   //* Feature: reviewTime
 
   /** getter for reviewTime - gets 
@@ -295,6 +277,72 @@ public class Review extends ComponentAnnotation {
     if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_helpfulnessTotal == null)
       jcasType.jcas.throwFeatMissing("helpfulnessTotal", "type.Review");
     jcasType.ll_cas.ll_setIntValue(addr, ((Review_Type)jcasType).casFeatCode_helpfulnessTotal, v);}    
+   
+    
+  //*--------------*
+  //* Feature: regressionScores
+
+  /** getter for regressionScores - gets 
+   * @generated
+   * @return value of the feature 
+   */
+  public FloatList getRegressionScores() {
+    if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_regressionScores == null)
+      jcasType.jcas.throwFeatMissing("regressionScores", "type.Review");
+    return (FloatList)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Review_Type)jcasType).casFeatCode_regressionScores)));}
+    
+  /** setter for regressionScores - sets  
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setRegressionScores(FloatList v) {
+    if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_regressionScores == null)
+      jcasType.jcas.throwFeatMissing("regressionScores", "type.Review");
+    jcasType.ll_cas.ll_setRefValue(addr, ((Review_Type)jcasType).casFeatCode_regressionScores, jcasType.ll_cas.ll_getFSRef(v));}    
+   
+    
+  //*--------------*
+  //* Feature: classificationScores
+
+  /** getter for classificationScores - gets 
+   * @generated
+   * @return value of the feature 
+   */
+  public IntegerList getClassificationScores() {
+    if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_classificationScores == null)
+      jcasType.jcas.throwFeatMissing("classificationScores", "type.Review");
+    return (IntegerList)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Review_Type)jcasType).casFeatCode_classificationScores)));}
+    
+  /** setter for classificationScores - sets  
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setClassificationScores(IntegerList v) {
+    if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_classificationScores == null)
+      jcasType.jcas.throwFeatMissing("classificationScores", "type.Review");
+    jcasType.ll_cas.ll_setRefValue(addr, ((Review_Type)jcasType).casFeatCode_classificationScores, jcasType.ll_cas.ll_getFSRef(v));}    
+   
+    
+  //*--------------*
+  //* Feature: goldLabel
+
+  /** getter for goldLabel - gets 
+   * @generated
+   * @return value of the feature 
+   */
+  public int getGoldLabel() {
+    if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_goldLabel == null)
+      jcasType.jcas.throwFeatMissing("goldLabel", "type.Review");
+    return jcasType.ll_cas.ll_getIntValue(addr, ((Review_Type)jcasType).casFeatCode_goldLabel);}
+    
+  /** setter for goldLabel - sets  
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setGoldLabel(int v) {
+    if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_goldLabel == null)
+      jcasType.jcas.throwFeatMissing("goldLabel", "type.Review");
+    jcasType.ll_cas.ll_setIntValue(addr, ((Review_Type)jcasType).casFeatCode_goldLabel, v);}    
   }
 
     

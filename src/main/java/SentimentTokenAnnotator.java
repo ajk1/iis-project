@@ -31,7 +31,9 @@ import util.Utils;
 
 public class SentimentTokenAnnotator extends JCasAnnotator_ImplBase {
 	final String PARAM_SIZELIMIT = "SizeLimit";
+	final String PARAM_MODE = "Mode";
 	private int sizeLimit;
+	private String mode;
 
 	public List<HashMap<String, Float>> sentiDictionaries = new ArrayList<HashMap<String, Float>>();
 	
@@ -39,6 +41,7 @@ public class SentimentTokenAnnotator extends JCasAnnotator_ImplBase {
 	public void initialize(UimaContext aContext) throws ResourceInitializationException {
 		super.initialize(aContext);		
 		sizeLimit = Integer.valueOf((String) aContext.getConfigParameterValue(PARAM_SIZELIMIT));
+		mode = (String) aContext.getConfigParameterValue(PARAM_MODE);
 
 	    // Read library
 	    // Open the file
@@ -118,7 +121,7 @@ public class SentimentTokenAnnotator extends JCasAnnotator_ImplBase {
       
         int ctr = 0;
         for (Review review : reviews) {
-    	  if(ctr++ > sizeLimit) break;
+        	if(ctr++ > sizeLimit && sizeLimit != 0) break;
 		  //score of review from each library
 		  float[] scores = new float[sentiDictionaries.size()];
 		  //number of tokens with a match in each library
@@ -174,7 +177,7 @@ public class SentimentTokenAnnotator extends JCasAnnotator_ImplBase {
     			  (aggScore1/size) + "," + scores[0]/matches[0] + "," + scores[1]/matches[1] + "," + 
     			  (scores[0]+scores[1])/(matches[0]+matches[1]) + "," + 
     			  (aggScore/aggMatches) + "," + (aggScore1/aggMatches) + 
-    			  review.getScore().getGoldLabel());
+    			  review.getGoldLabel());
 //    	  Score sc = review.getScore();
 //    	  sc.setRegressionScore(score1);
 //    	  review.setScore(sc);

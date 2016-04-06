@@ -69,9 +69,7 @@ public class ReviewAnnotator extends JCasAnnotator_ImplBase {
       // Add score with gold label
       
       //TODO: Score as attributes
-      Score s = new Score(aJCas);
-      s.setGoldLabel(Integer.parseInt(matcher.group(7)));
-      annotation.setScore(s);
+      annotation.setGoldLabel(Integer.parseInt(matcher.group(7)));
       annotation.setSummary(matcher.group(8));
       annotation.setReviewTime(matcher.group(10));
       // Add empty measurement
