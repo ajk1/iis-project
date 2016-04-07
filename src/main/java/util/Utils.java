@@ -108,15 +108,15 @@ public class Utils {
   public static List<Float> fromFloatListToArrayList(FloatList list) {
 
     if (list == null) {
-      return new ArrayList<>();
+      return new ArrayList<Float>();
     }
 
     if (list instanceof EmptyFloatList) {
-      return new ArrayList<>();
+      return new ArrayList<Float>();
     }
 
     FloatList tail = list;
-    List<Float> buffer = new ArrayList<>();
+    List<Float> buffer = new ArrayList<Float>();
     while (tail instanceof NonEmptyFloatList) {
       NonEmptyFloatList nonEmptyFloatList = (NonEmptyFloatList) tail;
       buffer.add(nonEmptyFloatList.getHead());
@@ -131,15 +131,15 @@ public class Utils {
   public static List<Integer> fromIntegerListToArrayList(IntegerList list) {
 
     if (list == null) {
-      return new ArrayList<>();
+      return new ArrayList<Integer>();
     }
 
     if (list instanceof EmptyIntegerList) {
-      return new ArrayList<>();
+      return new ArrayList<Integer>();
     }
 
     IntegerList tail = list;
-    List<Integer> buffer = new ArrayList<>();
+    List<Integer> buffer = new ArrayList<Integer>();
     while (tail instanceof NonEmptyIntegerList) {
       NonEmptyIntegerList nonEmptyIntegerList = (NonEmptyIntegerList) tail;
       buffer.add(nonEmptyIntegerList.getHead());
@@ -154,15 +154,15 @@ public class Utils {
   public static List<Integer> fromIntegerListToLinkedList(IntegerList list) {
 
     if (list == null) {
-      return new LinkedList<>();
+      return new LinkedList<Integer>();
     }
 
     if (list instanceof EmptyIntegerList) {
-      return new LinkedList<>();
+      return new LinkedList<Integer>();
     }
 
     IntegerList tail = list;
-    List<Integer> buffer = new LinkedList<>();
+    List<Integer> buffer = new LinkedList<Integer>();
     while (tail instanceof NonEmptyIntegerList) {
       NonEmptyIntegerList nonEmptyIntegerList = (NonEmptyIntegerList) tail;
       buffer.add(nonEmptyIntegerList.getHead());

@@ -9,8 +9,6 @@ import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 
-import type.InputDocument;
-import type.Measurement;
 import type.Review;
 import type.Score;
 import util.Utils;

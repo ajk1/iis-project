@@ -13,7 +13,7 @@ import org.apache.uima.cas.impl.FeatureImpl;
 import org.apache.uima.cas.Feature;
 
 /** 
- * Updated by JCasGen Thu Mar 24 10:07:15 EDT 2016
+ * Updated by JCasGen Wed Apr 06 22:47:28 EDT 2016
  * @generated */
 public class Review_Type extends ComponentAnnotation_Type {
   /** @generated 
@@ -90,30 +90,6 @@ public class Review_Type extends ComponentAnnotation_Type {
         if (featOkTst && casFeat_rawText == null)
       jcas.throwFeatMissing("rawText", "type.Review");
     ll_cas.ll_setStringValue(addr, casFeatCode_rawText, v);}
-    
-  
- 
-  /** @generated */
-  final Feature casFeat_tokens;
-  /** @generated */
-  final int     casFeatCode_tokens;
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @return the feature value 
-   */ 
-  public int getTokens(int addr) {
-        if (featOkTst && casFeat_tokens == null)
-      jcas.throwFeatMissing("tokens", "type.Review");
-    return ll_cas.ll_getRefValue(addr, casFeatCode_tokens);
-  }
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @param v value to set 
-   */    
-  public void setTokens(int addr, int v) {
-        if (featOkTst && casFeat_tokens == null)
-      jcas.throwFeatMissing("tokens", "type.Review");
-    ll_cas.ll_setRefValue(addr, casFeatCode_tokens, v);}
     
   
  
@@ -351,10 +327,6 @@ public class Review_Type extends ComponentAnnotation_Type {
  
     casFeat_rawText = jcas.getRequiredFeatureDE(casType, "rawText", "uima.cas.String", featOkTst);
     casFeatCode_rawText  = (null == casFeat_rawText) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_rawText).getCode();
-
- 
-    casFeat_tokens = jcas.getRequiredFeatureDE(casType, "tokens", "uima.cas.FSList", featOkTst);
-    casFeatCode_tokens  = (null == casFeat_tokens) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_tokens).getCode();
 
  
     casFeat_sentences = jcas.getRequiredFeatureDE(casType, "sentences", "uima.cas.FSList", featOkTst);

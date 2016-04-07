@@ -30,6 +30,12 @@
     
     
     </delegateAnalysisEngine>
+  <delegateAnalysisEngine key="learnerAnnotatorDescriptor">
+      <import name="descriptors.learnerAnnotatorDescriptor"/>
+    
+    
+    
+    </delegateAnalysisEngine>
   </delegateAnalysisEngineSpecifiers>
   <analysisEngineMetaData>
     <name>aaeDescriptor</name>
@@ -48,6 +54,7 @@
         <parameter>reviewAnnotatorDescriptor/SizeLimit</parameter>
         <parameter>sentimentTokenAnnotatorDescriptor/SizeLimit</parameter>
         <parameter>scoreAnnotatorDescriptor/SizeLimit</parameter>
+        <parameter>learnerAnnotatorDescriptor/SizeLimit</parameter>
         </overrides>
       </configurationParameter>
     <configurationParameter>
@@ -57,6 +64,16 @@
         <mandatory>false</mandatory>
         <overrides>
           <parameter>sentimentTokenAnnotatorDescriptor/Mode</parameter>
+        <parameter>learnerAnnotatorDescriptor/Mode</parameter>
+        </overrides>
+      </configurationParameter>
+    <configurationParameter>
+        <name>ModelDir</name>
+        <type>String</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+        <overrides>
+          <parameter>learnerAnnotatorDescriptor/ModelDir</parameter>
         </overrides>
       </configurationParameter>
     </configurationParameters>
@@ -73,9 +90,10 @@
         <node>reviewAnnotatorDescriptor</node>
         <node>tokenAnnotatorDescriptor</node>
       <node>ngramAnnotatorDescriptor</node>
+        <node>learnerAnnotatorDescriptor</node>
         <node>sentimentTokenAnnotatorDescriptor</node>
         <node>amplifierAnnotatorDescriptor</node>
-        <node>negationAnnotatorDescriptor</node>
+      <node>negationAnnotatorDescriptor</node>
       <node>scoreAnnotatorDescriptor</node>
       </fixedFlow>
     </flowConstraints>

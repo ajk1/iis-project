@@ -16,7 +16,7 @@ import org.apache.uima.jcas.cas.IntegerArray;
 
 
 /** 
- * Updated by JCasGen Thu Mar 24 10:07:15 EDT 2016
+ * Updated by JCasGen Wed Apr 06 22:47:28 EDT 2016
  * XML source: /Users/Terry/Desktop/CMU/16-spring/11792/project/OpinionMining/src/main/resources/descriptors/typeSystem.xml
  * @generated */
 public class Review extends ComponentAnnotation {
@@ -123,28 +123,6 @@ public class Review extends ComponentAnnotation {
     if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_rawText == null)
       jcasType.jcas.throwFeatMissing("rawText", "type.Review");
     jcasType.ll_cas.ll_setStringValue(addr, ((Review_Type)jcasType).casFeatCode_rawText, v);}    
-   
-    
-  //*--------------*
-  //* Feature: tokens
-
-  /** getter for tokens - gets 
-   * @generated
-   * @return value of the feature 
-   */
-  public FSList getTokens() {
-    if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_tokens == null)
-      jcasType.jcas.throwFeatMissing("tokens", "type.Review");
-    return (FSList)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Review_Type)jcasType).casFeatCode_tokens)));}
-    
-  /** setter for tokens - sets  
-   * @generated
-   * @param v value to set into the feature 
-   */
-  public void setTokens(FSList v) {
-    if (Review_Type.featOkTst && ((Review_Type)jcasType).casFeat_tokens == null)
-      jcasType.jcas.throwFeatMissing("tokens", "type.Review");
-    jcasType.ll_cas.ll_setRefValue(addr, ((Review_Type)jcasType).casFeatCode_tokens, jcasType.ll_cas.ll_getFSRef(v));}    
    
     
   //*--------------*
