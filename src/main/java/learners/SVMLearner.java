@@ -1,5 +1,7 @@
 package learners;
 
+import java.util.List;
+
 public class SVMLearner extends ClassificationLearner{
 
 	@Override
@@ -15,7 +17,7 @@ public class SVMLearner extends ClassificationLearner{
 	}
 
 	@Override
-	public void initialize(String mode, String modelPath) {
+	public void initialize(String mode, String modelPath, List<Record> data) {
 		// TODO Auto-generated method stub
 		
 	}

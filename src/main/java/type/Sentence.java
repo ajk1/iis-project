@@ -14,7 +14,7 @@ import org.apache.uima.jcas.cas.StringList;
 
 
 /** 
- * Updated by JCasGen Thu Mar 24 10:07:15 EDT 2016
+ * Updated by JCasGen Wed Apr 06 22:47:28 EDT 2016
  * XML source: /Users/Terry/Desktop/CMU/16-spring/11792/project/OpinionMining/src/main/resources/descriptors/typeSystem.xml
  * @generated */
 public class Sentence extends ComponentAnnotation {
@@ -99,28 +99,6 @@ public class Sentence extends ComponentAnnotation {
     if (Sentence_Type.featOkTst && ((Sentence_Type)jcasType).casFeat_rawText == null)
       jcasType.jcas.throwFeatMissing("rawText", "type.Sentence");
     jcasType.ll_cas.ll_setStringValue(addr, ((Sentence_Type)jcasType).casFeatCode_rawText, v);}    
-   
-    
-  //*--------------*
-  //* Feature: tokens
-
-  /** getter for tokens - gets 
-   * @generated
-   * @return value of the feature 
-   */
-  public FSList getTokens() {
-    if (Sentence_Type.featOkTst && ((Sentence_Type)jcasType).casFeat_tokens == null)
-      jcasType.jcas.throwFeatMissing("tokens", "type.Sentence");
-    return (FSList)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Sentence_Type)jcasType).casFeatCode_tokens)));}
-    
-  /** setter for tokens - sets  
-   * @generated
-   * @param v value to set into the feature 
-   */
-  public void setTokens(FSList v) {
-    if (Sentence_Type.featOkTst && ((Sentence_Type)jcasType).casFeat_tokens == null)
-      jcasType.jcas.throwFeatMissing("tokens", "type.Sentence");
-    jcasType.ll_cas.ll_setRefValue(addr, ((Sentence_Type)jcasType).casFeatCode_tokens, jcasType.ll_cas.ll_getFSRef(v));}    
    
     
   //*--------------*

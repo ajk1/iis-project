@@ -66,12 +66,6 @@ You need to implement the types requried for your ranking model.</description>
           <rangeTypeName>uima.cas.String</rangeTypeName>
         </featureDescription>
         <featureDescription>
-          <name>tokens</name>
-          <description/>
-          <rangeTypeName>uima.cas.FSList</rangeTypeName>
-          <elementType>type.Token</elementType>
-        </featureDescription>
-        <featureDescription>
           <name>sentences</name>
           <description/>
           <rangeTypeName>uima.cas.FSList</rangeTypeName>
@@ -128,12 +122,6 @@ You need to implement the types requried for your ranking model.</description>
           <name>rawText</name>
           <description/>
           <rangeTypeName>uima.cas.String</rangeTypeName>
-        </featureDescription>
-        <featureDescription>
-          <name>tokens</name>
-          <description/>
-          <rangeTypeName>uima.cas.FSList</rangeTypeName>
-          <elementType>type.Token</elementType>
         </featureDescription>
         <featureDescription>
           <name>bigramList</name>

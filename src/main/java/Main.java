@@ -55,7 +55,7 @@ public class Main {
     AnalysisEngine cp0 = (AnalysisEngine) mCPE.getCasProcessors()[0];
     cp0.setConfigParameterValue("Mode", mode);
     cp0.setConfigParameterValue("SizeLimit", sizeLimit);
-    cp0.setConfigParameterValue("ModelDir", modelDir);
+    cp0.setConfigParameterValue("ModelDir", "src/main/resources/" + modelDir);
     cp0.reconfigure();
         
 
