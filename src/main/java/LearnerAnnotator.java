@@ -1,32 +1,25 @@
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
-import org.apache.uima.cas.FSIterator;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 
-import edu.stanford.nlp.process.Tokenizer;
-import edu.stanford.nlp.process.TokenizerFactory;
-import edu.stanford.nlp.process.PTBTokenizer.PTBTokenizerFactory;
-import edu.stanford.nlp.util.StringUtils;
 import type.Review;
 import type.Sentence;
-import util.StopWordUtils;
-import util.NGramUtils;
 import util.Utils;
+import util.MapUtil;
 
 import learners.*;
 
@@ -37,6 +30,7 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 	private int sizeLimit;
 	private String mode;
 	private String modelPath;
+	private int topWordLimit;
 	
 	Set<String> topWords = new HashSet<String>();
 
@@ -48,31 +42,6 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		sizeLimit = Integer.valueOf((String) aContext.getConfigParameterValue(PARAM_SIZELIMIT));
 		mode = (String) aContext.getConfigParameterValue(PARAM_MODE);
 		modelPath = (String) aContext.getConfigParameterValue(PARAM_MODEL_PATH);
-		
-		
-		// get top words 
-	    // Read library
-	    // Open the file
-	    FileInputStream fstream;
-		
-	    System.out.println("... Reading Vader Sentiment Libraries");
-	    
-	    //Read File Line By Line
-	    try {
-			fstream = new FileInputStream("src/main/resources/libraries/sentiment_libraries/vader.txt");
-		    BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
-
-		    String strLine;
-			while ((strLine = br.readLine()) != null)   {
-				String[] parts = strLine.split("\t");
-				topWords.add(parts[0]);
-			    //Close the input stream
-			}
-		    br.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	@Override
@@ -88,10 +57,30 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		
 		List<Record> data = new ArrayList<Record>();
 		
+		
 		// get reviews from the CAS
 		Collection<Review> reviews = JCasUtil.select(aJCas, Review.class);      
 		System.out.println("... review size: " + reviews.size());
 
+		// write top words to file
+		HashMap<String, Integer> wordFreq = new HashMap<String, Integer>();
+		for (Review review : reviews) {
+			for(Sentence sentence : Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class)) {
+				for(String token : Utils.fromStringListToArrayList(sentence.getUnigramList())) {
+					token = token.toLowerCase();
+					if(!wordFreq.containsKey(token)) {
+						wordFreq.put(token, 1);
+					} else {
+						wordFreq.put(token, wordFreq.get(token) + 1);
+					}
+				}
+				
+			}
+			
+		}
+		Map<String, Integer> sortedWordFreq = MapUtil.sortByValue(wordFreq);		
+		writeTopWords(sortedWordFreq, topWordLimit);
+		
 		int ctr = 0;
 		for (Review review : reviews) {
 	    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
@@ -102,18 +91,22 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 			//for each sentence in review
 			for(Sentence sentence : Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class)) {
 				List<String> tokenList = Utils.fromStringListToArrayList(sentence.getUnigramList());
-				allTokens.addAll(tokenList);
+				for(String token: tokenList) {
+					token = token.toLowerCase();
+					allTokens.add(token);					
+				}
 			}
 			
 			r.setGoldLabel(review.getGoldLabel());
-			r.setAttr(allTokens, topWords);
+			r.setAttr(allTokens, sortedWordFreq.keySet());
 			data.add(r);
 		}
 		
 		System.out.println("... data size: " + data.size());
 		
 		//naive bayes init
-		nbLearner.initTrain(modelPath, data);
+		Set<String> vocabulary = sortedWordFreq.keySet();
+		nbLearner.initTrain(modelPath, data, vocabulary);
 		nbLearner.train();
 		nbLearner.setModelPath(modelPath);
 		nbLearner.writeModel();
@@ -122,4 +115,23 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		regLearner.initialize(mode, modelPath, data);
 	}
 
+	private void writeTopWords(Map<String, Integer> map, int limit) {
+		//write csv document with scores for analysis
+		File outputFile = null;
+	    PrintWriter writer = null;
+	    try {
+	        outputFile = new File(Paths.get(modelPath, "topWords.txt").toString());
+	        outputFile.getParentFile().mkdirs();
+	        writer = new PrintWriter(outputFile);
+	    } catch (FileNotFoundException e) {
+	        System.out.printf("Output file could not be written: %s\n",
+	                Paths.get(modelPath, "topWords.txt").toString());
+	        return;
+	    }
+	    for(String key: map.keySet()) {
+	        writer.println(key);
+	    }
+		writer.close();
+	}
+	
 }

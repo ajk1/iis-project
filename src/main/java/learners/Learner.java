@@ -4,6 +4,7 @@
 package learners;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Terry
@@ -15,15 +16,11 @@ public interface Learner {
 	//produce a model and save the model to file system
 	void train();
 	
-	//take
-	void predict();
-	
-	//
-	void initTrain(String modelPath, List<Record> data);
-
-	void initTest(String modelPath, List<Record> data);
+	void initTest(String modelPath);
 
 	void writeModel();
 
 	void setModelPath(String modelPath);
+
+	void initTrain(String modelPath, List<Record> data, Set<String> vocabulary);
 }

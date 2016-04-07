@@ -1,31 +1,46 @@
 package learners;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import type.Review;
+import type.Sentence;
+import util.Utils;
 
 public class NaiveBayesLeaner extends ClassificationLearner{
 	
 	private List<Record> data;
 	private List<Map<String, Float>> wordPOfStars  = new ArrayList<Map<String, Float>>();
+	private Set<String> vocabulary = new HashSet<String>();
 
 	@Override
 	public void train() {
 
 		float[] priorP = new float[5];
 		int[] totalLengthOfAClass = new int[5];
+		List<ArrayList<Record>> reviewWithStars = new ArrayList<ArrayList<Record>>();
 		
 		System.out.println("... LEARNER INFO: NaiveBayes training");
 		
-		List<ArrayList<Record>> reviewWithStars = new ArrayList<ArrayList<Record>>();
-		//calculate prior Pi
-		
+		//init
 		for(int i=1; i<=5; i++) {
 			reviewWithStars.add(new ArrayList<Record>());
 			wordPOfStars.add(new HashMap<String, Float>());
 		}
 		
+		//calculate prior Pi
 		for(Record r: data) {
 			reviewWithStars.get(r.goldLabel - 1).add(r);
 		}
@@ -41,12 +56,7 @@ public class NaiveBayesLeaner extends ClassificationLearner{
 			}
 			totalLengthOfAClass[i-1] = totalLength;
 		}
-		
-		for(int i=0; i<5; i++) {
-//			System.out.println(priorP[i]);			
-//			System.out.println(totalLengthOfAClass[i]);			
-		}
-		
+				
 		for(int i=0; i<5; i++) {			
 			for(String word: data.get(0).tokenFreq.keySet()) {
 				int nk = 0;
@@ -56,37 +66,108 @@ public class NaiveBayesLeaner extends ClassificationLearner{
 				wordPOfStars.get(i).put(word, (float)(nk+1) / ( totalLengthOfAClass[i] + data.get(0).tokenFreq.size()));
 			}
 		}
+				
 		
-		for(int i=0; i<5; i++) {
-//			System.out.println(wordPOfStars.get(i).get("brilliant"));			
-//			System.out.println(totalLengthOfAClass[i]);			
+	}
+
+	@Override
+	public int predict(Review review) {
+		
+		float[] nbScore = new float[5];
+		
+		for(Sentence sentence : Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class)) {
+			List<String> tokenList = Utils.fromStringListToArrayList(sentence.getUnigramList());
+			for(String token: tokenList) {
+				for(int i=0; i<5; i++) {
+					nbScore[i] += Math.log(wordPOfStars.get(i).get(token));
+				}
+			}
 		}
 		
+		float max = 0;
+		int maxId = 0;
+		for(int i=0; i<5; i++) {
+			if(nbScore[i] > max) {
+				max = nbScore[i];
+				maxId = i;
+			}
+		}
 		
-	}
-
-	@Override
-	public void predict() {
 		// TODO Auto-generated method stub
 		System.out.println("... LEARNER INFO: NaiveBayes predicting");
+		return maxId;
 		
 	}
 
 	@Override
-	public void initTest(String modelPath, List<Record> data ) {
+	public void initTest(String modelPath) {
 		
+		//init
+		for(int i=1; i<=5; i++) {
+			wordPOfStars.add(new HashMap<String, Float>());
+		}
+
+	    // Open the file
+	    FileInputStream fstream;
+		try {
+			System.out.println("... LEARNER INFO: opening NaiveBayes model descripter");
+			fstream = new FileInputStream(modelPath + this.getClass().getSimpleName() + ".txt");
+		    BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+
+		    String strLine;
+		    
+		    //Read File Line By Line
+		    while ((strLine = br.readLine()) != null)   {
+		    	String[] parts = strLine.split(" ");
+		    	for(int i=0; i<5; i++) {
+		    		wordPOfStars.get(i).put(parts[0], Float.valueOf(parts[i+1]));
+		    	}
+		    }
+
+		    //Close the input stream
+		    br.close();
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
 		
 	}
 	
 	@Override
-	public void initTrain(String modelPath, List<Record> data) {
+	public void initTrain(String modelPath, List<Record> data, Set<String> vocabulary) {
 		System.out.println("... LEARNER INFO: " + this.getClass().getSimpleName() + " initializing training");
 		this.data = data;
+		this.vocabulary = vocabulary;
 	}
 
 	@Override
 	public void writeModel() {
 		System.out.println("... LEARNER INFO: writing " + modelName + " to " + modelPath);
+		System.out.println("... LEARNER INFO: writing " + modelName + " to " + modelPath);
+		
+		//write csv document with scores for analysis
+		File outputFile = null;
+	    PrintWriter writer = null;
+	    try {	    	
+	        outputFile = new File(Paths.get(modelPath, this.getClass().getSimpleName() + ".txt").toString());
+	        outputFile.getParentFile().mkdirs();
+	        writer = new PrintWriter(outputFile);
+	    } catch (FileNotFoundException e) {
+	        System.out.printf("Output file could not be written: %s\n",
+	                Paths.get(modelPath, "topWords.txt").toString());
+	        return;
+	    }
+	    for(String key: wordPOfStars.get(0).keySet()) {
+	    	String line = key + " ";
+	    	for(int i=0; i<5; i++) {
+	    		line = line + wordPOfStars.get(i).get(key) + " ";
+	    	}
+	        writer.println(line);
+	    }
+		writer.close();
+		
 	}
 	
 }

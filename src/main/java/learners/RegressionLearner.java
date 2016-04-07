@@ -1,6 +1,7 @@
 package learners;
 
 import java.util.List;
+import java.util.Set;
 
 public class RegressionLearner implements Learner{
 
@@ -23,12 +24,6 @@ public class RegressionLearner implements Learner{
 	}
 
 	@Override
-	public void initTrain(String modelPath, List<Record> data) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void initTest(String modelPath, List<Record> data) {
 		// TODO Auto-generated method stub
 		
@@ -36,6 +31,18 @@ public class RegressionLearner implements Learner{
 
 	@Override
 	public void writeModel() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setModelPath(String modelPath) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void initTrain(String modelPath, List<Record> data, Set<String> vocabulary) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -1,6 +1,9 @@
 package learners;
 
 import java.util.List;
+import java.util.Set;
+
+import type.Review;
 
 public class ClassificationLearner implements Learner{
 
@@ -30,22 +33,14 @@ public class ClassificationLearner implements Learner{
 		
 	}
 
-	@Override
-	public void predict() {
-		// TODO Auto-generated method stub
-		
+	public int predict() {
+		return 0;
 	}
 
 
-	@Override
-	public void initTrain(String modelPath, List<Record> data) {
-		// TODO Auto-generated method stub
-		
-	}
-
 
 	@Override
-	public void initTest(String modelPath, List<Record> data) {
+	public void initTest(String modelPath) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -55,6 +50,17 @@ public class ClassificationLearner implements Learner{
 	public void writeModel() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void initTrain(String modelPath, List<Record> data, Set<String> vocabulary) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public int predict(Review r) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 
