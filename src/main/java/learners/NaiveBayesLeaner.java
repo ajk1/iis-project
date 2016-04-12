@@ -78,13 +78,15 @@ public class NaiveBayesLeaner extends ClassificationLearner{
 		for(Sentence sentence : Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class)) {
 			List<String> tokenList = Utils.fromStringListToArrayList(sentence.getUnigramList());
 			for(String token: tokenList) {
-				for(int i=0; i<5; i++) {
-					nbScore[i] += Math.log(wordPOfStars.get(i).get(token));
+				if(wordPOfStars.get(0).keySet().contains(token)) {
+					for(int i=0; i<5; i++) {
+						nbScore[i] += Math.log(wordPOfStars.get(i).get(token));
+					}					
 				}
 			}
 		}
 		
-		float max = 0;
+		float max = 0 - Float.MAX_VALUE;
 		int maxId = 0;
 		for(int i=0; i<5; i++) {
 			if(nbScore[i] > max) {
@@ -93,10 +95,7 @@ public class NaiveBayesLeaner extends ClassificationLearner{
 			}
 		}
 		
-		// TODO Auto-generated method stub
-		System.out.println("... LEARNER INFO: NaiveBayes predicting");
-		return maxId;
-		
+		return maxId + 1;
 	}
 
 	@Override
