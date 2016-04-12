@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -51,7 +52,7 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		System.out.println("... mode: " + mode);
 		System.out.println("... modelPath: " + modelPath);
 
-		Learner nbLearner = new NaiveBayesLeaner();
+		ClassificationLearner nbLearner = new NaiveBayesLeaner();
 		Learner svmLearner = new SVMLearner();
 		Learner regLearner = new LinearRegressionLearner();
 		
@@ -62,54 +63,93 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		Collection<Review> reviews = JCasUtil.select(aJCas, Review.class);      
 		System.out.println("... review size: " + reviews.size());
 
-		// write top words to file
-		HashMap<String, Integer> wordFreq = new HashMap<String, Integer>();
-		for (Review review : reviews) {
-			for(Sentence sentence : Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class)) {
-				for(String token : Utils.fromStringListToArrayList(sentence.getUnigramList())) {
-					token = token.toLowerCase();
-					if(!wordFreq.containsKey(token)) {
-						wordFreq.put(token, 1);
-					} else {
-						wordFreq.put(token, wordFreq.get(token) + 1);
+		int ctr = 0;
+		Map<String, Integer> sortedWordFreq = new LinkedHashMap<String, Integer>();	
+
+		if(mode.equals("train")) {
+			// write top words to file
+			HashMap<String, Integer> wordFreq = new HashMap<String, Integer>();
+			for (Review review : reviews) {
+				for(Sentence sentence : Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class)) {
+					for(String token : Utils.fromStringListToArrayList(sentence.getUnigramList())) {
+						token = token.toLowerCase();
+						if(!wordFreq.containsKey(token)) {
+							wordFreq.put(token, 1);
+						} else {
+							wordFreq.put(token, wordFreq.get(token) + 1);
+						}
 					}
+					
 				}
 				
 			}
+			sortedWordFreq = MapUtil.sortByValue(wordFreq);		
+			writeTopWords(sortedWordFreq, topWordLimit);
 			
-		}
-		Map<String, Integer> sortedWordFreq = MapUtil.sortByValue(wordFreq);		
-		writeTopWords(sortedWordFreq, topWordLimit);
-		
-		int ctr = 0;
-		for (Review review : reviews) {
-	    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
-			
-			Record r = new Record();
-			List<String> allTokens = new ArrayList<String>();
-			
-			//for each sentence in review
-			for(Sentence sentence : Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class)) {
-				List<String> tokenList = Utils.fromStringListToArrayList(sentence.getUnigramList());
-				for(String token: tokenList) {
-					token = token.toLowerCase();
-					allTokens.add(token);					
+			//init unified data format
+			for (Review review : reviews) {
+		    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
+				
+				Record r = new Record();
+				List<String> allTokens = new ArrayList<String>();
+				
+				//for each sentence in review
+				for(Sentence sentence : Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class)) {
+					List<String> tokenList = Utils.fromStringListToArrayList(sentence.getUnigramList());
+					for(String token: tokenList) {
+						token = token.toLowerCase();
+						allTokens.add(token);					
+					}
 				}
+				
+				r.setGoldLabel(review.getGoldLabel());
+				r.setAttr(allTokens, sortedWordFreq.keySet());
+				data.add(r);
 			}
 			
-			r.setGoldLabel(review.getGoldLabel());
-			r.setAttr(allTokens, sortedWordFreq.keySet());
-			data.add(r);
 		}
 		
 		System.out.println("... data size: " + data.size());
 		
+		
+		//0-order classification
+		System.out.println("... 0-order classification processing... ");	
+		for (Review review : reviews) {
+	    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
+			List<Integer> cScores = Utils.fromIntegerListToArrayList(review.getClassificationScores());
+			cScores.add(5);
+			review.setClassificationScores(Utils.fromCollectionToIntegerList(aJCas, cScores));
+		}
+		
+		
+		
 		//naive bayes init
-		Set<String> vocabulary = sortedWordFreq.keySet();
-		nbLearner.initTrain(modelPath, data, vocabulary);
-		nbLearner.train();
 		nbLearner.setModelPath(modelPath);
-		nbLearner.writeModel();
+		
+		ctr = 0;
+		
+		if(mode.equals("train")) {
+			Set<String> vocabulary = sortedWordFreq.keySet();
+			nbLearner.initTrain(modelPath, data, vocabulary);
+			nbLearner.train();
+			nbLearner.writeModel();			
+		} else if(mode.equals("test")) {
+			System.out.println("... naive bayes classification processing... ");	
+			nbLearner.initTest(modelPath);
+			for (Review review : reviews) {
+		    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
+		    	int predictScore = nbLearner.predict(review);
+				
+//		    	System.out.println("... predicting review: " + (ctr-1) + ": " + predictScore);
+				
+				List<Integer> cScores = Utils.fromIntegerListToArrayList(review.getClassificationScores());
+				cScores.add(predictScore);
+				review.setClassificationScores(Utils.fromCollectionToIntegerList(aJCas, cScores));
+//				System.out.println("size: " + Utils.fromIntegerListToArrayList(review.getClassificationScores()).size());
+			}
+			
+		}
+		
 		
 		svmLearner.initialize(mode, modelPath, data);
 		regLearner.initialize(mode, modelPath, data);

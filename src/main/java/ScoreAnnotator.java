@@ -56,7 +56,7 @@ public class ScoreAnnotator extends JCasAnnotator_ImplBase {
 			
 			//add back to type Score
 			review.setRegressionScores(Utils.fromCollectionToFloatList(aJCas, rScores));
-			review.setClassificationScores(Utils.fromCollectionToIntegerList(aJCas, cScores));
+//			review.setClassificationScores(Utils.fromCollectionToIntegerList(aJCas, cScores));
 		}
 
       
