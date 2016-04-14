@@ -10,8 +10,8 @@ public class CoreNLP {
     private static final StanfordCoreNLP pipeline;
     private static final Properties props = new Properties();
     static {
-    	props.put("annotators","tokenize, ssplit, pos, lemma, ner, parse, dcoref");
-//        props.put("annotators", "tokenize, ssplit, pos, lemma, parse");
+//    	props.put("annotators","tokenize, ssplit, pos, lemma, ner, parse, dcoref");
+        props.put("annotators", "tokenize, ssplit, pos, lemma, parse");
         pipeline = new StanfordCoreNLP(props);
     }
 
