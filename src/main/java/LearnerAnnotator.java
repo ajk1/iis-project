@@ -10,6 +10,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -31,7 +34,7 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 	private int sizeLimit;
 	private String mode;
 	private String modelPath;
-	private int topWordLimit;
+	private int topWordLimit = 1000;
 	
 	Set<String> topWords = new HashSet<String>();
 
@@ -52,7 +55,8 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		System.out.println("... mode: " + mode);
 		System.out.println("... modelPath: " + modelPath);
 
-		ClassificationLearner nbLearner = new NaiveBayesLeaner();
+		ClassificationLearner nbLearner = new NaiveBayesLearner();
+		ClassificationLearner nnLearner = new NeuralNetLearner();
 		Learner svmLearner = new SVMLearner();
 		Learner regLearner = new LinearRegressionLearner();
 		
@@ -65,7 +69,8 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 
 		int ctr = 0;
 		Map<String, Integer> sortedWordFreq = new LinkedHashMap<String, Integer>();	
-
+		Set<String> vocabulary = new HashSet<String>();
+		
 		if(mode.equals("train")) {
 			// write top words to file
 			HashMap<String, Integer> wordFreq = new HashMap<String, Integer>();
@@ -83,8 +88,16 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 				}
 				
 			}
-			sortedWordFreq = MapUtil.sortByValue(wordFreq);		
-			writeTopWords(sortedWordFreq, topWordLimit);
+			sortedWordFreq = MapUtil.sortByValue(wordFreq);	
+			
+			int i=0;
+			for (String v : sortedWordFreq.keySet()) {
+				if (i<1000) vocabulary.add(v);
+				else break;
+				i++;
+			}
+			
+			//writeTopWords(sortedWordFreq, topWordLimit);
 			
 			//init unified data format
 			for (Review review : reviews) {
@@ -103,7 +116,7 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 				}
 				
 				r.setGoldLabel(review.getGoldLabel());
-				r.setAttr(allTokens, sortedWordFreq.keySet());
+				r.setAttr(allTokens, vocabulary);
 				data.add(r);
 			}
 			
@@ -129,7 +142,6 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		ctr = 0;
 		
 		if(mode.equals("train")) {
-			Set<String> vocabulary = sortedWordFreq.keySet();
 			nbLearner.initTrain(modelPath, data, vocabulary);
 			nbLearner.train();
 			nbLearner.writeModel();			
@@ -147,9 +159,32 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 				review.setClassificationScores(Utils.fromCollectionToIntegerList(aJCas, cScores));
 //				System.out.println("size: " + Utils.fromIntegerListToArrayList(review.getClassificationScores()).size());
 			}
-			
 		}
 		
+		//neural network init
+		nnLearner.setModelPath(modelPath);
+		
+		ctr = 0;
+		
+		if(mode.equals("train")) {
+			nnLearner.initTrain(modelPath, data, vocabulary);
+			nnLearner.train();
+			nnLearner.writeModel();			
+		} else if(mode.equals("test")) {
+			System.out.println("... neural network classification processing... ");	
+			nnLearner.initTest(modelPath);
+			for (Review review : reviews) {
+		    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
+		    	int predictScore = nnLearner.predict(review);
+				
+//				System.out.println("... predicting review: " + (ctr-1) + ": " + predictScore);
+				
+				List<Integer> cScores = Utils.fromIntegerListToArrayList(review.getClassificationScores());
+				cScores.add(predictScore);
+				review.setClassificationScores(Utils.fromCollectionToIntegerList(aJCas, cScores));
+//				System.out.println("size: " + Utils.fromIntegerListToArrayList(review.getClassificationScores()).size());
+			}
+		}
 		
 		svmLearner.initialize(mode, modelPath, data);
 		regLearner.initialize(mode, modelPath, data);

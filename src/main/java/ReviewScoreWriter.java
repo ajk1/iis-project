@@ -85,7 +85,7 @@ public class ReviewScoreWriter extends CasConsumer_ImplBase {
       List<double[]> fn = new ArrayList<double[]>();
 
       //TODO: need a specific number to determine how long this array should be
-	  for(int rScoreIndex = 0; rScoreIndex < 2; rScoreIndex++) {
+	  for(int rScoreIndex = 0; rScoreIndex < 3; rScoreIndex++) {
 		  tp.add(new double[5]);
 		  fp.add(new double[5]);
 		  tn.add(new double[5]);
@@ -96,7 +96,7 @@ public class ReviewScoreWriter extends CasConsumer_ImplBase {
       
 			List<Integer> cScores = Utils.fromIntegerListToLinkedList(review.getClassificationScores());
 			List<Float> rScores = Utils.fromFloatListToLinkedList(review.getRegressionScores());
-    	  
+
     	  //regression-like evaluation
     	  sumErrorSquare += Math.pow(review.getGoldLabel() - rScores.get(0) ,2);
     	  
@@ -121,7 +121,7 @@ public class ReviewScoreWriter extends CasConsumer_ImplBase {
 	  System.out.println("... MSE: " + sumErrorSquare / allReviews.size());
 
       
-      for(int index=0; index<2; index++) {
+      for(int index=0; index<3; index++) {
           System.out.print("tp: ");
           for(double d: tp.get(index)) { System.out.printf("%-10.0f",d);}
           System.out.println("");
