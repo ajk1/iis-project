@@ -7,8 +7,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -20,9 +22,25 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 
+import edu.stanford.nlp.ling.CoreAnnotations;
+import edu.stanford.nlp.ling.CoreLabel;
+import edu.stanford.nlp.pipeline.Annotation;
+import edu.stanford.nlp.pipeline.StanfordCoreNLP;
+import edu.stanford.nlp.trees.GrammaticalStructure;
+import edu.stanford.nlp.trees.GrammaticalStructureFactory;
+import edu.stanford.nlp.trees.PennTreebankLanguagePack;
+import edu.stanford.nlp.trees.Tree;
+import edu.stanford.nlp.trees.TreeCoreAnnotations;
+import edu.stanford.nlp.trees.TreeCoreAnnotations.TreeAnnotation;
+import edu.stanford.nlp.trees.TreebankLanguagePack;
+import edu.stanford.nlp.trees.TypedDependency;
+import edu.stanford.nlp.trees.tregex.TregexMatcher;
+import edu.stanford.nlp.trees.tregex.TregexPattern;
+import edu.stanford.nlp.util.CoreMap;
 import type.Review;
 import type.Sentence;
 import util.Utils;
+import util.CoreNLP;
 import util.MapUtil;
 
 import learners.*;
@@ -66,8 +84,77 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		// get reviews from the CAS
 		Collection<Review> reviews = JCasUtil.select(aJCas, Review.class);      
 		System.out.println("... review size: " + reviews.size());
-
 		int ctr = 0;
+
+		TregexPattern npPattern = TregexPattern.compile("@NP");
+		
+		for (Review review : reviews) {
+	    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
+			System.out.println("... review id: " + review.getProductId());
+			System.out.println("... review text: " + review.getRawText());
+			for(Sentence sentence : Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class)) {
+				System.out.println("... sentence text: " + sentence.getRawText());
+				doSentenceTest(sentence.getRawText());
+//		        String text = "The fitness room was dirty.";
+//		        Annotation s = new Annotation(sentence.getRawText());
+//		        Annotation s = new Annotation(text);
+//		        CoreNLP.annotate(s);
+//		        List<CoreMap> sentences = s.get(CoreAnnotations.SentencesAnnotation.class);
+//
+//		        
+//	        	List<String> compoundNounsPerSentence = getCompoundNouns(sentences.get(0));
+//					        	
+//	            Tree sentenceTree = s.get(TreeCoreAnnotations.TreeAnnotation.class);
+//	            TregexMatcher matcher = npPattern.matcher(sentenceTree);
+//
+//	            System.out.println(sentenceTree);
+//	            
+//	            while (matcher.find()) {
+//	                //this tree should contain "The fitness room" 
+//	                Tree nounPhraseTree = matcher.getMatch();
+//	                //Question : how do I find that "dirty" has a relationship to the nounPhraseTree
+//
+//
+//	            }
+
+	            // Output dependency tree
+//	            TreebankLanguagePack tlp = new PennTreebankLanguagePack();
+//	            GrammaticalStructureFactory gsf = tlp.grammaticalStructureFactory();
+//	            GrammaticalStructure gs = gsf.newGrammaticalStructure(sentenceTree);
+//	            Collection<TypedDependency> tdl = gs.typedDependenciesCollapsed();
+//
+//	            System.out.println("typedDependencies: "+tdl); 
+	        	
+	        	// Get dependency tree
+//	        	TreebankLanguagePack tlp = new PennTreebankLanguagePack();
+//	        	GrammaticalStructureFactory gsf = tlp.grammaticalStructureFactory();
+//	        	GrammaticalStructure gs = gsf.newGrammaticalStructure(tree);
+//	        	Collection<TypedDependency> td = gs.typedDependenciesCollapsed();
+//	        	System.out.println(td);
+//
+//	        	Object[] list = td.toArray();
+//	        	System.out.println(list.length);
+//	        	TypedDependency typedDependency;
+//	        	for (Object object : list) {
+//	        		typedDependency = (TypedDependency) object;
+//	        		System.out.println("Depdency Name: "+typedDependency.dep().toString()+ " :: "+ "Node"+typedDependency.reln());
+//	        		if (typedDependency.reln().getShortName().equals("something")) {
+//	        			//your code
+//	        		}
+//	        	
+//	        	}
+//			}
+//	        Annotation document = new Annotation(review.getRawText().toLowerCase());
+//	        CoreNLP.annotate(document);
+//	        List<CoreMap> sentences = document.get(CoreAnnotations.SentencesAnnotation.class);
+//
+//	        for(CoreMap sentence: sentences) {
+//	        }
+			}
+		}
+		
+		
+		ctr = 0;
 		Map<String, Integer> sortedWordFreq = new LinkedHashMap<String, Integer>();	
 		Set<String> vocabulary = new HashSet<String>();
 		
@@ -78,6 +165,10 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 				for(Sentence sentence : Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class)) {
 					for(String token : Utils.fromStringListToArrayList(sentence.getUnigramList())) {
 						token = token.toLowerCase();
+
+//				        System.out.println("word: "+word+", lemma: "+lemma+", pos: "+pos);
+
+						
 						if(!wordFreq.containsKey(token)) {
 							wordFreq.put(token, 1);
 						} else {
@@ -207,6 +298,75 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 	        writer.println(key);
 	    }
 		writer.close();
+	}
+	
+	public List<String> getCompoundNouns(CoreMap sentence) {
+	    List<String> nounPhraseCandidates = new LinkedList<String>();
+	    List<String> nounPhrases = new LinkedList<String>();
+	    List<CoreLabel> tokens = sentence.get(CoreAnnotations.TokensAnnotation.class);
+
+		for (int j = 0; j < tokens.size(); ++j) {
+	        CoreLabel token = tokens.get(j);
+	        String lemma = token.get(CoreAnnotations.LemmaAnnotation.class);
+	        String word = token.get(CoreAnnotations.TextAnnotation.class);
+	        String pos = token.get(CoreAnnotations.PartOfSpeechAnnotation.class);
+	        System.out.println("word: "+word+", lemma: "+lemma+", pos: "+pos);
+	        
+	        //extracting noun phrase
+	        if(isNoun(pos)) {
+	      	  nounPhraseCandidates.add(word);
+	        } else {
+	      	  if(nounPhraseCandidates.size() > 1) {
+	      		  nounPhrases.add(String.join(" ",nounPhraseCandidates));
+	      	  }
+	      	  nounPhraseCandidates.clear();
+	        }
+	    }
+	    return nounPhrases;
+	}
+	
+	public boolean isNoun(String posTag) {
+		if(posTag.equals("NN")) return true;
+		if(posTag.equals("NNS")) return true;
+		if(posTag.equals("NNP")) return true;
+		if(posTag.equals("NNPS")) return true;
+		return false;
+	}
+	
+	private static void doSentenceTest(String text){
+
+	    TregexPattern npPattern = TregexPattern.compile("@NP");
+
+	    // create an empty Annotation just with the given text
+	    Annotation document = new Annotation(text);
+	    // run all Annotators on this text
+	    CoreNLP.annotate(document);
+
+	    List<CoreMap> sentences = document.get(CoreAnnotations.SentencesAnnotation.class);
+	    for (CoreMap sentence : sentences) {
+
+	        Tree sentenceTree = sentence.get(TreeCoreAnnotations.TreeAnnotation.class);
+	        TregexMatcher matcher = npPattern.matcher(sentenceTree);
+
+	        while (matcher.find()) {
+	            //this tree should contain "The fitness room" 
+	            Tree nounPhraseTree = matcher.getMatch();
+	            //Question : how do I find that "dirty" has a relationship to the nounPhraseTree
+
+	        }
+
+	        // Output dependency tree
+	        TreebankLanguagePack tlp = new PennTreebankLanguagePack();
+	        GrammaticalStructureFactory gsf = tlp.grammaticalStructureFactory();
+	        GrammaticalStructure gs = gsf.newGrammaticalStructure(sentenceTree);
+	        Collection<TypedDependency> tdl = gs.typedDependenciesCollapsed();
+
+	        for(TypedDependency td: tdl) {
+		        System.out.println("typedDependencies: "+td); 	        	
+	        }
+
+	    }
+
 	}
 	
 }
