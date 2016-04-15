@@ -85,7 +85,11 @@ public class ReviewScoreWriter extends CasConsumer_ImplBase {
       List<double[]> fn = new ArrayList<double[]>();
 
       //TODO: need a specific number to determine how long this array should be
+<<<<<<< HEAD
 	  for(int rScoreIndex = 0; rScoreIndex < 3; rScoreIndex++) {
+=======
+	  for(int cScoreIndex = 0; cScoreIndex < 3; cScoreIndex++) {
+>>>>>>> fbf2ab1... learner.class flow refactor
 		  tp.add(new double[5]);
 		  fp.add(new double[5]);
 		  tn.add(new double[5]);
@@ -137,6 +141,8 @@ public class ReviewScoreWriter extends CasConsumer_ImplBase {
           
           
     	  double f1agg = 0;
+    	  double recallagg = 0;
+    	  double precisionagg = 0;
           for(int i=0; i<5; i++) {
         	  double precision = (tp.get(index)[i] + fp.get(index)[i] == 0) ? 0 : tp.get(index)[i] / (tp.get(index)[i] + fp.get(index)[i]);
         	  double recall = (tp.get(index)[i] + fn.get(index)[i] == 0) ? 0 : tp.get(index)[i] / (tp.get(index)[i] + fn.get(index)[i]);
@@ -146,8 +152,13 @@ public class ReviewScoreWriter extends CasConsumer_ImplBase {
         	  System.out.println("... precision of rating " + (i+1) +" : " + precision);    	  
         	  System.out.println("... recall of rating " + (i+1) +" : " + recall);    	  
         	  System.out.println("... f1 of rating " + (i+1) +" : " + f1);  
+
+        	  recallagg += recall*(tp.get(index)[i]+fn.get(index)[i]);
+        	  precisionagg += precision*(tp.get(index)[i]+fn.get(index)[i]);
         	  f1agg += f1*(tp.get(index)[i]+fn.get(index)[i]);
           }
+          System.out.println("... weighted recall (aggregate) : " + recallagg);
+          System.out.println("... weighted precision (aggregate) : " + precisionagg);
           System.out.println("... weighted f1 (aggregate) : " + f1agg);
     	  
       }

@@ -30,6 +30,10 @@ public class Record {
 		}
 	}
 	
+	public void addNegSubstract() {
+		
+	}
+	
 	public void setGoldLabel(int goldLabel) {
 		this.goldLabel = goldLabel;
 	}

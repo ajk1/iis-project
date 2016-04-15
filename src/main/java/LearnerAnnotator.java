@@ -1,5 +1,10 @@
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -64,8 +69,11 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		Learner svmLearner = new SVMLearner();
 		Learner regLearner = new LinearRegressionLearner();
 		
+		//vocabulary
+		Map<String, Integer> sortedWordFreq = new LinkedHashMap<String, Integer>();	
+
+		//data set, in the format of Record
 		List<Record> data = new ArrayList<Record>();
-		
 		
 		// get reviews from the CAS
 		Collection<Review> reviews = JCasUtil.select(aJCas, Review.class);      
@@ -73,75 +81,27 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		System.out.println("... data size: " + data.size());
 		int ctr = 0;
 		
-		Map<String, Integer> sortedWordFreq = new LinkedHashMap<String, Integer>();	
 		Set<String> vocabulary = new HashSet<String>();
 		
+
 		if(mode.equals("train")) {
 			
 			// write top words to file
-			HashMap<String, Integer> wordFreq = new HashMap<String, Integer>();
-			for (Review review : reviews) {
-		    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
-				System.out.println("... review id: " + review.getProductId());
-
-				for(Sentence sentence : Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class)) {
-					
-					//generating top words vocabs
-					//TODO: stopwords removal
-					for(String token : Utils.fromStringListToArrayList(sentence.getUnigramList())) {
-						token = token.toLowerCase();
-
-						if(!wordFreq.containsKey(token)) {
-							wordFreq.put(token, 1);
-						} else {
-							wordFreq.put(token, wordFreq.get(token) + 1);
-						}
-					}
-				}
-			}
-			sortedWordFreq = MapUtil.sortByValue(wordFreq);	
+			HashMap<String, Integer> wordFreq = getVocabInTrainSet(reviews);
+			sortedWordFreq = MapUtil.sortByValue(wordFreq);		
 			writeTopWords(sortedWordFreq, topWordLimit);
-			
 			int i=0;
 			for (String v : sortedWordFreq.keySet()) {
 				if (i<1000) vocabulary.add(v);
 				else break;
 				i++;
-			}
-			
-			//writeTopWords(sortedWordFreq, topWordLimit);
-			
+			}						
 			ctr = 0;
-			//init unified data format
+			//create Record List for unified learner input data format
 			for (Review review : reviews) {
 		    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
-				
-				Record r = new Record();
-				List<String> allTokens = new ArrayList<String>();
-				Map<String, Integer> negatedWords = new HashMap<String, Integer>();
-				
-				//for each sentence in review
-				for(Sentence sentence : Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class)) {
-					System.out.println("... sentence text: " + sentence.getRawText());
 
-					//negation detection
-					Map<String, Integer> negatedWordsInSentence = CoreNLPUtils.getNegatedWordsWithParseTree(sentence.getRawText());
-//					System.out.println(negatedWordsInSentence);
-					negatedWordsInSentence.forEach((k, v) -> negatedWords.merge(k, v, (v1, v2) -> v1 + v2));
-
-					//token detection
-					List<String> tokenList = Utils.fromStringListToArrayList(sentence.getUnigramList());
-
-					for(String token: tokenList) {
-						token = token.toLowerCase();
-						allTokens.add(token);					
-					}
-				}
-				System.out.println("review: " + negatedWords);
-				
-				r.setGoldLabel(review.getGoldLabel());
-				r.setAttr(allTokens, vocabulary);
-				r.addNeg(negatedWords);
+				Record r = reviewToRecord(review, sortedWordFreq);
 				data.add(r);
 			}
 			
@@ -168,14 +128,19 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		} else if(mode.equals("test")) {
 			System.out.println("... naive bayes classification processing... ");	
 			nbLearner.initTest(modelPath);
+			sortedWordFreq = getTopWordsFromFile(topWordLimit);
 			for (Review review : reviews) {
 		    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
-		    	int predictScore = nbLearner.predict(review);
+
+				Record r = reviewToRecord(review, sortedWordFreq);
+		    	int predictScore = nbLearner.predict(review);		    	
+		    	int predictScore2 = nbLearner.predict(r);
 				
-//		    	System.out.println("... predicting review: " + (ctr-1) + ": " + predictScore);
+		    	System.out.println("... predicting review: " + (ctr-1) + ": " + predictScore + "," + predictScore2);
 				
 				List<Integer> cScores = Utils.fromIntegerListToArrayList(review.getClassificationScores());
 				cScores.add(predictScore);
+				cScores.add(predictScore2);
 				review.setClassificationScores(Utils.fromCollectionToIntegerList(aJCas, cScores));
 //				System.out.println("size: " + Utils.fromIntegerListToArrayList(review.getClassificationScores()).size());
 			}
@@ -210,6 +175,59 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		regLearner.initialize(mode, modelPath, data);
 	}
 
+	private Record reviewToRecord(Review review, Map<String, Integer> sortedWordFreq) {
+		Record r = new Record();
+		List<String> allTokens = new ArrayList<String>();
+		Map<String, Integer> negatedWords = new HashMap<String, Integer>();
+		
+		//for each sentence in review
+		for(Sentence sentence : Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class)) {
+
+			//negation detection
+			Map<String, Integer> negatedWordsInSentence = CoreNLPUtils.getNegatedWordsWithParseTree(sentence.getRawText());
+//			System.out.println(negatedWordsInSentence);
+			negatedWordsInSentence.forEach((k, v) -> negatedWords.merge(k, v, (v1, v2) -> v1 + v2));
+
+			//token detection
+			List<String> tokenList = Utils.fromStringListToArrayList(sentence.getUnigramList());
+
+			for(String token: tokenList) {
+				token = token.toLowerCase();
+				allTokens.add(token);					
+			}
+		}
+//		System.out.println("review: " + negatedWords);
+		r.setGoldLabel(review.getGoldLabel());
+		r.setAttr(allTokens, sortedWordFreq.keySet());
+		r.addNeg(negatedWords);
+		return r;
+	}
+
+	private HashMap<String, Integer> getVocabInTrainSet(Collection<Review> reviews) {
+		HashMap<String, Integer> wordFreq = new HashMap<String, Integer>();
+		int ctr = 0;
+		for (Review review : reviews) {
+	    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
+			System.out.println("... review id: " + review.getProductId());
+
+			for(Sentence sentence : Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class)) {
+				
+				//generating top words vocabs
+				//TODO: stopwords removal
+				for(String token : Utils.fromStringListToArrayList(sentence.getUnigramList())) {
+					token = token.toLowerCase();
+
+					if(!wordFreq.containsKey(token)) {
+						wordFreq.put(token, 1);
+					} else {
+						wordFreq.put(token, wordFreq.get(token) + 1);
+					}
+				}
+			}
+		}
+		return wordFreq;
+	}
+
 	private void writeTopWords(Map<String, Integer> map, int limit) {
 		//write csv document with scores for analysis
 		File outputFile = null;
@@ -227,6 +245,32 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 	        writer.println(key);
 	    }
 		writer.close();
+	}
+	
+	private Map<String, Integer> getTopWordsFromFile(int limit) {
+		Map<String, Integer> topWords = new LinkedHashMap<String, Integer>();
+		
+		// Construct BufferedReader from FileReader
+		File file = new File(Paths.get(modelPath, "topWords.txt").toString());
+		FileReader fileReader;
+		try {
+			fileReader = new FileReader(file);
+			//Construct BufferedReader from InputStreamReader
+			BufferedReader br = new BufferedReader(fileReader);
+		 
+			String line = null;
+			while ((line = br.readLine()) != null) {
+				topWords.put(line, 0);
+			}
+			br.close();
+		 
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		 
+		return topWords;	
 	}
 	
 	public List<String> getCompoundNouns(CoreMap sentence) {

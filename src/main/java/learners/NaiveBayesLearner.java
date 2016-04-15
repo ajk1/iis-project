@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import type.Review;
@@ -70,6 +71,29 @@ public class NaiveBayesLearner extends ClassificationLearner{
 		
 	}
 
+	@Override
+	public int predict(Record review) {
+		float[] nbScore = new float[5];
+		for(Entry<String, Integer> e: review.tokenFreq.entrySet()) {
+			if(wordPOfStars.get(0).keySet().contains(e.getKey())) {
+				for(int i=0; i<5; i++) {
+					nbScore[i] += e.getValue() * Math.log(wordPOfStars.get(i).get(e.getKey()));
+				}					
+			}
+		}
+
+		float max = 0 - Float.MAX_VALUE;
+		int maxId = 0;
+		for(int i=0; i<5; i++) {
+			if(nbScore[i] > max) {
+				max = nbScore[i];
+				maxId = i;
+			}
+		}
+		
+		return maxId + 1;		
+	}
+	
 	@Override
 	public int predict(Review review) {
 		
