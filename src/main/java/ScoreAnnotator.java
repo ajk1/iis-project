@@ -16,12 +16,16 @@ import util.Utils;
 
 public class ScoreAnnotator extends JCasAnnotator_ImplBase {
 	final String PARAM_SIZELIMIT = "SizeLimit";
+	final String PARAM_MODE = "Mode";
 	private int sizeLimit;
+	private String mode;
+
 
 	@Override
 	public void initialize(UimaContext aContext) throws ResourceInitializationException {
 		super.initialize(aContext);		
 		sizeLimit = Integer.valueOf((String) aContext.getConfigParameterValue(PARAM_SIZELIMIT));
+		mode = (String) aContext.getConfigParameterValue(PARAM_MODE);
 	}
 
 	

@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,10 +23,6 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 
-import edu.stanford.nlp.ling.CoreAnnotations;
-import edu.stanford.nlp.ling.CoreLabel;
-
-import edu.stanford.nlp.util.CoreMap;
 import type.Review;
 import type.Sentence;
 import util.Utils;
@@ -36,6 +31,7 @@ import util.StopWordUtils;
 import util.CoreNLPUtils;
 
 import learners.*;
+import learners.Record;
 
 public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 	final String PARAM_SIZELIMIT = "SizeLimit";
@@ -72,7 +68,6 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		System.out.println("... readRecords: " + readRecords);
 
 		// 1. annotate Records from Reviews (Class <Review> is POJO)
-		
 		// get reviews from the CAS
 		Collection<Review> reviews = JCasUtil.select(aJCas, Review.class);
 		System.out.println("... review size: " + reviews.size());
@@ -85,7 +80,7 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		Set<String> vocabulary = new HashSet<String>();
 
 		// DataSet, in the format of Record
-		List<Record> data;
+		List<Record> data = new ArrayList<Record>();
 
 		int ctr = 0;
 		
@@ -129,23 +124,23 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 			sortedWordFreq = getTopWordsFromFile(topWordLimit);
 			vocabulary = getTopVocab(sortedWordFreq, topWordLimit);					
 		}
+
+		Record.setVocab(vocabulary);
 		
 		// 1.2 create Record List for unified learner input data format
 		if (!readRecords) {
-			data = reviewsToRecords(reviews);
-			
+			for (Review review : reviews) {
+		    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
+				System.out.println("... Learner Annotator: annotating " + ctr + " review to record ... ");	
+	
+				Record r = Record.reviewToRecordWithNeg(review);
+				data.add(r);
+			}
 //			writeRecords(data);
 		}
 		else { 
 			data = readRecords(reviews);
 		}
-//		
-//		for (Record r : data) {
-//			for(String s : r.tokenFreq.keySet()) {
-//				if(r.tokenFreq.get(s)>0) System.out.print(s+" "+r.tokenFreq.get(s)+", ");
-//			}
-//			System.out.println();
-//		}
 		
 		// 2. Learners start working here
 		ClassificationLearner nbLearner = new NaiveBayesLearner();
@@ -177,7 +172,6 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 			for(int i = 0; i < numOfFolds; i++) {
 				System.out.println("... Cross-Validation: " + (i*sizeLimit/numOfFolds+1) 
 						+ " through " + Math.round((double)(i+1)*sizeLimit/numOfFolds));
-				// TODO: k-fold modify here
 				
 				// get training set 
 				List<Record> trainingData = new ArrayList<Record>();
@@ -199,7 +193,6 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 				nnLearner.initTrain(modelPath, trainingData, vocabulary);
 				nnLearner.train();
 				nnLearner.writeModel();			
-
 				
 				// k-fold test
 				System.out.println("... Cross-Validation: Testing fold " + (i+1));
@@ -317,9 +310,9 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 	}
 	
 	private ArrayList<Record> readRecords(Collection<Review> reviews) {
-
 		ArrayList<Record> data = new ArrayList<Record>();
 		int ctr = 0;
+
 		// Open the file
 	    FileInputStream fstream;
 		try {
@@ -332,30 +325,15 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 				String line = br.readLine();
 				if(line == null) break;
 				
-				Record r = new Record();
-				List<String> allTokens = new ArrayList<String>();
+				Record r = Record.reviewToRecord(review);
 				Map<String, Integer> negatedWords = new HashMap<String, Integer>();
 				
-				//for each sentence in review
-				for(Sentence sentence : Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class)) {
-					//token detection
-					List<String> tokenList = Utils.fromStringListToArrayList(sentence.getUnigramList());
 
-					for(String token: tokenList) {
-						//remove punctuation
-						token = token.replaceAll("[^a-zA-Z ]", "");
-						if (!token.equals(token.toUpperCase())) token = token.toLowerCase();
-						allTokens.add(token);		
-					}
-				}
 				String[] values = line.split("\\s");
 				for(int i=0; i<values.length/2; i++) {
 					negatedWords.put(values[i*2], Integer.parseInt(values[i*2+1]));
 				}
 				
-				r.setReview(review);
-				r.setGoldLabel(review.getGoldLabel());
-				r.setAttr(allTokens);
 				r.addNeg(negatedWords);
 				r.addNegSubstract(negatedWords);
 				data.add(r);

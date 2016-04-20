@@ -1,5 +1,6 @@
 package learners;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,9 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import type.Review;
+import type.Sentence;
+import util.CoreNLPUtils;
+import util.Utils;
 
 public class Record {
 	public static Set<String> vocabulary;
@@ -23,7 +27,44 @@ public class Record {
 	
 	public static void setVocab(Set<String> vocab) {
 		vocabulary = vocab;
-	}
+	}	
+	
+	public static Record reviewToRecordWithNeg(Review review) {
+		Record r = Record.reviewToRecord(review);
+		Map<String, Integer> negatedWords = new HashMap<String, Integer>();
+		
+		//for each sentence in review
+		for(Sentence sentence : Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class)) {
+
+			//negation detection
+			Map<String, Integer> negatedWordsInSentence = CoreNLPUtils.getNegatedWordsWithParseTree(sentence.getRawText());
+			negatedWordsInSentence.forEach((k, v) -> negatedWords.merge(k, v, (v1, v2) -> v1 + v2));
+		}
+		r.addNeg(negatedWords);
+		r.addNegSubstract(negatedWords);
+		return r;
+	}	
+
+	public static Record reviewToRecord(Review review) {
+		Record r = new Record();
+		List<String> allTokens = new ArrayList<String>();
+		
+		//for each sentence in review
+		for(Sentence sentence : Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class)) {
+
+			//token detection
+			List<String> tokenList = Utils.fromStringListToArrayList(sentence.getUnigramList());
+
+			for(String token: tokenList) {
+				token = token.toLowerCase();
+				allTokens.add(token);					
+			}
+		}
+		r.setReview(review);
+		r.setGoldLabel(review.getGoldLabel());
+		r.setAttr(allTokens);
+		return r;
+	}		
 	
 //	public static void setNegatedVocab(Set<String> negatedVocab) {
 //		negatedVocabulary = negatedVocab;
