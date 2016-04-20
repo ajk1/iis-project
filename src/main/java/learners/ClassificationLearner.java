@@ -33,10 +33,9 @@ public class ClassificationLearner implements Learner{
 		
 	}
 
-	public int predict() {
+	public int predict(Record r) {
 		return 0;
 	}
-
 
 
 	@Override
