@@ -26,9 +26,9 @@ public class NeuralNetLearner extends ClassificationLearner{
 	private List<Record> data;
 	private Set<String> vocabulary = new HashSet<String>();
 	private int numInput;
-	private int numHidden = 4;
+	private int numHidden = 5;
 	private int numOutput = 5;
-	double eta = 5; //step size
+	double eta; //step size
 	double[][] w;
 	double[][] q = new double[numHidden][numOutput];
 
@@ -62,7 +62,8 @@ public class NeuralNetLearner extends ClassificationLearner{
 		}
 		
 		double prevSqError = 100000;
-		for (int iter=0; iter<1000; iter++) {
+		double firstSqError = 0;
+		for (int iter=0; iter<2000; iter++) {
 			double sqError = 0;
 			
 			for (int n=0; n<data.size(); n++) {
@@ -112,23 +113,38 @@ public class NeuralNetLearner extends ClassificationLearner{
 					sqError += Math.pow(output[o] - t[o], 2)/2;
 				}
 			}
-			//System.out.println(sqError);
+			if (firstSqError == 0) firstSqError = sqError;
 			if (sqError/prevSqError > 1.01) {
 				System.out.println("reduce step");
-				if (eta < 1) break;
+				System.out.println(sqError);
+				if (eta < .1) {
+					if (sqError > firstSqError/5) {
+						System.out.println("stuck in local min");
+						//randomize weights
+						for (int h=0; h<numHidden; h++) {
+							for (int i=0; i<numInput; i++) {
+								w[i][h] = Math.random()*0.2 - 0.1;
+							}
+							for (int o=0; o<numOutput; o++) {
+								q[h][o] = Math.random()*0.2 - 0.1;
+							}
+						}
+						iter = 0;
+						eta = 2;
+					}
+					else break;
+				}
 				eta = eta/2;
 			}
 			prevSqError = sqError;
 		}
-		
+		System.out.println(prevSqError);
 	}
 
 	@Override
 	public int predict(Record r) {
 		
 		float[] nnScore = new float[5];
-		
-	    System.out.println(vocabulary.size());
 		
 		//divide each value by the sum to get frequencies
 		int sum = 0;
@@ -221,6 +237,7 @@ public class NeuralNetLearner extends ClassificationLearner{
 		this.vocabulary = vocabulary;
 		this.numInput = vocabulary.size() + 1; //extra unit for bias unit (which always has input of 1)
 		this.w = new double[numInput][numHidden]; 
+		this.eta = 1;
 	}
 
 	@Override

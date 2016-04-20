@@ -161,8 +161,6 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 					else
 						trainingData.add(data.get(j));
 				}
-				System.out.println(trainingData.size());
-				System.out.println(testingData.size());
 				
 				// k-fold train
 				System.out.println("... Cross-Validation: Training fold " + (i+1));
@@ -182,7 +180,7 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 			    	int zeroRegScore = 5;
 			    	int nbPredictScore = nbLearner.predict(r);			    	
 			    	int nnPredictScore = nnLearner.predict(r);
-			    	System.out.println("... predicting review: " + (ctr) + ": " + nbPredictScore + "," + nnPredictScore);
+//			    	System.out.println("... predicting review: " + (ctr) + ": " + nbPredictScore + "," + nnPredictScore);
 			    	
 					List<Integer> cScores = Utils.fromIntegerListToArrayList(r.review.getClassificationScores());
 					cScores.add(zeroRegScore);
@@ -324,8 +322,6 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 				String[] values = line.split("\\s");
 				for(int i=0; i<values.length/2; i++) {
 					negatedWords.put(values[i*2], Integer.parseInt(values[i*2+1]));
-					System.out.println(values[i*2]);
-					System.out.println(review.getRawText());
 				}
 				
 				r.setReview(review);
