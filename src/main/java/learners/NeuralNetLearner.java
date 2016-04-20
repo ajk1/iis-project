@@ -112,7 +112,7 @@ public class NeuralNetLearner extends ClassificationLearner{
 					sqError += Math.pow(output[o] - t[o], 2)/2;
 				}
 			}
-			System.out.println(sqError);
+			//System.out.println(sqError);
 			if (sqError/prevSqError > 1.01) {
 				System.out.println("reduce step");
 				if (eta < 1) break;
@@ -124,20 +124,13 @@ public class NeuralNetLearner extends ClassificationLearner{
 	}
 
 	@Override
-	public int predict(Review review) {
+	public int predict(Record r) {
 		
 		float[] nnScore = new float[5];
 		
-		List<String> tokens = new ArrayList<String>();
-		for(Sentence sentence : Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class)) {
-			List<String> tokenList = Utils.fromStringListToArrayList(sentence.getUnigramList());
-			for(String token: tokenList) {
-				tokens.add(token);
-			}
-		}
-		Record r = new Record();
-		r.setAttr(tokens);
+	    System.out.println(vocabulary.size());
 		
+		//divide each value by the sum to get frequencies
 		int sum = 0;
 		for (int v : r.tokenFreqSubNeg.values()) {
 			sum += v;
@@ -210,7 +203,6 @@ public class NeuralNetLearner extends ClassificationLearner{
 		    		w[i][h] = Double.parseDouble(s[h]);
 		    	}
 		    }
-
 		    //Close the input stream
 		    br.close();
 
@@ -233,7 +225,6 @@ public class NeuralNetLearner extends ClassificationLearner{
 
 	@Override
 	public void writeModel() {
-		System.out.println("... LEARNER INFO: writing " + modelName + " to " + modelPath);
 		System.out.println("... LEARNER INFO: writing " + modelName + " to " + modelPath);
 		
 		//write csv document with scores for analysis

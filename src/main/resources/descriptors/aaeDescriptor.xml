@@ -75,6 +75,15 @@
         <overrides>
           <parameter>learnerAnnotatorDescriptor/ModelDir</parameter>
         </overrides>
+			</configurationParameter>
+    <configurationParameter>
+        <name>ReadRecords</name>
+        <type>String</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+        <overrides>
+          <parameter>learnerAnnotatorDescriptor/ReadRecords</parameter>
+        </overrides>
       </configurationParameter>
     </configurationParameters>
     <configurationParameterSettings>

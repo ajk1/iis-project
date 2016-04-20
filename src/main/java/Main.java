@@ -26,9 +26,13 @@ public class Main {
     String outputDir = args[2];
     String modelDir = args[3];
     String sizeLimit = "0";
+    String readRecords = "false";
     if(args.length > 4) {
         sizeLimit = args[4];    	    	
     } 
+    if(args.length > 5) {
+    	readRecords = args[5];
+    }
 
     // Instantiate CPE.
     CpeDescription cpeDesc = UIMAFramework.getXMLParser()
@@ -56,6 +60,7 @@ public class Main {
     cp0.setConfigParameterValue("Mode", mode);
     cp0.setConfigParameterValue("SizeLimit", sizeLimit);
     cp0.setConfigParameterValue("ModelDir", "src/main/resources/" + modelDir);
+    cp0.setConfigParameterValue("ReadRecords", readRecords);
     cp0.reconfigure();
         
 

@@ -1,5 +1,6 @@
 package learners;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -15,6 +16,7 @@ public class Record {
 	public SortedMap<String, Integer> tokenFreq = new TreeMap<String, Integer>();
 	public SortedMap<String, Integer> tokenFreqNeg = new TreeMap<String, Integer>();	//treat negation word as new attr. E.g. great <-> n_great
 	public SortedMap<String, Integer> tokenFreqSubNeg = new TreeMap<String, Integer>();	//treat negation word as substration of the origin word
+	public Map<String, Integer> negatedWords = new HashMap<String, Integer>();
 	public int goldLabel;
 	public Review review;
 	
@@ -39,6 +41,7 @@ public class Record {
 	}
 	
 	public void addNeg(Map<String, Integer> negatedWords) {
+		this.negatedWords = negatedWords;
 		tokenFreqNeg = new TreeMap<String, Integer>(tokenFreq);
 		for(Entry<String, Integer> e: negatedWords.entrySet()) {
 			String key = "n_"+e.getKey();
@@ -51,9 +54,10 @@ public class Record {
 		for(Entry<String, Integer> e: negatedWords.entrySet()) {
 			if(tokenFreqSubNeg.containsKey(e.getKey())) {
 				tokenFreqSubNeg.put(e.getKey(), e.getValue() - 1);				
-			} else {
+			} //don't need else block because if it's not in vocab then it's not important
+			/*else {
 				tokenFreqSubNeg.put(e.getKey(), -1);								
-			}
+			}*/
 		}
 		
 	}
