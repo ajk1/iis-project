@@ -2,12 +2,14 @@ package util;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import edu.stanford.nlp.ling.CoreAnnotations;
+import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.trees.GrammaticalStructure;
 import edu.stanford.nlp.trees.GrammaticalStructureFactory;
@@ -69,4 +71,39 @@ public class CoreNLPUtils {
 	    return negatedWords;
 	    
 	}
+	
+	
+	public List<String> getCompoundNouns(CoreMap sentence) {
+	    List<String> nounPhraseCandidates = new LinkedList<String>();
+	    List<String> nounPhrases = new LinkedList<String>();
+	    List<CoreLabel> tokens = sentence.get(CoreAnnotations.TokensAnnotation.class);
+
+		for (int j = 0; j < tokens.size(); ++j) {
+	        CoreLabel token = tokens.get(j);
+	        String lemma = token.get(CoreAnnotations.LemmaAnnotation.class);
+	        String word = token.get(CoreAnnotations.TextAnnotation.class);
+	        String pos = token.get(CoreAnnotations.PartOfSpeechAnnotation.class);
+	        System.out.println("word: "+word+", lemma: "+lemma+", pos: "+pos);
+	        
+	        //extracting noun phrase
+	        if(isNoun(pos)) {
+	      	  nounPhraseCandidates.add(word);
+	        } else {
+	      	  if(nounPhraseCandidates.size() > 1) {
+	      		  nounPhrases.add(String.join(" ",nounPhraseCandidates));
+	      	  }
+	      	  nounPhraseCandidates.clear();
+	        }
+	    }
+	    return nounPhrases;
+	}
+	
+	public boolean isNoun(String posTag) {
+		if(posTag.equals("NN")) return true;
+		if(posTag.equals("NNS")) return true;
+		if(posTag.equals("NNP")) return true;
+		if(posTag.equals("NNPS")) return true;
+		return false;
+	}
+	
 }

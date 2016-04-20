@@ -113,13 +113,14 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 				Record r = reviewToRecord(review, sortedWordFreq);
 				data.add(r);
 			}
-			writeRecords(data);
+//			writeRecords(data);
 			
 		}
 		else { 
 			data = readRecords(reviews);
 		}
 		
+
 		
 		// 2. Learners start working here
 		ClassificationLearner nbLearner = new NaiveBayesLearner();
@@ -207,31 +208,12 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		    	int nbPredictScore = nbLearner.predict(r);			    	
 		    	int nnPredictScore = nnLearner.predict(r);
 		    	System.out.println("... predicting review: " + (ctr-1) + ": " + nbPredictScore + "," + nbPredictScore);
-		    	
-				
-				
-				//##############################
-				//# 0-order classification     #
-				//##############################
-				
-
-				//##############################
-				//# NB classification          #
-				//##############################
-
-				
-				//##############################
-				//# NN classification          #
-				//##############################
-
-
-		    	
+		    			    	
 				List<Integer> cScores = Utils.fromIntegerListToArrayList(r.review.getClassificationScores());
 				cScores.add(zeroRegScore);
 				cScores.add(nnPredictScore);
 				cScores.add(nbPredictScore);
-				r.review.setClassificationScores(Utils.fromCollectionToIntegerList(aJCas, cScores));
-	    	
+				r.review.setClassificationScores(Utils.fromCollectionToIntegerList(aJCas, cScores));	
 			}
 			System.out.println("... neural network classification processing... ");	
 			
@@ -436,40 +418,6 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		 
 		return topWords;	
 	}
-	
-	public List<String> getCompoundNouns(CoreMap sentence) {
-	    List<String> nounPhraseCandidates = new LinkedList<String>();
-	    List<String> nounPhrases = new LinkedList<String>();
-	    List<CoreLabel> tokens = sentence.get(CoreAnnotations.TokensAnnotation.class);
-
-		for (int j = 0; j < tokens.size(); ++j) {
-	        CoreLabel token = tokens.get(j);
-	        String lemma = token.get(CoreAnnotations.LemmaAnnotation.class);
-	        String word = token.get(CoreAnnotations.TextAnnotation.class);
-	        String pos = token.get(CoreAnnotations.PartOfSpeechAnnotation.class);
-	        System.out.println("word: "+word+", lemma: "+lemma+", pos: "+pos);
-	        
-	        //extracting noun phrase
-	        if(isNoun(pos)) {
-	      	  nounPhraseCandidates.add(word);
-	        } else {
-	      	  if(nounPhraseCandidates.size() > 1) {
-	      		  nounPhrases.add(String.join(" ",nounPhraseCandidates));
-	      	  }
-	      	  nounPhraseCandidates.clear();
-	        }
-	    }
-	    return nounPhrases;
-	}
-	
-	public boolean isNoun(String posTag) {
-		if(posTag.equals("NN")) return true;
-		if(posTag.equals("NNS")) return true;
-		if(posTag.equals("NNP")) return true;
-		if(posTag.equals("NNPS")) return true;
-		return false;
-	}
-	
 
 	
 }
