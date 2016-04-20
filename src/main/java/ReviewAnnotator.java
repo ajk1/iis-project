@@ -40,7 +40,7 @@ public class ReviewAnnotator extends JCasAnnotator_ImplBase {
 	@Override
 	public void process(JCas aJCas) throws AnalysisEngineProcessException {
     System.out.println(">> Review Annotator Processing");
-    System.out.println("... sizeLimit: " + sizeLimit);
+//    System.out.println("... sizeLimit: " + sizeLimit);
     // get document text from the CAS
     String docText = aJCas.getDocumentText();
     

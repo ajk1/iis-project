@@ -39,14 +39,14 @@ public class TokenAnnotator extends JCasAnnotator_ImplBase {
 	@Override
 	public void process(JCas aJCas) throws AnalysisEngineProcessException {
 		System.out.println(">> Token Annotator Processing");
-		System.out.println("... sizeLimit : " + sizeLimit);
+//		System.out.println("... sizeLimit : " + sizeLimit);
     
 	    //component implementation	          
 	    StopWordUtils swu = new StopWordUtils("limit");
 	
 	    // get reviews from the CAS
 	    Collection<Review> reviews = JCasUtil.select(aJCas, Review.class);      
-	    System.out.println("... review size: " + reviews.size());
+//	    System.out.println("... review size: " + reviews.size());
 	
 	    int ctr = 0;
 	    for (Review review : reviews) {

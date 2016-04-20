@@ -98,11 +98,11 @@ public class SentimentTokenAnnotator extends JCasAnnotator_ImplBase {
 	@Override
 	public void process(JCas aJCas) throws AnalysisEngineProcessException {
     System.out.println(">> Sentiment Token Annotator Processing");
-    System.out.println("... sizeLimit: " + sizeLimit);
+//    System.out.println("... sizeLimit: " + sizeLimit);
     
 	// get reviews from the CAS
 	Collection<Review> reviews = JCasUtil.select(aJCas, Review.class);      
-	System.out.println("... review size: " + reviews.size());
+//	System.out.println("... review size: " + reviews.size());
 	
 	//write csv document with scores for analysis
 	File outputFile = null;

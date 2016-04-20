@@ -53,6 +53,7 @@ public class Main {
     // mCPE.getCasProcessors().
     ConfigurableResource cc = (ConfigurableResource) mCPE.getCasProcessors()[1]; // <-- Careful with index
     cc.setConfigParameterValue("OutputDir", "src/main/resources/" + outputDir);
+    cc.setConfigParameterValue("Mode", mode);
     cc.reconfigure();
     
 

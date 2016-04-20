@@ -27,8 +27,9 @@ import util.Utils;
  */
 public class ReviewScoreWriter extends CasConsumer_ImplBase {
 	final String PARAM_OUTPUTDIR = "OutputDir";
-
 	final String OUTPUT_FILENAME = "ErrorAnalysis.csv";
+	final String PARAM_MODE = "Mode";
+	private String mode;
 
 	File mOutputDir;
 
@@ -39,6 +40,7 @@ public class ReviewScoreWriter extends CasConsumer_ImplBase {
 	@Override
 	public void initialize() throws ResourceInitializationException {
 	    String mOutputDirStr = (String) getConfigParameterValue(PARAM_OUTPUTDIR);
+		mode = (String) getConfigParameterValue(PARAM_MODE);
 	    if (mOutputDirStr != null) {
 	    	mOutputDir = new File(mOutputDirStr);
 	    	if (!mOutputDir.exists()) {
@@ -57,6 +59,7 @@ public class ReviewScoreWriter extends CasConsumer_ImplBase {
   @Override
   public void processCas(CAS arg0) throws ResourceProcessException {
 	  System.out.println(">> Review Score Writer Processing");
+	  System.out.println("... mode: " + mode);
 	  // Import the CAS as a aJCas
 	  JCas aJCas = null;
 	  File outputFile = null;
@@ -118,46 +121,53 @@ public class ReviewScoreWriter extends CasConsumer_ImplBase {
 
       }
       
-	  System.out.println("... MSE: " + sumErrorSquare / allReviews.size());
+      if(!mode.equals("train")) {
+    	  System.out.println("... MSE: " + sumErrorSquare / allReviews.size());
 
-      
-      for(int index=0; index<3; index++) {
-          System.out.print("tp: ");
-          for(double d: tp.get(index)) { System.out.printf("%-10.0f",d);}
-          System.out.println("");
-          System.out.print("fp: ");
-          for(double d: fp.get(index)) { System.out.printf("%-10.0f",d);}
-          System.out.println("");
-          System.out.print("tn: ");
-          for(double d: tn.get(index)) { System.out.printf("%-10.0f",d);}
-          System.out.println("");
-          System.out.print("fn: ");
-          for(double d: fn.get(index)) { System.out.printf("%-10.0f",d);}
-          System.out.println("");
           
-          
-    	  double f1agg = 0;
-    	  double recallagg = 0;
-    	  double precisionagg = 0;
-          for(int i=0; i<5; i++) {
-        	  double precision = (tp.get(index)[i] + fp.get(index)[i] == 0) ? 0 : tp.get(index)[i] / (tp.get(index)[i] + fp.get(index)[i]);
-        	  double recall = (tp.get(index)[i] + fn.get(index)[i] == 0) ? 0 : tp.get(index)[i] / (tp.get(index)[i] + fn.get(index)[i]);
-        	  double accuracy = (tp.get(index)[i] + tn.get(index)[i])/(tp.get(index)[i]+fp.get(index)[i]+tn.get(index)[i]+fn.get(index)[i]);
-        	  double f1 = (precision == 0 || recall == 0) ? 0.0 : 2 * precision * recall / (precision + recall);
-        	  System.out.println("... accuracy of rating " + (i+1) +" : " + accuracy);
-        	  System.out.println("... precision of rating " + (i+1) +" : " + precision);    	  
-        	  System.out.println("... recall of rating " + (i+1) +" : " + recall);    	  
-        	  System.out.println("... f1 of rating " + (i+1) +" : " + f1);  
+          for(int index=0; index<3; index++) {
+              System.out.print("tp: ");
+              for(double d: tp.get(index)) { System.out.printf("%-10.0f",d);}
+              System.out.println("");
+              System.out.print("fp: ");
+              for(double d: fp.get(index)) { System.out.printf("%-10.0f",d);}
+              System.out.println("");
+              System.out.print("tn: ");
+              for(double d: tn.get(index)) { System.out.printf("%-10.0f",d);}
+              System.out.println("");
+              System.out.print("fn: ");
+              for(double d: fn.get(index)) { System.out.printf("%-10.0f",d);}
+              System.out.println("");
+              
+              
+        	  double f1agg = 0;
+        	  double recallagg = 0;
+        	  double precisionagg = 0;
+              for(int i=0; i<5; i++) {
+            	  double precision = (tp.get(index)[i] + fp.get(index)[i] == 0) ? 0 : tp.get(index)[i] / (tp.get(index)[i] + fp.get(index)[i]);
+            	  double recall = (tp.get(index)[i] + fn.get(index)[i] == 0) ? 0 : tp.get(index)[i] / (tp.get(index)[i] + fn.get(index)[i]);
+            	  double accuracy = (tp.get(index)[i] + tn.get(index)[i])/(tp.get(index)[i]+fp.get(index)[i]+tn.get(index)[i]+fn.get(index)[i]);
+            	  double f1 = (precision == 0 || recall == 0) ? 0.0 : 2 * precision * recall / (precision + recall);
+            	  System.out.println("... accuracy of rating " + (i+1) +" : " + accuracy);
+            	  System.out.println("... precision of rating " + (i+1) +" : " + precision);    	  
+            	  System.out.println("... recall of rating " + (i+1) +" : " + recall);    	  
+            	  System.out.println("... f1 of rating " + (i+1) +" : " + f1);  
 
-        	  recallagg += recall*(tp.get(index)[i]+fn.get(index)[i]);
-        	  precisionagg += precision*(tp.get(index)[i]+fn.get(index)[i]);
-        	  f1agg += f1*(tp.get(index)[i]+fn.get(index)[i]);
-          }
-          System.out.println("... weighted recall (aggregate) : " + recallagg);
-          System.out.println("... weighted precision (aggregate) : " + precisionagg);
-          System.out.println("... weighted f1 (aggregate) : " + f1agg);
+            	  recallagg += recall*(tp.get(index)[i]+fn.get(index)[i]);
+            	  precisionagg += precision*(tp.get(index)[i]+fn.get(index)[i]);
+            	  f1agg += f1*(tp.get(index)[i]+fn.get(index)[i]);
+              }
+              System.out.println("... weighted recall (aggregate) : " + recallagg);
+              System.out.println("... weighted precision (aggregate) : " + precisionagg);
+              System.out.println("... weighted f1 (aggregate) : " + f1agg);
+        	  
+          } 
+          System.out.println("... " + mode + " PIPELINE FINISHED, all evaluation results are stored");        	  
     	  
+      } else {
+          System.out.println("... TRAINING PIPELINE FINISHED, all model results are stored");        	  
       }
+
       
       
     } catch (CASException e) {

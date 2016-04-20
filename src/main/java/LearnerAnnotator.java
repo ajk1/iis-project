@@ -62,15 +62,15 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 	@Override
 	public void process(JCas aJCas) throws AnalysisEngineProcessException {
 		System.out.println(">> Learner Annotator Processing");
-		System.out.println("... sizeLimit: " + sizeLimit);
+//		System.out.println("... sizeLimit: " + sizeLimit);
 		System.out.println("... mode: " + mode);
-		System.out.println("... modelPath: " + modelPath);
-		System.out.println("... readRecords: " + readRecords);
+//		System.out.println("... modelPath: " + modelPath);
+//		System.out.println("... readRecords: " + readRecords);
 
 		// 1. annotate Records from Reviews (Class <Review> is POJO)
 		// get reviews from the CAS
 		Collection<Review> reviews = JCasUtil.select(aJCas, Review.class);
-		System.out.println("... review size: " + reviews.size());
+//		System.out.println("... review size: " + reviews.size());
 
 		// 1.1 init vocab and write vocab (CV and Train) / Read vocal (Test)
 		// PARAMS: vocab size limit
