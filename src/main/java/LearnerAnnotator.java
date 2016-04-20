@@ -40,11 +40,14 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 	final String PARAM_SIZELIMIT = "SizeLimit";
 	final String PARAM_MODE = "Mode";
 	final String PARAM_MODEL_PATH = "ModelDir";
+	final String PARAM_READ_RECORDS = "ReadRecords";
 	private int sizeLimit;
 	private String mode;
 	private String modelPath;
+	private boolean readRecords;
 	private int topWordLimit = 1000;
 	private int numOfFolds = 10;
+	private String recordsFile = "src/main/resources/records/records.txt";
 	
 	@Override
 	public void initialize(UimaContext aContext) throws ResourceInitializationException {
@@ -54,6 +57,11 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		sizeLimit = Integer.valueOf((String) aContext.getConfigParameterValue(PARAM_SIZELIMIT));
 		mode = (String) aContext.getConfigParameterValue(PARAM_MODE);
 		modelPath = (String) aContext.getConfigParameterValue(PARAM_MODEL_PATH);
+		System.out.println(aContext.getConfigParameterValue(PARAM_READ_RECORDS));
+//		for (String name : aContext.getConfigParameterNames())
+//			System.out.println(name);
+//		System.out.println(aContext.getConfigParameterValue(PARAM_READ_RECORDS));
+		readRecords = false;//aContext.getConfigParameterValue(PARAM_READ_RECORDS).toString().toLowerCase().equals("true");
 	}
 
 	@Override
@@ -66,7 +74,7 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		// 1. annotate Records from Reviews (Class <Review> is POJO)
 		
 		// get reviews from the CAS
-		Collection<Review> reviews = JCasUtil.select(aJCas, Review.class);      
+		Collection<Review> reviews = JCasUtil.select(aJCas, Review.class);
 		System.out.println("... review size: " + reviews.size());
 
 		// 1.1 init vocab and write vocab (CV and Train) / Read vocal (Test)
@@ -97,12 +105,19 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 
 		
 		// 1.2 create Record List for unified learner input data format
-		for (Review review : reviews) {
-	    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
-			System.out.println("... Learner Annotator: annotating " + ctr + " review to record ... ");	
-
-			Record r = reviewToRecord(review, sortedWordFreq);
-			data.add(r);
+		if (!readRecords) {
+			for (Review review : reviews) {
+		    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
+				System.out.println("... Learner Annotator: annotating " + ctr + " review to record ... ");	
+	
+				Record r = reviewToRecord(review, sortedWordFreq);
+				data.add(r);
+			}
+			writeRecords(data);
+			
+		}
+		else { 
+			data = readRecords(reviews);
 		}
 		
 		
@@ -118,7 +133,7 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		//neural network init
 		nnLearner.setModelPath(modelPath);
 				
-		
+		ctr = 0;
 		if(mode.equals("train")) {
 			System.out.println("... Learner Annotator: TRAIN MODE ... ");	
 			
@@ -134,17 +149,25 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 			System.out.println("... Learner Annotator: CROSS VALIDATION MODE ... ");	
 
 			for(int i = 0; i < numOfFolds; i++) {
-				System.out.println("... doing k-folds: "+i);	
-				
-				
+				System.out.println("... Cross-Validation: " + (i*sizeLimit/numOfFolds+1) 
+						+ " through " + Math.round((double)(i+1)*sizeLimit/numOfFolds));
 				// TODO: k-fold modify here
 				
 				// get training set 
-				List<Record> trainingData = null;
+				List<Record> trainingData = new ArrayList<Record>();
 				//get testing set 
-				List<Record> testingData = null;
+				List<Record> testingData = new ArrayList<Record>();
+				for(int j=0; j<sizeLimit; j++) {
+					if (j >= i*sizeLimit/numOfFolds && j < Math.round((double)(i+1)*sizeLimit/numOfFolds))
+						testingData.add(data.get(j));
+					else
+						trainingData.add(data.get(j));
+				}
+				System.out.println(trainingData.size());
+				System.out.println(testingData.size());
 				
 				// k-fold train
+				System.out.println("... Cross-Validation: Training fold " + (i+1));
 				nbLearner.initTrain(modelPath, trainingData, vocabulary);
 				nbLearner.train();
 				nbLearner.writeModel();			
@@ -155,12 +178,13 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 
 				
 				// k-fold test
+				System.out.println("... Cross-Validation: Testing fold " + (i+1));
 				for(Record r : testingData) {
-			    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
+					ctr++;
 			    	int zeroRegScore = 5;
 			    	int nbPredictScore = nbLearner.predict(r);			    	
 			    	int nnPredictScore = nnLearner.predict(r);
-			    	System.out.println("... predicting review: " + (ctr-1) + ": " + nbPredictScore + "," + nbPredictScore);
+			    	System.out.println("... predicting review: " + (ctr) + ": " + nbPredictScore + "," + nnPredictScore);
 			    	
 					List<Integer> cScores = Utils.fromIntegerListToArrayList(r.review.getClassificationScores());
 					cScores.add(zeroRegScore);
@@ -177,7 +201,6 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 			nbLearner.initTest(modelPath);
 			nnLearner.initTest(modelPath);
 
-			ctr = 0;
 			for (Record r : data) {
 		    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
 		    	int zeroRegScore = 5;
@@ -260,7 +283,89 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		r.setGoldLabel(review.getGoldLabel());
 		r.setAttr(allTokens);
 		r.addNeg(negatedWords);
+		r.addNegSubstract(negatedWords);
 		return r;
+	}
+	
+	private void writeRecords(List<Record> data) {
+		System.out.println("... Writing Records to " + recordsFile);
+		//write txt document with scores for analysis
+		File outputFile = null;
+	    PrintWriter writer = null;
+	    try {	    	
+	        outputFile = new File(recordsFile);
+	        outputFile.getParentFile().mkdirs();
+	        writer = new PrintWriter(outputFile);
+	    } catch (FileNotFoundException e) {
+	        System.out.printf("Output file could not be written: %s\n", recordsFile);
+	        return;
+	    }
+	    //each record in data
+	    for(Record r : data) {
+	    	String line = "";
+	    	for (String s : r.negatedWords.keySet()) {
+	    		line = line + s + " " + r.negatedWords.get(s) + " ";
+	    	}
+	    	writer.println(line);
+	    }
+	    
+	    writer.close();
+	}
+	
+	private ArrayList<Record> readRecords(Collection<Review> reviews) {
+		Set<String> vocabulary = new HashSet<String>();
+		ArrayList<Record> data = new ArrayList<Record>();
+		int ctr = 0;
+		// Open the file
+	    FileInputStream fstream;
+		try {
+			System.out.println("... Reading Records from " + recordsFile);
+			fstream = new FileInputStream(recordsFile);
+		    BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+		    
+			for (Review review : reviews) {
+				if(ctr++ > sizeLimit && sizeLimit != 0) break;
+				String line = br.readLine();
+				if(line == null) break;
+				
+				Record r = new Record();
+				List<String> allTokens = new ArrayList<String>();
+				Map<String, Integer> negatedWords = new HashMap<String, Integer>();
+				
+				//for each sentence in review
+				for(Sentence sentence : Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class)) {
+					//token detection
+					List<String> tokenList = Utils.fromStringListToArrayList(sentence.getUnigramList());
+
+					for(String token: tokenList) {
+						token = token.toLowerCase();
+						allTokens.add(token);					
+					}
+				}
+				String[] values = line.split("\\s");
+				for(int i=0; i<values.length/2; i++) {
+					negatedWords.put(values[i*2], Integer.parseInt(values[i*2+1]));
+					System.out.println(values[i*2]);
+					System.out.println(review.getRawText());
+				}
+				
+				r.setReview(review);
+				r.setGoldLabel(review.getGoldLabel());
+				r.setAttr(allTokens);
+				r.addNeg(negatedWords);
+				r.addNegSubstract(negatedWords);
+				data.add(r);
+			}
+			System.out.println("... Finished reading " + ctr + " Records");
+		    //Close the input stream
+		    br.close();
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return data;
 	}
 
 	private HashMap<String, Integer> getVocabInTrainSet(Collection<Review> reviews) {

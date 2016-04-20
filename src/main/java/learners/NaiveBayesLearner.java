@@ -168,7 +168,6 @@ public class NaiveBayesLearner extends ClassificationLearner{
 	@Override
 	public void writeModel() {
 		System.out.println("... LEARNER INFO: writing " + modelName + " to " + modelPath);
-		System.out.println("... LEARNER INFO: writing " + modelName + " to " + modelPath);
 		
 		//write csv document with scores for analysis
 		File outputFile = null;
