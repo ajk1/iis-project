@@ -53,7 +53,7 @@ public class Record {
 		tokenFreqSubNeg = new TreeMap<String, Integer>(tokenFreq);
 		for(Entry<String, Integer> e: negatedWords.entrySet()) {
 			if(tokenFreqSubNeg.containsKey(e.getKey())) {
-				tokenFreqSubNeg.put(e.getKey(), e.getValue() - 1);				
+				tokenFreqSubNeg.put(e.getKey(), tokenFreqSubNeg.get(e.getKey()) - e.getValue());				
 			} //don't need else block because if it's not in vocab then it's not important
 			/*else {
 				tokenFreqSubNeg.put(e.getKey(), -1);								
