@@ -57,11 +57,7 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		sizeLimit = Integer.valueOf((String) aContext.getConfigParameterValue(PARAM_SIZELIMIT));
 		mode = (String) aContext.getConfigParameterValue(PARAM_MODE);
 		modelPath = (String) aContext.getConfigParameterValue(PARAM_MODEL_PATH);
-		System.out.println(aContext.getConfigParameterValue(PARAM_READ_RECORDS));
-//		for (String name : aContext.getConfigParameterNames())
-//			System.out.println(name);
-//		System.out.println(aContext.getConfigParameterValue(PARAM_READ_RECORDS));
-		readRecords = false;//aContext.getConfigParameterValue(PARAM_READ_RECORDS).toString().toLowerCase().equals("true");
+		readRecords = Boolean.valueOf((String)aContext.getConfigParameterValue(PARAM_READ_RECORDS));
 	}
 
 	@Override
@@ -70,6 +66,7 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		System.out.println("... sizeLimit: " + sizeLimit);
 		System.out.println("... mode: " + mode);
 		System.out.println("... modelPath: " + modelPath);
+		System.out.println("... readRecords: " + readRecords);
 
 		// 1. annotate Records from Reviews (Class <Review> is POJO)
 		
