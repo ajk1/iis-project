@@ -226,7 +226,7 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		Set<String> vocabulary = new HashSet<String>();
 		int i=0;
 		for (String v : sortedWordFreq.keySet()) {
-			if (i<1000) vocabulary.add(v);
+			if (i<topWordLimit) vocabulary.add(v);
 			else break;
 			i++;
 		}	

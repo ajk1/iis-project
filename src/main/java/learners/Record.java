@@ -39,18 +39,20 @@ public class Record {
 	}
 	
 	public void addNeg(Map<String, Integer> negatedWords) {
+		tokenFreqNeg = new TreeMap<String, Integer>(tokenFreq);
 		for(Entry<String, Integer> e: negatedWords.entrySet()) {
 			String key = "n_"+e.getKey();
-			tokenFreq.put(key, e.getValue());
+			tokenFreqNeg.put(key, e.getValue());
 		}
 	}
 	
 	public void addNegSubstract(Map<String, Integer> negatedWords) {
+		tokenFreqSubNeg = new TreeMap<String, Integer>(tokenFreq);
 		for(Entry<String, Integer> e: negatedWords.entrySet()) {
-			if(tokenFreq.containsKey(e.getKey())) {
-				tokenFreq.put(e.getKey(), e.getValue() - 1);				
+			if(tokenFreqSubNeg.containsKey(e.getKey())) {
+				tokenFreqSubNeg.put(e.getKey(), e.getValue() - 1);				
 			} else {
-				tokenFreq.put(e.getKey(), -1);								
+				tokenFreqSubNeg.put(e.getKey(), -1);								
 			}
 		}
 		

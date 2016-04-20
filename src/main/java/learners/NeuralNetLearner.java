@@ -39,13 +39,13 @@ public class NeuralNetLearner extends ClassificationLearner{
 		for (Record r: data) {
 			
 			int sum = 0;
-			for (int v : r.tokenFreq.values()) {
+			for (int v : r.tokenFreqSubNeg.values()) {
 				sum += v;
 			}
 			double[] x = new double[numInput];
 			x[0] = 1;
 			int j = 1;
-			for (int v : r.tokenFreq.values()) {
+			for (int v : r.tokenFreqSubNeg.values()) {
 				x[j] = (double)v/sum;
 				j++;
 			}
@@ -139,13 +139,13 @@ public class NeuralNetLearner extends ClassificationLearner{
 		r.setAttr(tokens);
 		
 		int sum = 0;
-		for (int v : r.tokenFreq.values()) {
+		for (int v : r.tokenFreqSubNeg.values()) {
 			sum += v;
 		}
 		double[] x = new double[numInput];
 		x[0] = 1;
 		int j = 1;
-		for (int v : r.tokenFreq.values()) {
+		for (int v : r.tokenFreqSubNeg.values()) {
 			x[j] = (double)v/sum;
 			j++;
 		}
@@ -250,7 +250,7 @@ public class NeuralNetLearner extends ClassificationLearner{
 	    }
 	  //first line: vocabulary in alphabetical order
 	    String line = "";
-	    for(String s : data.get(0).tokenFreq.keySet()) {
+	    for(String s : data.get(0).tokenFreqSubNeg.keySet()) {
 	    	line = line + s + " ";
 	    }
 	    writer.println(line);
