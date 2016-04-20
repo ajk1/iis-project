@@ -37,6 +37,7 @@ public class NeuralNetLearner extends ClassificationLearner{
 		
 		List<double[]> inputs = new ArrayList<double[]>();
 		for (Record r: data) {
+			
 			int sum = 0;
 			for (int v : r.tokenFreq.values()) {
 				sum += v;
@@ -135,7 +136,7 @@ public class NeuralNetLearner extends ClassificationLearner{
 			}
 		}
 		Record r = new Record();
-		r.setAttr(tokens, vocabulary);
+		r.setAttr(tokens);
 		
 		int sum = 0;
 		for (int v : r.tokenFreq.values()) {

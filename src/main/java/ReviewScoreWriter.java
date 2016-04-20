@@ -85,11 +85,7 @@ public class ReviewScoreWriter extends CasConsumer_ImplBase {
       List<double[]> fn = new ArrayList<double[]>();
 
       //TODO: need a specific number to determine how long this array should be
-<<<<<<< HEAD
-	  for(int rScoreIndex = 0; rScoreIndex < 3; rScoreIndex++) {
-=======
 	  for(int cScoreIndex = 0; cScoreIndex < 3; cScoreIndex++) {
->>>>>>> fbf2ab1... learner.class flow refactor
 		  tp.add(new double[5]);
 		  fp.add(new double[5]);
 		  tn.add(new double[5]);

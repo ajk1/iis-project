@@ -44,9 +44,8 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 	private String mode;
 	private String modelPath;
 	private int topWordLimit = 1000;
+	private int numOfFolds = 10;
 	
-	Set<String> topWords = new HashSet<String>();
-
 	@Override
 	public void initialize(UimaContext aContext) throws ResourceInitializationException {
 		super.initialize(aContext);		
@@ -64,117 +63,177 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		System.out.println("... mode: " + mode);
 		System.out.println("... modelPath: " + modelPath);
 
+		// 1. annotate Records from Reviews (Class <Review> is POJO)
+		
+		// get reviews from the CAS
+		Collection<Review> reviews = JCasUtil.select(aJCas, Review.class);      
+		System.out.println("... review size: " + reviews.size());
+
+		// 1.1 init vocab and write vocab (CV and Train) / Read vocal (Test)
+		// PARAMS: vocab size limit
+
+		Map<String, Integer> sortedWordFreq = new LinkedHashMap<String, Integer>();	
+		Set<String> vocabulary = new HashSet<String>();
+
+		// DataSet, in the format of Record
+		List<Record> data = new ArrayList<Record>();
+
+		int ctr = 0;
+		
+		if(mode.equals("train") || mode.equals("cv")) {	
+			
+			// write vocab to file
+			sortedWordFreq = MapUtil.sortByValue(getVocabInTrainSet(reviews));		
+			writeTopWords(sortedWordFreq, topWordLimit);
+			vocabulary = getTopVocab(sortedWordFreq, topWordLimit);	
+			
+		} else if(mode.equals("test")) {
+			
+			// read vocab from file			
+			sortedWordFreq = getTopWordsFromFile(topWordLimit);
+			vocabulary = getTopVocab(sortedWordFreq, topWordLimit);					
+		}
+		Record.setVocab(vocabulary);
+
+		
+		// 1.2 create Record List for unified learner input data format
+		for (Review review : reviews) {
+	    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
+			System.out.println("... Learner Annotator: annotating " + ctr + " review to record ... ");	
+
+			Record r = reviewToRecord(review, sortedWordFreq);
+			data.add(r);
+		}
+		
+		
+		// 2. Learners start working here
 		ClassificationLearner nbLearner = new NaiveBayesLearner();
 		ClassificationLearner nnLearner = new NeuralNetLearner();
 		Learner svmLearner = new SVMLearner();
 		Learner regLearner = new LinearRegressionLearner();
 		
-		//vocabulary
-		Map<String, Integer> sortedWordFreq = new LinkedHashMap<String, Integer>();	
-
-		//data set, in the format of Record
-		List<Record> data = new ArrayList<Record>();
-		
-		// get reviews from the CAS
-		Collection<Review> reviews = JCasUtil.select(aJCas, Review.class);      
-		System.out.println("... review size: " + reviews.size());
-		System.out.println("... data size: " + data.size());
-		int ctr = 0;
-		
-		Set<String> vocabulary = new HashSet<String>();
-		
-
-		if(mode.equals("train")) {
-			
-			// write top words to file
-			HashMap<String, Integer> wordFreq = getVocabInTrainSet(reviews);
-			sortedWordFreq = MapUtil.sortByValue(wordFreq);		
-			writeTopWords(sortedWordFreq, topWordLimit);
-			int i=0;
-			for (String v : sortedWordFreq.keySet()) {
-				if (i<1000) vocabulary.add(v);
-				else break;
-				i++;
-			}						
-			ctr = 0;
-			//create Record List for unified learner input data format
-			for (Review review : reviews) {
-		    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
-
-				Record r = reviewToRecord(review, sortedWordFreq);
-				data.add(r);
-			}
-			
-		}
-		
-		//0-order classification
-		System.out.println("... 0-order classification processing... ");	
-		for (Review review : reviews) {
-	    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
-			List<Integer> cScores = Utils.fromIntegerListToArrayList(review.getClassificationScores());
-			cScores.add(5);
-			review.setClassificationScores(Utils.fromCollectionToIntegerList(aJCas, cScores));
-		}
-		
 		//naive bayes init
 		nbLearner.setModelPath(modelPath);
 		
-		ctr = 0;
-		
-		if(mode.equals("train")) {
-			nbLearner.initTrain(modelPath, data, vocabulary);
-			nbLearner.train();
-			nbLearner.writeModel();			
-		} else if(mode.equals("test")) {
-			System.out.println("... naive bayes classification processing... ");	
-			nbLearner.initTest(modelPath);
-			sortedWordFreq = getTopWordsFromFile(topWordLimit);
-			for (Review review : reviews) {
-		    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
-
-				Record r = reviewToRecord(review, sortedWordFreq);
-		    	int predictScore = nbLearner.predict(review);		    	
-		    	int predictScore2 = nbLearner.predict(r);
-				
-		    	System.out.println("... predicting review: " + (ctr-1) + ": " + predictScore + "," + predictScore2);
-				
-				List<Integer> cScores = Utils.fromIntegerListToArrayList(review.getClassificationScores());
-				cScores.add(predictScore);
-				cScores.add(predictScore2);
-				review.setClassificationScores(Utils.fromCollectionToIntegerList(aJCas, cScores));
-//				System.out.println("size: " + Utils.fromIntegerListToArrayList(review.getClassificationScores()).size());
-			}
-		}
-		
 		//neural network init
 		nnLearner.setModelPath(modelPath);
-		
-		ctr = 0;
+				
 		
 		if(mode.equals("train")) {
+			System.out.println("... Learner Annotator: TRAIN MODE ... ");	
+			
+			nbLearner.initTrain(modelPath, data, vocabulary);
+			nbLearner.train();
+			nbLearner.writeModel();		
+			
 			nnLearner.initTrain(modelPath, data, vocabulary);
 			nnLearner.train();
 			nnLearner.writeModel();			
-		} else if(mode.equals("test")) {
-			System.out.println("... neural network classification processing... ");	
-			nnLearner.initTest(modelPath);
-			for (Review review : reviews) {
-		    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
-		    	int predictScore = nnLearner.predict(review);
+			
+		} else if(mode.equals("cv")) {
+			System.out.println("... Learner Annotator: CROSS VALIDATION MODE ... ");	
+
+			for(int i = 0; i < numOfFolds; i++) {
+				System.out.println("... doing k-folds: "+i);	
 				
-//				System.out.println("... predicting review: " + (ctr-1) + ": " + predictScore);
 				
-				List<Integer> cScores = Utils.fromIntegerListToArrayList(review.getClassificationScores());
-				cScores.add(predictScore);
-				review.setClassificationScores(Utils.fromCollectionToIntegerList(aJCas, cScores));
-//				System.out.println("size: " + Utils.fromIntegerListToArrayList(review.getClassificationScores()).size());
+				// TODO: k-fold modify here
+				
+				// get training set 
+				List<Record> trainingData = null;
+				//get testing set 
+				List<Record> testingData = null;
+				
+				// k-fold train
+				nbLearner.initTrain(modelPath, trainingData, vocabulary);
+				nbLearner.train();
+				nbLearner.writeModel();			
+
+				nnLearner.initTrain(modelPath, trainingData, vocabulary);
+				nnLearner.train();
+				nnLearner.writeModel();			
+
+				
+				// k-fold test
+				for(Record r : testingData) {
+			    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
+			    	int zeroRegScore = 5;
+			    	int nbPredictScore = nbLearner.predict(r);			    	
+			    	int nnPredictScore = nnLearner.predict(r);
+			    	System.out.println("... predicting review: " + (ctr-1) + ": " + nbPredictScore + "," + nbPredictScore);
+			    	
+					List<Integer> cScores = Utils.fromIntegerListToArrayList(r.review.getClassificationScores());
+					cScores.add(zeroRegScore);
+					cScores.add(nnPredictScore);
+					cScores.add(nbPredictScore);
+					r.review.setClassificationScores(Utils.fromCollectionToIntegerList(aJCas, cScores));
+
+				}
+				
 			}
+	
+		} else if(mode.equals("test")) {
+			System.out.println("... Learner Annotator: TESTING MODE ... ");	
+			nbLearner.initTest(modelPath);
+			nnLearner.initTest(modelPath);
+
+			ctr = 0;
+			for (Record r : data) {
+		    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
+		    	int zeroRegScore = 5;
+		    	int nbPredictScore = nbLearner.predict(r);			    	
+		    	int nnPredictScore = nnLearner.predict(r);
+		    	System.out.println("... predicting review: " + (ctr-1) + ": " + nbPredictScore + "," + nbPredictScore);
+		    	
+				
+				
+				//##############################
+				//# 0-order classification     #
+				//##############################
+				
+
+				//##############################
+				//# NB classification          #
+				//##############################
+
+				
+				//##############################
+				//# NN classification          #
+				//##############################
+
+
+		    	
+				List<Integer> cScores = Utils.fromIntegerListToArrayList(r.review.getClassificationScores());
+				cScores.add(zeroRegScore);
+				cScores.add(nnPredictScore);
+				cScores.add(nbPredictScore);
+				r.review.setClassificationScores(Utils.fromCollectionToIntegerList(aJCas, cScores));
+	    	
+			}
+			System.out.println("... neural network classification processing... ");	
+			
 		}
 		
 		svmLearner.initialize(mode, modelPath, data);
 		regLearner.initialize(mode, modelPath, data);
 	}
 
+	//##############################
+	//# helper functions           #
+	//##############################
+	
+	private Set<String> getTopVocab(Map<String, Integer> sortedWordFreq, int topWordLimit) {
+		Set<String> vocabulary = new HashSet<String>();
+		int i=0;
+		for (String v : sortedWordFreq.keySet()) {
+			if (i<1000) vocabulary.add(v);
+			else break;
+			i++;
+		}	
+		return vocabulary;
+	}
+
+	
 	private Record reviewToRecord(Review review, Map<String, Integer> sortedWordFreq) {
 		Record r = new Record();
 		List<String> allTokens = new ArrayList<String>();
@@ -197,8 +256,9 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 			}
 		}
 //		System.out.println("review: " + negatedWords);
+		r.setReview(review);
 		r.setGoldLabel(review.getGoldLabel());
-		r.setAttr(allTokens, sortedWordFreq.keySet());
+		r.setAttr(allTokens);
 		r.addNeg(negatedWords);
 		return r;
 	}
@@ -208,7 +268,6 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		int ctr = 0;
 		for (Review review : reviews) {
 	    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
-			System.out.println("... review id: " + review.getProductId());
 
 			for(Sentence sentence : Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class)) {
 				
