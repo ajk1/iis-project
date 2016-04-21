@@ -34,8 +34,16 @@ public class NaiveBayesLearner extends ClassificationLearner{
 		List<ArrayList<Record>> reviewWithStars = new ArrayList<ArrayList<Record>>();
 		
 		System.out.println("... LEARNER INFO: NaiveBayes training");
+		System.out.println("... LEARNER INFO: NaiveBayes training, tokenFreqNeg size: " + data.get(0).tokenFreqNeg.size());
 		
-		//init
+		// init
+		// find union set for all reviews
+		for(Record r: data) {
+			vocabulary.addAll(r.tokenFreqNeg.keySet());
+		}
+		
+		// put different ratings training record to 5 buckets
+		// init 5 vocabularies
 		for(int i=1; i<=5; i++) {
 			reviewWithStars.add(new ArrayList<Record>());
 			wordPOfStars.add(new HashMap<String, Float>());
@@ -56,13 +64,18 @@ public class NaiveBayesLearner extends ClassificationLearner{
 				}
 			}
 			totalLengthOfAClass[i-1] = totalLength;
+
+			System.out.println("... LEARNER INFO: size of " + i + ": " + reviewWithStars.get(i-1).size());
 		}
 				
 		for(int i=0; i<5; i++) {			
-			for(String word: data.get(0).tokenFreqNeg.keySet()) {
+			for(String word: vocabulary) {
 				int nk = 0;
 				for(Record r: reviewWithStars.get(i)) {
-					nk += r.tokenFreqNeg.get(word);
+//					System.out.println("... LEARNER INFO: " + word);
+					if(r.tokenFreqNeg.containsKey(word)) {
+						nk += r.tokenFreqNeg.get(word);						
+					}
 				}
 				wordPOfStars.get(i).put(word, (float)(nk+1) / ( totalLengthOfAClass[i] + data.get(0).tokenFreqNeg.size()));
 			}
