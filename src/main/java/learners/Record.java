@@ -12,6 +12,7 @@ import type.Review;
 
 public class Record {
 	public static Set<String> vocabulary;
+	public static Set<String> negatedVocabulary;
 	
 	public SortedMap<String, Integer> tokenFreq = new TreeMap<String, Integer>();
 	public SortedMap<String, Integer> tokenFreqNeg = new TreeMap<String, Integer>();	//treat negation word as new attr. E.g. great <-> n_great
@@ -22,6 +23,10 @@ public class Record {
 	
 	public static void setVocab(Set<String> vocab) {
 		vocabulary = vocab;
+	}
+	
+	public static void setNegatedVocab(Set<String> negatedVocab) {
+		negatedVocabulary = negatedVocab;
 	}
 	
 	public void  setReview(Review r) {
@@ -50,6 +55,7 @@ public class Record {
 	}
 	
 	public void addNegSubstract(Map<String, Integer> negatedWords) {
+		this.negatedWords = negatedWords;
 		tokenFreqSubNeg = new TreeMap<String, Integer>(tokenFreq);
 		for(Entry<String, Integer> e: negatedWords.entrySet()) {
 			if(tokenFreqSubNeg.containsKey(e.getKey())) {

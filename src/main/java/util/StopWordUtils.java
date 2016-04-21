@@ -32,13 +32,30 @@ public class StopWordUtils {
 	
 	public String removeStopword(String sentence) {
 		StringBuilder sb = new StringBuilder();
-		for(String s: sentence.split(" ")) {
+		for(String s: sentence.split("\\s+")) {
+			if(!s.equals(s.toUpperCase())) {
+				s = s.toLowerCase();
+			}
 			if(!isStopword(s)) {
 				sb.append(s+" ");
 			}
 		}
 		return sb.toString();  
 	}
+	
+//	public String removeStopwordPunctuation(String sentence) {
+//		StringBuilder sb = new StringBuilder();
+//		String[] tokens = sentence.replaceAll("[^a-zA-Z ]", "").toLowerCase().split("\\s+");
+//		for(String s: tokens) {
+//			if(!s.equals(s.toUpperCase())) {
+//				s = s.toLowerCase();
+//			}
+//			if(!isStopword(s)) {
+//				sb.append(s+" ");
+//			}
+//		}
+//		return sb.toString();  
+//	}
 	
 	public List<String> removeStopwordReturnList(String sentence) {
 		  List<String> list = new LinkedList<String>();

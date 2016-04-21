@@ -58,6 +58,10 @@ public class CoreNLPUtils {
 		      		if(type.equals("neg")) {
 //			      		System.out.println(type + ", "+aWord+", "+aIndex+", "+bWord+", "+bIndex);
 			      		String negatedWord = Integer.valueOf(aIndex) > Integer.valueOf(bIndex) ? aWord : bWord;
+			      		//remove all punctuation
+			      		negatedWord = negatedWord.replaceAll("[^a-zA-Z ]", "");
+						if (!negatedWord.equals(negatedWord.toUpperCase())) negatedWord = negatedWord.toLowerCase();
+						
 			      		if(negatedWords.containsKey(negatedWord)) {
 			      			negatedWords.put(negatedWord, negatedWords.get(negatedWord) + 1);
 			      		} else {
