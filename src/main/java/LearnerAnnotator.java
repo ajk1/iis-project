@@ -91,6 +91,7 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 			vocabulary = getTopVocab(sortedWordFreq, topWordLimit);	
 			Record.setVocab(vocabulary);
 			
+<<<<<<< HEAD
 			if (useInfoGain) {
 				if (!readRecords) {
 					data = reviewsToRecords(reviews);
@@ -118,6 +119,10 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 			}
 
 			writeTopWords(sortedWordFreq, topWordLimit);
+=======
+			System.out.println(sortedWordFreq.keySet());
+			
+>>>>>>> ea5540a... add video_games subset data
 		} else if(mode.equals("test")) {
 			
 			// read vocab from file			
@@ -199,14 +204,14 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 				for(Record r : testingData) {
 					ctr++;
 			    	int zeroRegScore = 5;
-			    	int nbPredictScore = nbLearner.predict(r);			    	
+			    	int nbPredictScore = nbLearner.predict(r);		    	
 			    	int nnPredictScore = nnLearner.predict(r);
 //			    	System.out.println("... predicting review: " + (ctr) + ": " + nbPredictScore + "," + nnPredictScore);
 			    	
 					List<Integer> cScores = Utils.fromIntegerListToArrayList(r.review.getClassificationScores());
 					cScores.add(zeroRegScore);
-					cScores.add(nnPredictScore);
 					cScores.add(nbPredictScore);
+					cScores.add(nnPredictScore);
 					r.review.setClassificationScores(Utils.fromCollectionToIntegerList(aJCas, cScores));
 
 				}
