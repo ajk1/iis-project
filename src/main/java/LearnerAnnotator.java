@@ -31,7 +31,6 @@ import util.StopWordUtils;
 import util.CoreNLPUtils;
 
 import learners.*;
-import learners.Record;
 
 public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 	final String PARAM_SIZELIMIT = "SizeLimit";
@@ -91,7 +90,6 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 			vocabulary = getTopVocab(sortedWordFreq, topWordLimit);	
 			Record.setVocab(vocabulary);
 			
-<<<<<<< HEAD
 			if (useInfoGain) {
 				if (!readRecords) {
 					data = reviewsToRecords(reviews);
@@ -119,10 +117,8 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 			}
 
 			writeTopWords(sortedWordFreq, topWordLimit);
-=======
 			System.out.println(sortedWordFreq.keySet());
-			
->>>>>>> ea5540a... add video_games subset data
+
 		} else if(mode.equals("test")) {
 			
 			// read vocab from file			
