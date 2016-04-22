@@ -46,7 +46,8 @@ public class NeuralNetLearner extends ClassificationLearner{
 			x[0] = 1;
 			int j = 1;
 			for (int v : r.tokenFreqSubNeg.values()) {
-				x[j] = (double)v/sum;
+				x[j] = (sum==0 ? 0 : (double)v/sum);
+				//if (x[j]>0) System.out.println(x[j]);
 				j++;
 			}
 			inputs.add(x);
@@ -68,6 +69,8 @@ public class NeuralNetLearner extends ClassificationLearner{
 			
 			for (int n=0; n<data.size(); n++) {
 				double[] x = inputs.get(n);
+//				for (double i : x) System.out.print(i + " ");
+//				System.out.println();
 				double[] output = {0,0,0,0,0};
 				int[] t = {0,0,0,0,0}; //true output
 				t[data.get(n).goldLabel - 1] = 1;
@@ -114,11 +117,12 @@ public class NeuralNetLearner extends ClassificationLearner{
 				}
 			}
 			if (firstSqError == 0) firstSqError = sqError;
+			//System.out.println(sqError);
 			if (sqError/prevSqError > 1.01) {
 				System.out.println("reduce step");
 				System.out.println(sqError);
 				if (eta < .1) {
-					if (sqError > firstSqError/5) {
+					if (sqError > firstSqError/6) {
 						System.out.println("stuck in local min");
 						//randomize weights
 						for (int h=0; h<numHidden; h++) {
@@ -170,7 +174,7 @@ public class NeuralNetLearner extends ClassificationLearner{
 			oH[h] = sigmoid(weightedSum);
 		}
 		
-		double max = -1;
+		double max = -999;
 		int maxId = -1;
 		for (int o=0; o<numOutput; o++) {
 			for (int h=0; h<numHidden; h++) {

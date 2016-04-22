@@ -32,6 +32,7 @@ import type.Review;
 import type.Sentence;
 import util.Utils;
 import util.MapUtil;
+import util.StopWordUtils;
 import util.CoreNLPUtils;
 
 import learners.*;
@@ -47,6 +48,8 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 	private boolean readRecords;
 	private int topWordLimit = 1000;
 	private int numOfFolds = 10;
+	private boolean removeStopWords = true;
+	private boolean useInfoGain = false;
 	private String recordsFile = "src/main/resources/records/records.txt";
 	
 	@Override
@@ -78,46 +81,71 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		// PARAMS: vocab size limit
 
 		Map<String, Integer> sortedWordFreq = new LinkedHashMap<String, Integer>();	
+		Map<String, Double> weightedWordFreq = new LinkedHashMap<String, Double>();
 		Set<String> vocabulary = new HashSet<String>();
 
 		// DataSet, in the format of Record
-		List<Record> data = new ArrayList<Record>();
+		List<Record> data;
 
 		int ctr = 0;
 		
 		if(mode.equals("train") || mode.equals("cv")) {	
 			
 			// write vocab to file
-			sortedWordFreq = MapUtil.sortByValue(getVocabInTrainSet(reviews));		
-			writeTopWords(sortedWordFreq, topWordLimit);
+			sortedWordFreq = MapUtil.sortByValue(getVocabInTrainSet(reviews));
 			vocabulary = getTopVocab(sortedWordFreq, topWordLimit);	
+			Record.setVocab(vocabulary);
 			
+			if (useInfoGain) {
+				if (!readRecords) {
+					data = reviewsToRecords(reviews);
+		//			writeRecords(data);
+				}
+				else { 
+					data = readRecords(reviews);
+				}
+				//get infoGain
+				Map<String, Double> infoGain = MapUtil.sortByValue(getInfoGain(data)); 
+				for (String word : infoGain.keySet()) {
+					if (sortedWordFreq.containsKey(word)){
+//						System.out.println(word + " " + infoGain.get(word));
+						weightedWordFreq.put(word, Math.pow(1, infoGain.get(word))*sortedWordFreq.get(word));
+					}
+				}
+				vocabulary = new HashSet<String>();
+				int i=0;
+				for (String v : weightedWordFreq.keySet()) {
+					if (i<topWordLimit) vocabulary.add(v);
+					else break;
+					i++;
+				}	
+				Record.setVocab(vocabulary);
+			}
+
+			writeTopWords(sortedWordFreq, topWordLimit);
 		} else if(mode.equals("test")) {
 			
 			// read vocab from file			
 			sortedWordFreq = getTopWordsFromFile(topWordLimit);
 			vocabulary = getTopVocab(sortedWordFreq, topWordLimit);					
 		}
-		Record.setVocab(vocabulary);
-
 		
 		// 1.2 create Record List for unified learner input data format
 		if (!readRecords) {
-			for (Review review : reviews) {
-		    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
-				System.out.println("... Learner Annotator: annotating " + ctr + " review to record ... ");	
-	
-				Record r = reviewToRecord(review, sortedWordFreq);
-				data.add(r);
-			}
-//			writeRecords(data);
+			data = reviewsToRecords(reviews);
 			
+//			writeRecords(data);
 		}
 		else { 
 			data = readRecords(reviews);
 		}
-		
-
+//		
+//		for (Record r : data) {
+//			for(String s : r.tokenFreq.keySet()) {
+//				if(r.tokenFreq.get(s)>0) System.out.print(s+" "+r.tokenFreq.get(s)+", ");
+//			}
+//			System.out.println();
+//		}
 		
 		// 2. Learners start working here
 		ClassificationLearner nbLearner = new NaiveBayesLearner();
@@ -221,47 +249,46 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 	//##############################
 	//# helper functions           #
 	//##############################
-	
-	private Set<String> getTopVocab(Map<String, Integer> sortedWordFreq, int topWordLimit) {
-		Set<String> vocabulary = new HashSet<String>();
-		int i=0;
-		for (String v : sortedWordFreq.keySet()) {
-			if (i<topWordLimit) vocabulary.add(v);
-			else break;
-			i++;
-		}	
-		return vocabulary;
-	}
 
 	
-	private Record reviewToRecord(Review review, Map<String, Integer> sortedWordFreq) {
-		Record r = new Record();
-		List<String> allTokens = new ArrayList<String>();
-		Map<String, Integer> negatedWords = new HashMap<String, Integer>();
-		
-		//for each sentence in review
-		for(Sentence sentence : Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class)) {
+	private ArrayList<Record> reviewsToRecords(Collection<Review> reviews) {
+		ArrayList<Record> data = new ArrayList<Record>();
+		int ctr = 0;
+		for (Review review : reviews) {
+	    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
+			System.out.println("... Learner Annotator: annotating " + ctr + " review to record ... ");	
+			
+			Record r = new Record();
+			List<String> allTokens = new ArrayList<String>();
+			Map<String, Integer> negatedWords = new HashMap<String, Integer>();
+			
+			//for each sentence in review
+			for(Sentence sentence : Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class)) {
+	
+				//negation detection - all negated words are cleaned (punctuation removed)
+				Map<String, Integer> negatedWordsInSentence = CoreNLPUtils.getNegatedWordsWithParseTree(sentence.getRawText());
 
-			//negation detection
-			Map<String, Integer> negatedWordsInSentence = CoreNLPUtils.getNegatedWordsWithParseTree(sentence.getRawText());
-//			System.out.println(negatedWordsInSentence);
-			negatedWordsInSentence.forEach((k, v) -> negatedWords.merge(k, v, (v1, v2) -> v1 + v2));
-
-			//token detection
-			List<String> tokenList = Utils.fromStringListToArrayList(sentence.getUnigramList());
-
-			for(String token: tokenList) {
-				token = token.toLowerCase();
-				allTokens.add(token);					
+				negatedWordsInSentence.forEach((k, v) -> negatedWords.merge(k, v, (v1, v2) -> v1 + v2));
+				
+				//token detection
+				List<String> tokenList = Utils.fromStringListToArrayList(sentence.getUnigramList());
+	
+				for(String token: tokenList) {
+					//remove punctuation
+					token = token.replaceAll("[^a-zA-Z ]", "");
+					if (!token.equals(token.toUpperCase())) token = token.toLowerCase();
+					allTokens.add(token);					
+				}
 			}
+			r.setReview(review);
+			r.setGoldLabel(review.getGoldLabel());
+			r.setAttr(allTokens);
+			r.addNeg(negatedWords);
+			r.addNegSubstract(negatedWords);
+			
+			data.add(r);
 		}
-//		System.out.println("review: " + negatedWords);
-		r.setReview(review);
-		r.setGoldLabel(review.getGoldLabel());
-		r.setAttr(allTokens);
-		r.addNeg(negatedWords);
-		r.addNegSubstract(negatedWords);
-		return r;
+		return data;
 	}
 	
 	private void writeRecords(List<Record> data) {
@@ -290,7 +317,7 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 	}
 	
 	private ArrayList<Record> readRecords(Collection<Review> reviews) {
-		Set<String> vocabulary = new HashSet<String>();
+
 		ArrayList<Record> data = new ArrayList<Record>();
 		int ctr = 0;
 		// Open the file
@@ -315,8 +342,10 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 					List<String> tokenList = Utils.fromStringListToArrayList(sentence.getUnigramList());
 
 					for(String token: tokenList) {
-						token = token.toLowerCase();
-						allTokens.add(token);					
+						//remove punctuation
+						token = token.replaceAll("[^a-zA-Z ]", "");
+						if (!token.equals(token.toUpperCase())) token = token.toLowerCase();
+						allTokens.add(token);		
 					}
 				}
 				String[] values = line.split("\\s");
@@ -331,6 +360,7 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 				r.addNegSubstract(negatedWords);
 				data.add(r);
 			}
+			
 			System.out.println("... Finished reading " + ctr + " Records");
 		    //Close the input stream
 		    br.close();
@@ -343,8 +373,20 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		return data;
 	}
 
+	private Set<String> getTopVocab(Map<String, Integer> sortedWordFreq, int topWordLimit) {
+		Set<String> vocabulary = new HashSet<String>();
+		int i=0;
+		for (String v : sortedWordFreq.keySet()) {
+			if (i<topWordLimit) vocabulary.add(v);
+			else break;
+			i++;
+		}	
+		return vocabulary;
+	}
+	
 	private HashMap<String, Integer> getVocabInTrainSet(Collection<Review> reviews) {
 		HashMap<String, Integer> wordFreq = new HashMap<String, Integer>();
+		StopWordUtils swu = new StopWordUtils("full");
 		int ctr = 0;
 		for (Review review : reviews) {
 	    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
@@ -352,19 +394,167 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 			for(Sentence sentence : Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class)) {
 				
 				//generating top words vocabs
-				//TODO: stopwords removal
 				for(String token : Utils.fromStringListToArrayList(sentence.getUnigramList())) {
-					token = token.toLowerCase();
-
-					if(!wordFreq.containsKey(token)) {
-						wordFreq.put(token, 1);
-					} else {
-						wordFreq.put(token, wordFreq.get(token) + 1);
+					//remove punctuation
+					token = token.replaceAll("[^a-zA-Z ]", "");
+					if (!token.equals(token.toUpperCase())) token = token.toLowerCase();
+					if(!(removeStopWords && swu.isStopword(token))) {
+						if(!wordFreq.containsKey(token)) {
+							wordFreq.put(token, 1);
+						} else {
+							wordFreq.put(token, wordFreq.get(token) + 1);
+						}
 					}
 				}
 			}
 		}
 		return wordFreq;
+	}
+	
+	private HashMap<String, Double> getInfoGain(List<Record> data) {
+		//word -> values (..., -1, 0, 1, ...) -> labels [1,2,3,4,5]
+		HashMap<String, HashMap<Integer, int[]>> wordValueLabels = new HashMap<String, HashMap<Integer, int[]>>();;
+		StopWordUtils swu = new StopWordUtils("full");
+		HashMap<Integer, int[]> valueLabels;
+		double[] pLabel = {0,0,0,0,0};
+		int numRecords = 0;
+		//int[] labels = new int[5];
+		int goldIndex;
+		
+		int ctr = 0;
+		for (Record r : data) {
+	    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
+	    	goldIndex = r.goldLabel-1;
+	    	pLabel[goldIndex]++;
+	    	numRecords++;
+	    	//get the value of each word in the review
+	    	HashMap<String, Integer> wordValue = new HashMap<String, Integer>();
+			for(Sentence sentence : Utils.fromFSListToLinkedList(r.review.getSentences(), Sentence.class)) {
+				
+				//tokens are already clean, remove stopwords
+				for(String token : Utils.fromStringListToArrayList(sentence.getUnigramList())) {
+					if (!(removeStopWords && swu.isStopword(token))) {
+						if(wordValue.containsKey(token)){
+							wordValue.put(token, wordValue.get(token)+1);
+						}
+						else {
+							wordValue.put(token, 1);
+						}
+					}
+				}
+			}
+			//subtract negated words
+			for(String token : r.negatedWords.keySet()) {
+				if (wordValue.containsKey(token))
+					wordValue.put(token, wordValue.get(token) - r.negatedWords.get(token));
+				else 
+					wordValue.put(token, - r.negatedWords.get(token));
+			}
+			//add word-value pair to word-value-labels
+			for(String token : wordValue.keySet()) {
+				//if the word hasn't been encountered yet
+				int value = wordValue.get(token);
+				if(!wordValueLabels.containsKey(token)) {
+					valueLabels = new HashMap<Integer, int[]>();
+					int[] labels = new int[5];
+					labels[goldIndex]++;
+					valueLabels.put(value, labels);
+					wordValueLabels.put(token, valueLabels);
+				//if this value of the word hasn't been encountered yet
+				} else if (!wordValueLabels.get(token).containsKey(value)) {
+					valueLabels = wordValueLabels.get(token);
+					int[] labels = new int[5];
+					labels[goldIndex]++;
+					valueLabels.put(value, labels);
+					wordValueLabels.put(token, valueLabels);
+				//word and value has been encountered, just increment label;
+				} else {
+					valueLabels = wordValueLabels.get(token);
+					int[] labels = valueLabels.get(value);
+					labels[goldIndex]++;
+					valueLabels.put(value, labels);
+					wordValueLabels.put(token, valueLabels);
+				}
+				
+			}
+		}
+//		ctr = 0;
+//		for (Record r : data) {
+//	    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
+//	    	goldIndex = r.goldLabel-1;
+//	    	pLabel[goldIndex]++;
+//	    	numRecords++;
+//	    	//get the value of each word in the review
+//	    	HashMap<String, Integer> wordValue = new HashMap<String, Integer>();
+//			for(Sentence sentence : Utils.fromFSListToLinkedList(r.review.getSentences(), Sentence.class)) {
+//				
+//				Set<String> sentenceTokens = new HashSet<String>(Utils.fromStringListToArrayList(sentence.getUnigramList()));
+//				for(String token : wordValueLabels.keySet()) {
+//					if (!sentenceTokens.contains(token)) {
+//						if (!wordValueLabels.get(token).containsKey(0)) {
+//							valueLabels = wordValueLabels.get(token);
+//							int[] labels = new int[5];
+//							labels[goldIndex]++;
+//							valueLabels.put(0, labels);
+//							wordValueLabels.put(token, valueLabels);
+//						//word and value has been encountered, just increment label;
+//						} else {
+//							valueLabels = wordValueLabels.get(token);
+//							int[] labels = valueLabels.get(0);
+//							labels[goldIndex]++;
+//							valueLabels.put(0, labels);
+//							wordValueLabels.put(token, valueLabels);
+//						}
+//					}
+//				}
+//			}
+//		}
+		//get label probabilities
+		for (int i=0; i<5; i++) {
+			pLabel[i] = pLabel[i]/numRecords;
+		}
+		HashMap<String, Double> wordInfoGain = new HashMap<String, Double>();
+		//IG(word) = H(labels) - sum_values(P(value=v)*H(labels|value=v))
+		//H(labels) = sum(P(label)*log(1/P(label)))
+		double hLabels = 0;
+		for (int i=0; i<5; i++) {
+			hLabels += pLabel[i]*Math.log(pLabel[i]==0 ? 1 : 1/pLabel[i]);
+		}
+		for (String token : wordValueLabels.keySet()) {
+			valueLabels = wordValueLabels.get(token);
+			HashMap<Integer, Integer> valueFreq = new HashMap<Integer, Integer>();
+			int totalValues = 0;
+			for (int value : valueLabels.keySet()) {
+				int[] labels = valueLabels.get(value);
+				int sum = 0;
+				for (int i=0; i<5; i++) {
+					sum += labels[i];
+				}
+				valueFreq.put(value, sum);
+				totalValues += sum;
+			}
+
+			double hLabelsGivenValue = 0.0;
+			for (int value : valueLabels.keySet()) {
+				int[] labels = valueLabels.get(value);
+				//calculate H(labels|value=v)
+				double h = 0;
+				for (int i=0; i<5; i++) {
+					double p = (double) labels[i]/valueFreq.get(value);
+					h += p*Math.log(p==0 ? 1.0 : 1.0/p);
+				}
+				hLabelsGivenValue += h*(double)valueFreq.get(value)/totalValues;
+			}
+//			if (hLabelsGivenValue < 1) {
+//				System.out.println(token + " " + hLabelsGivenValue + " " + totalValues);
+//				for (int value : valueLabels.keySet()) {
+//					System.out.println(value + " " + valueFreq.get(value));
+//				}
+//			}
+			wordInfoGain.put(token, hLabels - hLabelsGivenValue);
+		}
+		//System.out.println(hLabels);
+		return wordInfoGain;
 	}
 
 	private void writeTopWords(Map<String, Integer> map, int limit) {
