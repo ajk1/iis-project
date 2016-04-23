@@ -148,10 +148,10 @@ public class ReviewScoreWriter extends CasConsumer_ImplBase {
             	  double recall = (tp.get(index)[i] + fn.get(index)[i] == 0) ? 0 : tp.get(index)[i] / (tp.get(index)[i] + fn.get(index)[i]);
             	  double accuracy = (tp.get(index)[i] + tn.get(index)[i])/(tp.get(index)[i]+fp.get(index)[i]+tn.get(index)[i]+fn.get(index)[i]);
             	  double f1 = (precision == 0 || recall == 0) ? 0.0 : 2 * precision * recall / (precision + recall);
-            	  System.out.println("... accuracy of rating " + (i+1) +" : " + accuracy);
-            	  System.out.println("... precision of rating " + (i+1) +" : " + precision);    	  
-            	  System.out.println("... recall of rating " + (i+1) +" : " + recall);    	  
-            	  System.out.println("... f1 of rating " + (i+1) +" : " + f1);  
+//            	  System.out.println("... accuracy of rating " + (i+1) +" : " + accuracy);
+//            	  System.out.println("... precision of rating " + (i+1) +" : " + precision);    	  
+//            	  System.out.println("... recall of rating " + (i+1) +" : " + recall);    	  
+//            	  System.out.println("... f1 of rating " + (i+1) +" : " + f1);  
 
             	  recallagg += recall*(tp.get(index)[i]+fn.get(index)[i]);
             	  precisionagg += precision*(tp.get(index)[i]+fn.get(index)[i]);

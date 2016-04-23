@@ -14,7 +14,7 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.cas.TOP_Type;
 
 /** 
- * Updated by JCasGen Sat Apr 23 16:19:37 EDT 2016
+ * Updated by JCasGen Sat Apr 23 17:40:16 EDT 2016
  * @generated */
 public class Config_Type extends TOP_Type {
   /** @generated 
@@ -69,6 +69,30 @@ public class Config_Type extends TOP_Type {
     ll_cas.ll_setStringValue(addr, casFeatCode_InputFileName, v);}
     
   
+ 
+  /** @generated */
+  final Feature casFeat_ModelNames;
+  /** @generated */
+  final int     casFeatCode_ModelNames;
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value 
+   */ 
+  public int getModelNames(int addr) {
+        if (featOkTst && casFeat_ModelNames == null)
+      jcas.throwFeatMissing("ModelNames", "type.Config");
+    return ll_cas.ll_getRefValue(addr, casFeatCode_ModelNames);
+  }
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set 
+   */    
+  public void setModelNames(int addr, int v) {
+        if (featOkTst && casFeat_ModelNames == null)
+      jcas.throwFeatMissing("ModelNames", "type.Config");
+    ll_cas.ll_setRefValue(addr, casFeatCode_ModelNames, v);}
+    
+  
 
 
 
@@ -84,6 +108,10 @@ public class Config_Type extends TOP_Type {
  
     casFeat_InputFileName = jcas.getRequiredFeatureDE(casType, "InputFileName", "uima.cas.String", featOkTst);
     casFeatCode_InputFileName  = (null == casFeat_InputFileName) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_InputFileName).getCode();
+
+ 
+    casFeat_ModelNames = jcas.getRequiredFeatureDE(casType, "ModelNames", "uima.cas.StringList", featOkTst);
+    casFeatCode_ModelNames  = (null == casFeat_ModelNames) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_ModelNames).getCode();
 
   }
 }

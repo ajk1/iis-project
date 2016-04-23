@@ -43,7 +43,7 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 	
 	// for reading vocabs
 	private String vocabMode  = "write";
-	private String vocabOpt  = "freq";
+	private String vocabOpt  = "infoGain";	// this can be freq or infoGain
 	private int vocabLimit  = 1000;
 	
 	private boolean removeStopWords = true;
@@ -63,15 +63,17 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 	@Override
 	public void process(JCas aJCas) throws AnalysisEngineProcessException {
 		System.out.println(">> Learner Annotator Processing");
+		
+		Config config = JCasUtil.selectSingle(aJCas, Config.class);
+		inputFileName = config.getInputFileName().split("\\.")[0];
+		System.out.println("... inputFileName " + inputFileName);
 		System.out.println("... sizeLimit: " + sizeLimit);
 		System.out.println("... mode: " + mode);
 		System.out.println("... modelPath: " + modelPath);
 		System.out.println("... readRecords: " + readRecords);
 
-		Config config = JCasUtil.selectSingle(aJCas, Config.class);
-		inputFileName = config.getInputFileName().split("\\.")[0];
-		System.out.println("... inputFileName " + inputFileName);
 
+		List<String> modelNames = Utils.fromStringListToArrayList(config.getModelNames());
 		
 		// 1. annotate Records from Reviews (Class <Review> is POJO)
 		// get reviews from the CAS
@@ -288,10 +290,4 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		}
 		return data;
 	}
-
-
-	
-
-
-	
 }

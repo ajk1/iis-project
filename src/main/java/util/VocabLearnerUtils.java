@@ -156,6 +156,11 @@ public class VocabLearnerUtils {
 	
 	
 	static private HashMap<String, Double> getInfoGain(List<Review> reviews) {
+		
+		//this is bad, we need a vocab to init Record class to get a new vocab using info gain
+		Map<String, Integer> sortedWordFreq = MapUtil.sortByValue(getWordFreqInTrainSet(reviews));
+		Set<String> tempVocab = getVocabFromLinkedSet(sortedWordFreq.keySet(), sortedWordFreq.keySet().size());
+		Record.setVocab(tempVocab);
 		List<Record> data = Record.reviewsToRecordsWithNeg(reviews);
 		
 		//word -> values (..., -1, 0, 1, ...) -> labels [1,2,3,4,5]

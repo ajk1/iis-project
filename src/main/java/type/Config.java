@@ -10,8 +10,11 @@ import org.apache.uima.jcas.cas.TOP_Type;
 import org.apache.uima.jcas.cas.TOP;
 
 
+import org.apache.uima.jcas.cas.StringList;
+
+
 /** 
- * Updated by JCasGen Sat Apr 23 16:19:37 EDT 2016
+ * Updated by JCasGen Sat Apr 23 17:40:16 EDT 2016
  * XML source: /Users/Terry/Desktop/CMU/16-spring/11792/project/OpinionMining/src/main/resources/descriptors/typeSystem.xml
  * @generated */
 public class Config extends TOP {
@@ -84,6 +87,28 @@ public class Config extends TOP {
     if (Config_Type.featOkTst && ((Config_Type)jcasType).casFeat_InputFileName == null)
       jcasType.jcas.throwFeatMissing("InputFileName", "type.Config");
     jcasType.ll_cas.ll_setStringValue(addr, ((Config_Type)jcasType).casFeatCode_InputFileName, v);}    
+   
+    
+  //*--------------*
+  //* Feature: ModelNames
+
+  /** getter for ModelNames - gets 
+   * @generated
+   * @return value of the feature 
+   */
+  public StringList getModelNames() {
+    if (Config_Type.featOkTst && ((Config_Type)jcasType).casFeat_ModelNames == null)
+      jcasType.jcas.throwFeatMissing("ModelNames", "type.Config");
+    return (StringList)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Config_Type)jcasType).casFeatCode_ModelNames)));}
+    
+  /** setter for ModelNames - sets  
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setModelNames(StringList v) {
+    if (Config_Type.featOkTst && ((Config_Type)jcasType).casFeat_ModelNames == null)
+      jcasType.jcas.throwFeatMissing("ModelNames", "type.Config");
+    jcasType.ll_cas.ll_setRefValue(addr, ((Config_Type)jcasType).casFeatCode_ModelNames, jcasType.ll_cas.ll_getFSRef(v));}    
   }
 
     
