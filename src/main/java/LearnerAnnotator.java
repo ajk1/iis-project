@@ -40,11 +40,9 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 	
 	// for reading pre-train review instances
 	private boolean readRecords;
-	private String recordsFile = "src/main/resources/records/records.txt";
 	
 	// for reading vocabs
 	private String vocabMode  = "write";
-	private String vocabFileName  = "freq_instruments";
 	private String vocabOpt  = "freq";
 	private int vocabLimit  = 1000;
 	
@@ -100,10 +98,10 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		// 1.2 create Record List for unified learner input data format
 		if (!readRecords) {
 			data = Record.reviewsToRecordsWithNeg(reviews);
-//			writeRecords(data);
+			writeRecords(data, inputFileName);
 		}
 		else { 
-			data = readRecords(reviews);
+			data = readRecords(reviews, inputFileName);
 		}
 		
 		// 2. Learners start working here
@@ -114,9 +112,11 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		
 		//naive bayes init
 		nbLearner.setModelPath(modelPath);
+		nbLearner.setInputFileName(inputFileName);
 		
 		//neural network init
 		nnLearner.setModelPath(modelPath);
+		nnLearner.setInputFileName(inputFileName);
 				
 		if(mode.equals("train")) {
 			System.out.println("... Learner Annotator: TRAIN MODE ... ");	
@@ -221,17 +221,18 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		return reviews;
 	}
 	
-	private void writeRecords(List<Record> data) {
-		System.out.println("... Writing Records to " + recordsFile);
+	private void writeRecords(List<Record> data, String inputFileName) {
+		String fileName = "src/main/resources/records/" + inputFileName + "_" + sizeLimit + ".txt";
+		System.out.println("... Writing Records to " + fileName);
 		//write txt document with scores for analysis
 		File outputFile = null;
 	    PrintWriter writer = null;
 	    try {	    	
-	        outputFile = new File(recordsFile);
+	        outputFile = new File(fileName);
 	        outputFile.getParentFile().mkdirs();
 	        writer = new PrintWriter(outputFile);
 	    } catch (FileNotFoundException e) {
-	        System.out.printf("Output file could not be written: %s\n", recordsFile);
+	        System.out.printf("Output file could not be written: %s\n", fileName);
 	        return;
 	    }
 	    //each record in data
@@ -246,15 +247,16 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 	    writer.close();
 	}
 	
-	private ArrayList<Record> readRecords(Collection<Review> reviews) {
+	private ArrayList<Record> readRecords(Collection<Review> reviews, String inputFileName) {
+		String fileName = "src/main/resources/records/" + inputFileName + "_" + sizeLimit + ".txt";
 		ArrayList<Record> data = new ArrayList<Record>();
 		int ctr = 0;
 
 		// Open the file
 	    FileInputStream fstream;
 		try {
-			System.out.println("... Reading Records from " + recordsFile);
-			fstream = new FileInputStream(recordsFile);
+			System.out.println("... Reading Records from " + fileName);
+			fstream = new FileInputStream(fileName);
 		    BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
 		    
 			for (Review review : reviews) {
@@ -264,7 +266,6 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 				
 				Record r = Record.reviewToRecord(review);
 				Map<String, Integer> negatedWords = new HashMap<String, Integer>();
-				
 
 				String[] values = line.split("\\s");
 				for(int i=0; i<values.length/2; i++) {

@@ -107,33 +107,6 @@ public class NaiveBayesLearner extends ClassificationLearner{
 		return maxId + 1;		
 	}
 	
-	@Override
-	public int predict(Review review) {
-		
-		float[] nbScore = new float[5];
-		
-		for(Sentence sentence : Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class)) {
-			List<String> tokenList = Utils.fromStringListToArrayList(sentence.getUnigramList());
-			for(String token: tokenList) {
-				if(wordPOfStars.get(0).keySet().contains(token)) {
-					for(int i=0; i<5; i++) {
-						nbScore[i] += Math.log(wordPOfStars.get(i).get(token));
-					}					
-				}
-			}
-		}
-		
-		float max = 0 - Float.MAX_VALUE;
-		int maxId = 0;
-		for(int i=0; i<5; i++) {
-			if(nbScore[i] > max) {
-				max = nbScore[i];
-				maxId = i;
-			}
-		}
-		
-		return maxId + 1;
-	}
 
 	@Override
 	public void initTest(String modelPath) {
@@ -147,7 +120,7 @@ public class NaiveBayesLearner extends ClassificationLearner{
 	    FileInputStream fstream;
 		try {
 			System.out.println("... LEARNER INFO: opening NaiveBayes model descripter");
-			fstream = new FileInputStream(modelPath + this.getClass().getSimpleName() + ".txt");
+			fstream = new FileInputStream(modelPath + inputFileName + "_" + this.getClass().getSimpleName() + ".txt");
 		    BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
 
 		    String strLine;
@@ -186,7 +159,7 @@ public class NaiveBayesLearner extends ClassificationLearner{
 		File outputFile = null;
 	    PrintWriter writer = null;
 	    try {	    	
-	        outputFile = new File(Paths.get(modelPath, this.getClass().getSimpleName() + ".txt").toString());
+	        outputFile = new File(Paths.get(modelPath, inputFileName + "_" + this.getClass().getSimpleName() + ".txt").toString());
 	        outputFile.getParentFile().mkdirs();
 	        writer = new PrintWriter(outputFile);
 	    } catch (FileNotFoundException e) {
