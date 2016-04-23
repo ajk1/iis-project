@@ -2,16 +2,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,12 +20,9 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 
+import type.Config;
 import type.Review;
-import type.Sentence;
 import util.Utils;
-import util.MapUtil;
-import util.StopWordUtils;
-import util.CoreNLPUtils;
 import util.VocabLearnerUtils;
 
 import learners.*;
@@ -42,6 +36,7 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 	private String mode;
 	private int numOfFolds = 10;
 	private String modelPath;
+	private String inputFileName;
 	
 	// for reading pre-train review instances
 	private boolean readRecords;
@@ -75,6 +70,11 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		System.out.println("... modelPath: " + modelPath);
 		System.out.println("... readRecords: " + readRecords);
 
+		Config config = JCasUtil.selectSingle(aJCas, Config.class);
+		inputFileName = config.getInputFileName().split("\\.")[0];
+		System.out.println("... inputFileName " + inputFileName);
+
+		
 		// 1. annotate Records from Reviews (Class <Review> is POJO)
 		// get reviews from the CAS
 		Collection<Review> allReviews = JCasUtil.select(aJCas, Review.class);
@@ -94,7 +94,7 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		List<Record> data = new ArrayList<Record>();
 		
 		// Read vocab or build vocab using the current 
-		vocabulary = VocabLearnerUtils.getVocab(vocabMode, vocabFileName, vocabLimit, vocabOpt, reviews);
+		vocabulary = VocabLearnerUtils.getVocab(vocabMode, inputFileName, vocabLimit, vocabOpt, reviews);
 		Record.setVocab(vocabulary);
 		
 		// 1.2 create Record List for unified learner input data format

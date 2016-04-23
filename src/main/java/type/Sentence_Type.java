@@ -13,7 +13,7 @@ import org.apache.uima.cas.impl.FeatureImpl;
 import org.apache.uima.cas.Feature;
 
 /** 
- * Updated by JCasGen Wed Apr 06 22:47:28 EDT 2016
+ * Updated by JCasGen Sat Apr 23 16:19:37 EDT 2016
  * @generated */
 public class Sentence_Type extends ComponentAnnotation_Type {
   /** @generated 

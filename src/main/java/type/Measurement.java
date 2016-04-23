@@ -11,7 +11,7 @@ import org.apache.uima.jcas.cas.TOP;
 
 
 /** 
- * Updated by JCasGen Wed Apr 06 22:47:28 EDT 2016
+ * Updated by JCasGen Sat Apr 23 16:19:37 EDT 2016
  * XML source: /Users/Terry/Desktop/CMU/16-spring/11792/project/OpinionMining/src/main/resources/descriptors/typeSystem.xml
  * @generated */
 public class Measurement extends TOP {

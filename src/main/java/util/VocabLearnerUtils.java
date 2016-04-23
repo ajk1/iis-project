@@ -32,6 +32,8 @@ public class VocabLearnerUtils {
 	}
 	
 	static public Set<String> getVocab(String mode, String fileName, int limit, String opt, List<Review> reviews) {
+		fileName = "vocab_" + fileName + "_" + opt + "_" + limit + ".txt"; 
+		
 		Set<String> vocabulary = new LinkedHashSet<String>();
 		//READ or WRITE MODE
 		if(mode.equals("read")) {
