@@ -197,7 +197,7 @@ public class NeuralNetLearner extends ClassificationLearner{
 	    FileInputStream fstream;
 		try {
 			System.out.println("... LEARNER INFO: opening NeuralNet model descripter");
-			fstream = new FileInputStream(modelPath + this.getClass().getSimpleName() + ".txt");
+			fstream = new FileInputStream(modelPath + inputFileName + "_" + this.getClass().getSimpleName() + ".txt");
 		    BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
 
 			//first line: vocabulary in alphabetical order
@@ -252,7 +252,7 @@ public class NeuralNetLearner extends ClassificationLearner{
 		File outputFile = null;
 	    PrintWriter writer = null;
 	    try {	    	
-	        outputFile = new File(Paths.get(modelPath, this.getClass().getSimpleName() + ".txt").toString());
+	        outputFile = new File(Paths.get(modelPath, inputFileName + "_" + this.getClass().getSimpleName() + ".txt").toString());
 	        outputFile.getParentFile().mkdirs();
 	        writer = new PrintWriter(outputFile);
 	    } catch (FileNotFoundException e) {

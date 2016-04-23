@@ -8,11 +8,16 @@ import type.Review;
 public class ClassificationLearner implements Learner{
 
 	protected String modelPath;
+	protected String inputFileName;
 	protected String modelName = this.getClass().getSimpleName();
 	
 	@Override
 	public void setModelPath(String modelPath) {
 		this.modelPath = modelPath;
+	}
+	
+	public void setInputFileName(String fileName) {
+		inputFileName = fileName;
 	}
 	
 	@Override
