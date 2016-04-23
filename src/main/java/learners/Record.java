@@ -29,6 +29,17 @@ public class Record {
 		vocabulary = vocab;
 	}	
 	
+	public static List<Record> reviewsToRecordsWithNeg(List<Review> reviews) {
+		ArrayList<Record> data = new ArrayList<Record>();
+		int ctr = 0;
+		for (Review review : reviews) {
+			System.out.println("... Learner Annotator: annotating " + (ctr++) + " review to record ... ");	
+			Record r = Record.reviewToRecordWithNeg(review);
+			data.add(r);
+		}		
+		return data;
+	}
+	
 	public static Record reviewToRecordWithNeg(Review review) {
 		Record r = Record.reviewToRecord(review);
 		Map<String, Integer> negatedWords = new HashMap<String, Integer>();
@@ -56,7 +67,8 @@ public class Record {
 			List<String> tokenList = Utils.fromStringListToArrayList(sentence.getUnigramList());
 
 			for(String token: tokenList) {
-				token = token.toLowerCase();
+				token = token.replaceAll("[^a-zA-Z ]", "");
+				if (!token.equals(token.toUpperCase())) token = token.toLowerCase();
 				allTokens.add(token);					
 			}
 		}
