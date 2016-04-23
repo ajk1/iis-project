@@ -13,6 +13,9 @@ import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.util.Progress;
 import org.apache.uima.util.ProgressImpl;
 
+import type.Config;
+import type.Review;
+
 /**
  * This Collection Reader serves as a reader to parse your input. This is just template code, so you
  * need to implement actual code.
@@ -71,6 +74,10 @@ public class ReviewReader extends CollectionReader_ImplBase {
       // put document in CAS
       jcas.setDocumentText(text);
       System.out.printf("File: %s stored in CAS\n", file.getName());
+      Config config = new Config(jcas);
+      config.setInputFileName(file.getName());
+      config.addToIndexes();
+      
     } finally {
       if (fis != null)
         fis.close();

@@ -18,6 +18,7 @@ public class ScoreAnnotator extends JCasAnnotator_ImplBase {
 	final String PARAM_SIZELIMIT = "SizeLimit";
 	private int sizeLimit;
 
+
 	@Override
 	public void initialize(UimaContext aContext) throws ResourceInitializationException {
 		super.initialize(aContext);		
@@ -28,12 +29,13 @@ public class ScoreAnnotator extends JCasAnnotator_ImplBase {
 	@Override
 	  	public void process(JCas aJCas) throws AnalysisEngineProcessException {
 	    System.out.println(">> Score Annotator Processing");
-	    System.out.println("... sizeLimit: " + sizeLimit);
+//	    System.out.println("... sizeLimit: " + sizeLimit);
 	    
 		// get reviews from the CAS
 		Collection<Review> reviews = JCasUtil.select(aJCas, Review.class);      
-		System.out.println("... review size: " + reviews.size());
+//		System.out.println("... review size: " + reviews.size());
       
+		
 		//zero-order regression
 		double reviewCount = 0;
 		double sumScore = 0;  

@@ -10,8 +10,7 @@ import java.util.Map;
 public class MapUtil
 {
     public static <K, V extends Comparable<? super V>> Map<K, V> 
-        sortByValue( Map<K, V> map )
-    {
+    sortByValue( Map<K, V> map ) {
         List<Map.Entry<K, V>> list =
             new LinkedList<Map.Entry<K, V>>( map.entrySet() );
         Collections.sort( list, new Comparator<Map.Entry<K, V>>()
