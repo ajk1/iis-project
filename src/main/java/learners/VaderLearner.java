@@ -168,7 +168,6 @@ public class VaderLearner extends ClassificationLearner{
 	        return;
 	    }
 	    for(double score : cutoffScores) {
-	    	System.out.println(score);
 	        writer.println(score);
 	    }
 		writer.close();
