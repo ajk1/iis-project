@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,23 +45,16 @@ public class VocabLearnerUtils {
 		} else if(mode.equals("write")){
 			
 			//OPTIONS include [sort by infoGain, sort by pure frequency]
-			if(opt.equals("infoGain")) {	
+			if(opt.equals("weighted")) {	
 				System.out.println("... VOCAB INFO: generating vocab using info gain");
-				Map<String, Double> sortedWordFreq = MapUtil.sortByValue(getInfoGain(reviews));
-				
-				//LEGACY code: 
-//				for (String word : infoGain.keySet()) {
-//					if (sortedWordFreq.containsKey(word)){
-////						System.out.println(word + " " + infoGain.get(word));
-//						weightedWordFreq.put(word, Math.pow(1, infoGain.get(word))*sortedWordFreq.get(word));
-//					}
-//				}
+				Map<String, Double> sortedWordFreq = MapUtil.sortByValue(getWeightedWordFreq(reviews));
 				
 				vocabulary = getVocabFromLinkedSet(sortedWordFreq.keySet(), limit);
 				
 			} else if(opt.equals("freq")){
 				System.out.println("... VOCAB INFO: generating vocab using word freqencies");
 				Map<String, Integer> sortedWordFreq = MapUtil.sortByValue(getWordFreqInTrainSet(reviews));
+
 				vocabulary = getVocabFromLinkedSet(sortedWordFreq.keySet(), limit);
 			}			
 			
@@ -155,150 +149,74 @@ public class VocabLearnerUtils {
 	}
 	
 	
-	static private HashMap<String, Double> getInfoGain(List<Review> reviews) {
-		List<Record> data = Record.reviewsToRecordsWithNeg(reviews);
-		
+	static private HashMap<String, Double> getWeightedWordFreq(List<Review> reviews) {
+		HashMap<String, Double> weightedWordFreq = new HashMap<String, Double>();
+//		List<Record>[] labeledData = (ArrayList<Record>[]) new ArrayList[5];
+//		for (int i=0; i<5; i++) {
+//			labeledData[i] = new ArrayList<Record>();
+//		}
+//		for (Record r : data) {
+//			labeledData[r.goldLabel-1].add(r);
+//		}
 		//word -> values (..., -1, 0, 1, ...) -> labels [1,2,3,4,5]
-		HashMap<String, HashMap<Integer, int[]>> wordValueLabels = new HashMap<String, HashMap<Integer, int[]>>();;
+		HashMap<String, int[]> wordFreqByLabel = new HashMap<String, int[]>();
+		
 		StopWordUtils swu = new StopWordUtils("full");
-		HashMap<Integer, int[]> valueLabels;
 		double[] pLabel = {0,0,0,0,0};
 		int numRecords = 0;
-		//int[] labels = new int[5];
 		int goldIndex;
 		
-		for (Record r : data) {
-	    	goldIndex = r.goldLabel-1;
+		for (Review r : reviews) {
+	    	goldIndex = r.getGoldLabel()-1;
 	    	pLabel[goldIndex]++;
 	    	numRecords++;
 	    	//get the value of each word in the review
-	    	HashMap<String, Integer> wordValue = new HashMap<String, Integer>();
-			for(Sentence sentence : Utils.fromFSListToLinkedList(r.review.getSentences(), Sentence.class)) {
+	    	//HashMap<String, Integer> wordValue = new HashMap<String, Integer>();
+			for(Sentence sentence : Utils.fromFSListToLinkedList(r.getSentences(), Sentence.class)) {
 				
 				//tokens are already clean, remove stopwords
 				for(String token : Utils.fromStringListToArrayList(sentence.getUnigramList())) {
 					if (!(swu.isStopword(token))) {
-						if(wordValue.containsKey(token)){
-							wordValue.put(token, wordValue.get(token)+1);
+						int[] freq = {0,0,0,0,0};
+						if(wordFreqByLabel.containsKey(token)){
+							freq = wordFreqByLabel.get(token);
 						}
-						else {
-							wordValue.put(token, 1);
-						}
+						freq[goldIndex]++;
+						wordFreqByLabel.put(token, freq);
 					}
 				}
 			}
-			//subtract negated words
-			for(String token : r.negatedWords.keySet()) {
-				if (wordValue.containsKey(token))
-					wordValue.put(token, wordValue.get(token) - r.negatedWords.get(token));
-				else 
-					wordValue.put(token, - r.negatedWords.get(token));
-			}
-			//add word-value pair to word-value-labels
-			for(String token : wordValue.keySet()) {
-				//if the word hasn't been encountered yet
-				int value = wordValue.get(token);
-				if(!wordValueLabels.containsKey(token)) {
-					valueLabels = new HashMap<Integer, int[]>();
-					int[] labels = new int[5];
-					labels[goldIndex]++;
-					valueLabels.put(value, labels);
-					wordValueLabels.put(token, valueLabels);
-				//if this value of the word hasn't been encountered yet
-				} else if (!wordValueLabels.get(token).containsKey(value)) {
-					valueLabels = wordValueLabels.get(token);
-					int[] labels = new int[5];
-					labels[goldIndex]++;
-					valueLabels.put(value, labels);
-					wordValueLabels.put(token, valueLabels);
-				//word and value has been encountered, just increment label;
-				} else {
-					valueLabels = wordValueLabels.get(token);
-					int[] labels = valueLabels.get(value);
-					labels[goldIndex]++;
-					valueLabels.put(value, labels);
-					wordValueLabels.put(token, valueLabels);
-				}
-				
-			}
-		}
-//		ctr = 0;
-//		for (Record r : data) {
-//	    	if(ctr++ > sizeLimit && sizeLimit != 0) break;
-//	    	goldIndex = r.goldLabel-1;
-//	    	pLabel[goldIndex]++;
-//	    	numRecords++;
-//	    	//get the value of each word in the review
-//	    	HashMap<String, Integer> wordValue = new HashMap<String, Integer>();
-//			for(Sentence sentence : Utils.fromFSListToLinkedList(r.review.getSentences(), Sentence.class)) {
-//				
-//				Set<String> sentenceTokens = new HashSet<String>(Utils.fromStringListToArrayList(sentence.getUnigramList()));
-//				for(String token : wordValueLabels.keySet()) {
-//					if (!sentenceTokens.contains(token)) {
-//						if (!wordValueLabels.get(token).containsKey(0)) {
-//							valueLabels = wordValueLabels.get(token);
-//							int[] labels = new int[5];
-//							labels[goldIndex]++;
-//							valueLabels.put(0, labels);
-//							wordValueLabels.put(token, valueLabels);
-//						//word and value has been encountered, just increment label;
-//						} else {
-//							valueLabels = wordValueLabels.get(token);
-//							int[] labels = valueLabels.get(0);
-//							labels[goldIndex]++;
-//							valueLabels.put(0, labels);
-//							wordValueLabels.put(token, valueLabels);
-//						}
-//					}
-//				}
+//			//subtract negated words
+//			for(String token : r.negatedWords.keySet()) {
+//				if (wordFreqByLabel.containsKey(token))
+//					wordValue.put(token, wordValue.get(token) - r.negatedWords.get(token));
+//				else 
+//					wordValue.put(token, - r.negatedWords.get(token));
 //			}
-//		}
-		//get label probabilities
+		}
+		
+		//get distribution of labels
 		for (int i=0; i<5; i++) {
 			pLabel[i] = pLabel[i]/numRecords;
 		}
-		HashMap<String, Double> wordInfoGain = new HashMap<String, Double>();
-		//IG(word) = H(labels) - sum_values(P(value=v)*H(labels|value=v))
-		//H(labels) = sum(P(label)*log(1/P(label)))
-		double hLabels = 0;
-		for (int i=0; i<5; i++) {
-			hLabels += pLabel[i]*Math.log(pLabel[i]==0 ? 1 : 1/pLabel[i]);
-		}
-		for (String token : wordValueLabels.keySet()) {
-			valueLabels = wordValueLabels.get(token);
-			HashMap<Integer, Integer> valueFreq = new HashMap<Integer, Integer>();
-			int totalValues = 0;
-			for (int value : valueLabels.keySet()) {
-				int[] labels = valueLabels.get(value);
-				int sum = 0;
-				for (int i=0; i<5; i++) {
-					sum += labels[i];
-				}
-				valueFreq.put(value, sum);
-				totalValues += sum;
-			}
+		
+		//get distribution of word frequencies (sum to 1)
+		for (String token : wordFreqByLabel.keySet()) {
 
-			double hLabelsGivenValue = 0.0;
-			for (int value : valueLabels.keySet()) {
-				int[] labels = valueLabels.get(value);
-				//calculate H(labels|value=v)
-				double h = 0;
-				for (int i=0; i<5; i++) {
-					double p = (double) labels[i]/valueFreq.get(value);
-					h += p*Math.log(p==0 ? 1.0 : 1.0/p);
-				}
-				hLabelsGivenValue += h*(double)valueFreq.get(value)/totalValues;
+			int[] freq = wordFreqByLabel.get(token);
+			int total = 0;
+			for (int i=0; i<5; i++) {
+				total += freq[i];
 			}
-//			if (hLabelsGivenValue < 1) {
-//				System.out.println(token + " " + hLabelsGivenValue + " " + totalValues);
-//				for (int value : valueLabels.keySet()) {
-//					System.out.println(value + " " + valueFreq.get(value));
-//				}
-//			}
-			wordInfoGain.put(token, hLabels - hLabelsGivenValue);
+			//measures the deviance of the distribution of word frequency over labels from the average label frequency
+			double sumSqResidual = 0;
+			for (int i=0; i<5; i++) {
+				sumSqResidual += Math.pow(pLabel[i] - (double)freq[i]/total, 2);
+			}
+			weightedWordFreq.put(token, sumSqResidual*total);
 		}
 		//System.out.println(hLabels);
-		return wordInfoGain;
+		return weightedWordFreq;
 	}	
 	
 	

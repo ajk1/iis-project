@@ -43,7 +43,7 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 	
 	// for reading vocabs
 	private String vocabMode  = "write";
-	private String vocabOpt  = "freq";
+	private String vocabOpt  = "weighted";
 	private int vocabLimit  = 1000;
 	
 	private boolean removeStopWords = true;
@@ -97,7 +97,11 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		
 		// 1.2 create Record List for unified learner input data format
 		if (!readRecords) {
+//			XXX: toggle between 3 record methods
 			data = Record.reviewsToRecordsWithNeg(reviews);
+//			data = Record.reviewsToRecordsWithNegOneSentence(reviews, "first");
+//			data = Record.reviewsToRecordsWithNegOneSentence(reviews, "last");
+			
 			writeRecords(data, inputFileName);
 		}
 		else { 
@@ -107,7 +111,7 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		// 2. Learners start working here
 		ClassificationLearner nbLearner = new NaiveBayesLearner();
 		ClassificationLearner nnLearner = new NeuralNetLearner();
-		Learner svmLearner = new SVMLearner();
+		ClassificationLearner vaderLearner = new VaderLearner();
 		Learner regLearner = new LinearRegressionLearner();
 		
 		//naive bayes init
@@ -117,6 +121,11 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		//neural network init
 		nnLearner.setModelPath(modelPath);
 		nnLearner.setInputFileName(inputFileName);
+		
+		//vader lexicon learner init
+//		vaderLearner.initialize(mode, modelPath, data);
+//		vaderLearner.setModelPath(modelPath);
+//		vaderLearner.setInputFileName(inputFileName);
 				
 		if(mode.equals("train")) {
 			System.out.println("... Learner Annotator: TRAIN MODE ... ");	
@@ -200,7 +209,6 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 			
 		}
 		
-		svmLearner.initialize(mode, modelPath, data);
 		regLearner.initialize(mode, modelPath, data);
 	}
 

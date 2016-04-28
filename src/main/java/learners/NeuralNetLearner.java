@@ -28,7 +28,7 @@ public class NeuralNetLearner extends ClassificationLearner{
 	private int numInput;
 	private int numHidden = 5;
 	private int numOutput = 5;
-	double eta; //step size
+	double eta = 1; //step size
 	double[][] w;
 	double[][] q = new double[numHidden][numOutput];
 
@@ -62,9 +62,9 @@ public class NeuralNetLearner extends ClassificationLearner{
 			}
 		}
 		
-		double prevSqError = 100000;
+		double prevSqError = 999999;
 		double firstSqError = 0;
-		for (int iter=0; iter<2000; iter++) {
+		for (int iter=0; iter<1000; iter++) {
 			double sqError = 0;
 			
 			for (int n=0; n<data.size(); n++) {
@@ -241,7 +241,6 @@ public class NeuralNetLearner extends ClassificationLearner{
 		this.vocabulary = vocabulary;
 		this.numInput = vocabulary.size() + 1; //extra unit for bias unit (which always has input of 1)
 		this.w = new double[numInput][numHidden]; 
-		this.eta = 1;
 	}
 
 	@Override

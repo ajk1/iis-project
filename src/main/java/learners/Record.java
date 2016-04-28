@@ -78,6 +78,47 @@ public class Record {
 		return r;
 	}		
 	
+	public static List<Record> reviewsToRecordsWithNegOneSentence(List<Review> reviews, String firstOrLast) {
+		ArrayList<Record> data = new ArrayList<Record>();
+		int ctr = 0;
+		for (Review review : reviews) {
+			System.out.println("... Learner Annotator: annotating " + firstOrLast +
+					" sentence of " + (ctr++) + " review to record ... ");	
+			Record r = new Record();
+			List<String> allTokens = new ArrayList<String>();
+			Map<String, Integer> negatedWords = new HashMap<String, Integer>();
+			
+			//for each sentence in review
+			Sentence sentence;
+			List<Sentence> sentences = Utils.fromFSListToLinkedList(review.getSentences(), Sentence.class);
+			if (firstOrLast.toLowerCase().equals("first")) {
+				sentence = sentences.get(0); 
+			} else {
+				sentence = sentences.get(sentences.size()-1); 
+			}
+			
+			//token detection
+			List<String> tokenList = Utils.fromStringListToArrayList(sentence.getUnigramList());
+
+			for(String token: tokenList) {
+				token = token.replaceAll("[^a-zA-Z ]", "");
+				if (!token.equals(token.toUpperCase())) token = token.toLowerCase();
+				allTokens.add(token);					
+			}
+			//negation detection
+			Map<String, Integer> negatedWordsInSentence = CoreNLPUtils.getNegatedWordsWithParseTree(sentence.getRawText());
+			negatedWordsInSentence.forEach((k, v) -> negatedWords.merge(k, v, (v1, v2) -> v1 + v2));
+			
+			r.setReview(review);
+			r.setGoldLabel(review.getGoldLabel());
+			r.setAttr(allTokens);
+			r.addNeg(negatedWords);
+			r.addNegSubstract(negatedWords);
+			data.add(r);
+		}		
+		return data;
+	}
+	
 //	public static void setNegatedVocab(Set<String> negatedVocab) {
 //		negatedVocabulary = negatedVocab;
 //	}
@@ -106,6 +147,9 @@ public class Record {
 		for(Entry<String, Integer> e: negatedWords.entrySet()) {
 			String key = "n_"+e.getKey();
 			tokenFreqNeg.put(key, e.getValue());
+			//also subtract from frequency of non-negated word
+			if (tokenFreqNeg.containsKey(e.getKey()))
+				tokenFreqNeg.put(e.getKey(), tokenFreqNeg.get(e.getKey()) - e.getValue());
 		}
 	}
 	
