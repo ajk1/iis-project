@@ -123,12 +123,16 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 		nnLearner.setInputFileName(inputFileName);
 		
 		//vader lexicon learner init
-//		vaderLearner.initialize(mode, modelPath, data);
-//		vaderLearner.setModelPath(modelPath);
-//		vaderLearner.setInputFileName(inputFileName);
+		vaderLearner.initialize(mode, modelPath, data);
+		vaderLearner.setModelPath(modelPath);
+		vaderLearner.setInputFileName(inputFileName);
 				
 		if(mode.equals("train")) {
 			System.out.println("... Learner Annotator: TRAIN MODE ... ");	
+
+			vaderLearner.initTrain(modelPath, data, vocabulary);
+			vaderLearner.train();
+			vaderLearner.writeModel();
 			
 			nbLearner.initTrain(modelPath, data, vocabulary);
 			nbLearner.train();
@@ -136,7 +140,7 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 			
 			nnLearner.initTrain(modelPath, data, vocabulary);
 			nnLearner.train();
-			nnLearner.writeModel();			
+			nnLearner.writeModel();	
 			
 		} else if(mode.equals("cv")) {
 			System.out.println("... Learner Annotator: CROSS VALIDATION MODE ... ");	
@@ -158,6 +162,11 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 				
 				// k-fold train
 				System.out.println("... Cross-Validation: Training fold " + (i+1));
+				
+				vaderLearner.initTrain(modelPath, trainingData, vocabulary);
+				vaderLearner.train();
+				vaderLearner.writeModel();
+				
 				nbLearner.initTrain(modelPath, trainingData, vocabulary);
 				nbLearner.train();
 				nbLearner.writeModel();			
@@ -165,7 +174,8 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 				nnLearner.initTrain(modelPath, trainingData, vocabulary);
 				nnLearner.train();
 				nnLearner.writeModel();			
-				
+
+				vaderLearner.initTest(modelPath);
 				nbLearner.initTest(modelPath);
 				nnLearner.initTest(modelPath);
 
@@ -174,12 +184,14 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 				for(Record r : testingData) {
 
 			    	int zeroRegScore = 5;
+			    	int vaderPredictScore = vaderLearner.predict(r);
 			    	int nbPredictScore = nbLearner.predict(r);		    	
 			    	int nnPredictScore = nnLearner.predict(r);
 //			    	System.out.println("... predicting review: " + (ctr) + ": " + nbPredictScore + "," + nnPredictScore);
 			    	
 					List<Integer> cScores = Utils.fromIntegerListToArrayList(r.review.getClassificationScores());
 					cScores.add(zeroRegScore);
+					cScores.add(vaderPredictScore);
 					cScores.add(nbPredictScore);
 					cScores.add(nnPredictScore);
 					r.review.setClassificationScores(Utils.fromCollectionToIntegerList(aJCas, cScores));
@@ -190,17 +202,20 @@ public class LearnerAnnotator extends JCasAnnotator_ImplBase {
 	
 		} else if(mode.equals("test")) {
 			System.out.println("... Learner Annotator: TESTING MODE ... ");	
+			vaderLearner.initTest(modelPath);
 			nbLearner.initTest(modelPath);
 			nnLearner.initTest(modelPath);
 
 			for (Record r : data) {
 		    	int zeroRegScore = 5;
+		    	int vaderPredictScore = vaderLearner.predict(r);
 		    	int nbPredictScore = nbLearner.predict(r);			    	
 		    	int nnPredictScore = nnLearner.predict(r);
 //		    	System.out.println("... predicting review: " + (ctr-1) + ": " + nbPredictScore + "," + nbPredictScore);
 		    			    	
 				List<Integer> cScores = Utils.fromIntegerListToArrayList(r.review.getClassificationScores());
 				cScores.add(zeroRegScore);
+				cScores.add(vaderPredictScore);
 				cScores.add(nnPredictScore);
 				cScores.add(nbPredictScore);
 				r.review.setClassificationScores(Utils.fromCollectionToIntegerList(aJCas, cScores));	

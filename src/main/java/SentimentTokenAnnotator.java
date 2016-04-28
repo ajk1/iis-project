@@ -126,10 +126,6 @@ public class SentimentTokenAnnotator extends JCasAnnotator_ImplBase {
 		  float[] scores = new float[sentiDictionaries.size()];
 		  //number of tokens with a match in each library
 		  int[] matches = new int[sentiDictionaries.size()];
-		  for(int i=0; i<scores.length; i++){
-			  scores[i] = 0;
-			  matches[i] = 0;
-		  }
 		  float aggScore = 0; //aggregate score from both libraries
 		  float aggScore1 = 0; //aggregate score that prioritizes VADER
 		  int size = 0; //total number of tokens in review
